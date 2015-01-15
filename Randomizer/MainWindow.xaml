@@ -1,0 +1,161 @@
+﻿<Window
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
+    xmlns:randomizer="clr-namespace:Randomizer"
+    x:Class="Randomizer.MainWindow" Language="Ru"
+    Title="Генератор Нарядов" Height="600" MinWidth="400" Width="800" WindowStartupLocation="CenterScreen" Icon="DiceRoll.ico"
+    WindowState="Maximized">
+    
+    <Window.Resources>
+        <randomizer:ModelView x:Key="model" />
+    </Window.Resources>
+    <Grid Name="MainGrid" DataContext="{StaticResource model}">
+        <Label HorizontalAlignment="Right" VerticalAlignment="Top" >Павел Игоревич Платонов©, Шкотово 2015</Label>
+        <TabControl Name="Вкладки">
+            <TabItem Header="Настройки">
+                <Grid Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button Content="Сохранить Настройки" Margin="5" Height="24" Click="СохранитьНастройки" />
+                    <ScrollViewer Grid.Row="1" Grid.Column="0" Margin="5" MinWidth="130" Grid.RowSpan="3">
+                        <StackPanel CanVerticallyScroll="True">
+                            <Label Height="24">Период Графика</Label>
+                            <Calendar x:Name="graficDates" ToolTip="Период Графика" SelectionMode="MultipleRange"/>
+                            <Label Height="24">Усиления</Label>
+                            <Calendar x:Name="sealDates" ToolTip="Усиление" SelectionMode="MultipleRange"/>
+                            <Label Height="24">Выходные и Праздники</Label>
+                            <Calendar x:Name="holyDates" ToolTip="Выходные и Праздники" SelectionMode="MultipleRange"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                    <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" Margin="5">
+                        <Button Content="+" ToolTip="Добавить Наряд" Height="24" Width="24"
+                                Click="ДобавитьНаряд" />
+                        <Button Content="..." ToolTip="Редактировать Наряд" Height="24" Width="24"
+                                Click="РедактироватьНаряд" />
+                        <Button Content="-" ToolTip="Удалить Наряд" Height="24" Width="24"
+                                Click="УдалитьНаряд" />
+                        <Label Height="24">Наряды</Label>
+                        <Label Name="ВсегоНарядов" Height="24" />
+                    </StackPanel>
+                    <syncfusion:GridDataControl Grid.Row="1" Grid.Column="1" x:Name="narydsGrid"
+                                                ItemsSource="{Binding Наряды}" AllowEdit="False" ShowAddNewRow="False"
+                                                Margin="5" ColumnSizer="Auto" AutoGenerateColumnsInfo="False"
+                                                AutoPopulateColumns="False" AllowSort="False">
+                        <syncfusion:GridDataControl.VisibleColumns>
+                            <syncfusion:GridDataVisibleColumn MappingName="Название" HeaderText="Наряд"/>
+                            <syncfusion:GridDataVisibleColumn MappingName="Длительность" HeaderText="Длительность, ч"/>
+                            <syncfusion:GridDataVisibleColumn MappingName="Количество" HeaderText="Всего, шт"/>
+                            <syncfusion:GridDataVisibleColumn MappingName="КоличествоВыходных" HeaderText="Выходных, шт"/>
+                            <syncfusion:GridDataVisibleColumn MappingName="Всего" HeaderText="Всего, ч"/>
+                            <syncfusion:GridDataVisibleColumn MappingName="Выходных" HeaderText="Выходных, ч"/>
+                            <syncfusion:GridDataCheckBoxVisibleColumn MappingName="Усиление"
+                                                                      HeaderText="Только в Усиление" />
+                        </syncfusion:GridDataControl.VisibleColumns>
+                    </syncfusion:GridDataControl>
+                    <StackPanel Grid.Row="2" Grid.Column="1" Margin="5" Orientation="Horizontal">
+                        <Button Content="+" ToolTip="Добавить Подразделение" Click="ДобавитьПодразделение" Width="24"
+                                Height="24" />
+                        <Button Content="..." ToolTip="Редактировать Подразделение" Click="РедактироватьПодразделение"
+                                Width="24" Height="24" />
+                        <Button Content="-" ToolTip="Удалить Подразделение" Click="УдалитьПодразделение" Width="24"
+                                Height="24" />
+                        <Label Height="24">Подразделения</Label>
+                        <Button Content="Распределить Часы" Click="КнопкаПересчётаЧасов" Height="24" Width="120" />
+                        <syncfusion:IntegerTextBox Name="AllHours" Height="24" MinWidth="50" MinValue="0"
+                                                   MaxValue="1000000" NullValue="0" ToolTip="Количество Часов которые нужно распределить на следующие Подразделения"
+                                                   Margin="10,0" />
+                        <syncfusion:IntegerTextBox Name="HolyProcent" Height="24" MinWidth="30" MinValue="0"
+                                                   MaxValue="100" NullValue="0" ToolTip="Процент Выходных Часов для каждого Подразделения" />
+                        <Label Name="Распределено" Margin="5" Height="24" />
+                    </StackPanel>
+                    <syncfusion:GridDataControl x:Name="districtsGrid" Margin="5" ItemsSource="{Binding Подразделения}"
+                                                AllowEdit="False" ShowAddNewRow="False"
+                                                LayoutUpdated="DistrictsGridLayoutUpdated" Grid.Row="3"
+                                                Grid.Column="1" ColumnSizer="Auto" AutoGenerateColumnsInfo="False"
+                                                AutoPopulateColumns="False" AllowSort="False"
+                                                AutoPopulateRelations="False">
+                        <syncfusion:GridDataControl.VisibleColumns>
+                            <syncfusion:GridDataVisibleColumn MappingName="Название" HeaderText="Подразделение" />
+                            <syncfusion:GridDataVisibleColumn MappingName="Люди" HeaderText="Людей, чел" />
+                            <syncfusion:GridDataVisibleColumn MappingName="Процент" />
+                            <syncfusion:GridDataVisibleColumn MappingName="ЧасыПредвар" HeaderText="Всего, ч"/>
+                            <syncfusion:GridDataVisibleColumn MappingName="ВыходныеЧасыПредвар" HeaderText="Выходных, ч"/>
+                            <syncfusion:GridDataVisibleColumn MappingName="Распред12Ч" HeaderText="Распред 12ч, шт"/>
+                            <syncfusion:GridDataVisibleColumn MappingName="Распред24Ч" HeaderText="Распред 24ч, шт"/>
+                            <syncfusion:GridDataVisibleColumn MappingName="Часы" HeaderText="Распред Всего, ч" />
+                            <syncfusion:GridDataVisibleColumn MappingName="ВыходныеЧасы" HeaderText="Распред Выходных, ч" />
+                            <syncfusion:GridDataVisibleColumn MappingName="СписокНарядов" HeaderText="Доступные Наряды" />
+                        </syncfusion:GridDataControl.VisibleColumns>
+                    </syncfusion:GridDataControl>
+                </Grid>
+            </TabItem>
+            <TabItem Header="График">
+                <Grid Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="Генерировать График" Margin="5" Width="150" Height="24"
+                                Click="Button_Генерировать" />
+                        <Button Content="Применить Изменения" Margin="5" Width="150" Height="24"
+                                Click="ПрименитьИзменения" />
+                        <Button Content="Пересчитать Настройки" Margin="5" Width="150" Height="24"
+                                Click="ПересчитатьНастройки" />
+                    </StackPanel>
+                    <ListView Grid.Row="1" ItemsSource="{Binding ДатыГрафика}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Display}" Width="100"/>
+                                    <ListView ItemsSource="{Binding Подразделения}" >
+                                        <ListView.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <VirtualizingStackPanel IsItemsHost="True" Orientation="Horizontal"/>
+                                            </ItemsPanelTemplate>
+                                        </ListView.ItemsPanel>
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate>
+                                                <ComboBox SelectedValue="{Binding Pod}" SelectionChanged="Selector_OnSelectionChanged" ItemsSource="{Binding Source={StaticResource model}, Path=Подразделения, Mode=OneWay}" Width="100"></ComboBox>
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Вывод">
+                <Grid Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="Генерировать График" Margin="5" Width="150" Height="24"
+                                Click="Button_Генерировать" />
+                        <Button Content="Сохранить График" Margin="5" Width="150" Height="24"
+                                Click="СохранитьДокумент" />
+                        <Button Content="Сохранить Статистику" Margin="5" Width="150" Height="24"
+                                Click="СохранитьТаблицу" />
+                        <Button Content="Пересчитать Настройки" Margin="5" Width="150" Height="24"
+                                Click="ПересчитатьНастройки" />
+
+                    </StackPanel>
+                    <syncfusion:GridDataControl x:Name="eventsGrid" Margin="5" ItemsSource="{Binding GenerateTable}" AllowEdit="True"
+                                                ShowAddNewRow="False" Grid.Row="1" ColumnSizer="Auto" AllowSort="False" AllowDelete="False"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

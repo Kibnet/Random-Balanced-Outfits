@@ -1,0 +1,21 @@
+﻿<Window x:Class="Randomizer.NewDistrict"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
+        Title="Подразделение" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen">
+    <Grid Margin="10">
+        <StackPanel MinWidth="200">
+            <Label Height="24">Название Подразделения</Label>
+            <TextBox Height="24" Name="NameBox" TextWrapping="Wrap" Text="" />
+            <Label Height="24">Количество Людей</Label>
+            <syncfusion:IntegerTextBox Height="24" Name="PeopleBox" />
+            <Label Height="24">Количество Часов</Label>
+            <syncfusion:IntegerTextBox Height="24" Name="HoursBox" />
+            <Label Height="24">Количество Часов на Выходных</Label>
+            <syncfusion:IntegerTextBox Height="24" Name="HolyHoursBox" />
+            <Label Height="24">Доступные Наряды:</Label>
+            <StackPanel Name="NarydsPanel" />
+            <Button Margin="0,10,0,0" Height="24" Content="Сохранить" Click="Save" />
+        </StackPanel>
+    </Grid>
+</Window>
