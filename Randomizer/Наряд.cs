@@ -6,35 +6,11 @@ using Randomizer.Annotations;
 namespace Randomizer
 {
 	[Serializable]
-	public class Наряд:INotifyPropertyChanged
+	public class Наряд
 	{
-		private bool _усиление;
-		private int _длительность;
-		private string _название;
+		public string Название { get; set; }
 
-		public string Название
-		{
-			get { return _название; }
-			set
-			{
-				if (value == _название) return;
-				_название = value;
-				OnPropertyChanged("Название");
-			}
-		}
-
-		public int Длительность
-		{
-			get { return _длительность; }
-			set
-			{
-				if (value == _длительность) return;
-				_длительность = value;
-				OnPropertyChanged("Длительность");
-				OnPropertyChanged("Всего");
-				OnPropertyChanged("Выходных");
-			}
-		}
+		public int Длительность { get; set; }
 
 
 		public int Количество
@@ -66,31 +42,11 @@ namespace Randomizer
 			get { return КоличествоВыходных * Длительность; }
 		}
 
-		public bool Усиление
-		{
-			get { return _усиление; }
-			set
-			{
-				if (value.Equals(_усиление)) return;
-				_усиление = value;
-				OnPropertyChanged("Усиление");
-				OnPropertyChanged("Количество");
-				OnPropertyChanged("КоличествоВыходных");
-			}
-		}
+		public bool Усиление { get; set; }
 
 		public override string ToString()
 		{
 			return string.Format("{0} ({1} часов{2})", Название, Длительность, Усиление ? " только в Усиление" : "");
-		}
-
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		[NotifyPropertyChangedInvocator]
-		protected virtual void OnPropertyChanged(string propertyName)
-		{
-			var handler = PropertyChanged;
-			if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
 		}
 	}
 }

@@ -190,15 +190,10 @@ namespace Randomizer
 		{
 			get
 			{
-				int people = Подразделения.Sum(подразделение => подразделение.Люди);
 				int sum = Наряды.Sum(наряд => наряд.Всего);
 				int count = Наряды.Sum(наряд => наряд.Количество);
 				int holysum = Наряды.Sum(наряд => наряд.Выходных);
 				int holcount = Наряды.Sum(наряд => наряд.КоличествоВыходных);
-				foreach (var подразделение in Подразделения)
-				{
-					подразделение.Процент = (((float)подразделение.Люди * 100.0f / (float)people)).ToString("F1") + "%";
-				}
 				int hproc = 0;
 				if (sum != 0)
 				{
@@ -213,11 +208,32 @@ namespace Randomizer
 			var dates = ПериодГрафика.Select(date => new ДатаГрафика
 			{
 				Date = date,
-				Holyday = Праздники.Contains(date),
 				Смены =
 					Наряды.Where(nar => !nar.Усиление || Усиления.Contains(date))
 						  .ToDictionary<Наряд, Наряд, Подразделение>(nar => nar, nar => null)
 			}).ToList();
+			foreach (var date in dates)
+			{
+				var find = ДатыГрафика.FirstOrDefault(gr => gr.Date == date.Date);
+				if (find != null)
+				{
+					foreach (var nar in find.Блокировки)
+					{
+						date.Блокировки.Add(nar);
+						if (find.Смены.ContainsKey(nar))
+						{
+							if (!nar.Усиление || Усиления.Contains(date.Date))
+							{
+								date.Смены[nar] = find.Смены[nar];
+								if (date.Смены[nar] == null)
+								{
+									date.Смены[nar] = new Подразделение();
+								}
+							}
+						}
+					}
+				}
+			}
 			ДатыГрафика = new ObservableCollection<ДатаГрафика>(dates);
 			var rand = new Random();
 			foreach (var district in Подразделения)
@@ -248,9 +264,6 @@ namespace Randomizer
 				}
 
 				//Распределение нарядов на выходных не превышающих предварительных расчётов
-				district.ВыходныеЧасы = 0;
-				district.Распред12Ч = 0;
-				district.Распред24Ч = 0;
 				foreach (var pair in holypairs)
 				{
 					var day = pair.Key;
@@ -258,16 +271,10 @@ namespace Randomizer
 					if (district.ВыходныеЧасыПредвар >= district.ВыходныеЧасы + smen.Длительность)
 					{
 						day.Смены[smen] = district;
-						district.ВыходныеЧасы += smen.Длительность;
-						if (smen.Длительность == 12)
-							district.Распред12Ч++;
-						if (smen.Длительность == 24)
-							district.Распред24Ч++;
 					}
 				}
 
 				//Распределение остальных нарядов не превышающих предварительных расчётов
-				district.Часы = district.ВыходныеЧасы;
 				foreach (var pair in pairs)
 				{
 					var day = pair.Key;
@@ -275,16 +282,10 @@ namespace Randomizer
 					if (district.ЧасыПредвар >= district.Часы + smen.Длительность)
 					{
 						day.Смены[smen] = district;
-						district.Часы += smen.Длительность;
-						if (smen.Длительность == 12)
-							district.Распред12Ч++;
-						if (smen.Длительность == 24)
-							district.Распред24Ч++;
 					}
 				}
 			}
-			OnPropertyChanged("Подразделения");
-			OnPropertyChanged("GenerateTable");
+			RefreshTable();
 		}
 		
 		public void RefreshTable()

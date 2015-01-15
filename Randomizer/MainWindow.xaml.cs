@@ -18,7 +18,7 @@ namespace Randomizer
 	/// </summary>
 	public partial class MainWindow
 	{
-		public static ModelView Модель;// = new ModelView("Настройки.blin");
+		public static ModelView Модель;
 
 		public MainWindow()
 		{
@@ -27,7 +27,6 @@ namespace Randomizer
 			{
 				narydsGrid.MouseDoubleClick += (sender, args) => РедактироватьНаряд(null, null);
 				districtsGrid.MouseDoubleClick += (sender, args) => РедактироватьПодразделение(null, null);
-				//DataContext = Модель;
 				Модель = MainGrid.DataContext as ModelView;
 				DateTime fd = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(1);
 				DateTime sd = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(2).AddDays(-1);
@@ -54,11 +53,8 @@ namespace Randomizer
 						holyDates.SelectedDates.Add(date);
 					}
 				}
-				//narydsGrid.DataContext = Модель.Наряды;
-				//districtsGrid.DataContext = Модель.Подразделения;
 				AllHours.Value = Модель.ЗакрываемыеЧасы;
 				HolyProcent.Value = Модель.ПроцентВыходных;
-				//eventsGrid.DataContext = Модель.GenerateTable;
 			}
 			catch (Exception ex)
 			{
@@ -72,102 +68,15 @@ namespace Randomizer
 			{
 				СохранитьНастройки();
 				Модель.GenerateEvents();
-				//districtsGrid.DataContext = null;
-				//districtsGrid.DataContext = Модель.Подразделения;
-				//eventsGrid.DataContext = Модель.GenerateTable;
 			}
 			catch (Exception ex)
 			{
 				MessageBox.Show(string.Format("{0}\n{1}", ex.Message, ex.StackTrace), "Исключение");
-			}
-		}
-
-
-		private void ПересчитатьНастройки(object sender, RoutedEventArgs e)
-		{
-			var table = eventsGrid.DataContext as DataTable;
-			if (table == null)
-				return;
-			var dict = new Dictionary<string, List<string>>();
-			var dicth = new Dictionary<string, List<string>>();
-			for (int i = 0; i < table.Rows.Count; i++)
-			{
-				for (int j = 1; j < table.Columns.Count; j++)
-				{
-					var name = table.Columns[j].ColumnName;
-					var distr = (string)table.Rows[i].ItemArray[j];
-					if (distr == "" || distr == "---")
-					{
-						continue;
-					}
-					var outdic = Модель.ДатыГрафика[i].Holyday ? dicth : dict;
-					if (!outdic.ContainsKey(distr))
-						outdic[distr] = new List<string>();
-					outdic[distr].Add(name);
-				}
-			}
-			foreach (var distr in dict)
-			{
-				ReSettings(distr);
-			}
-			foreach (var distr in dicth)
-			{
-				ReSettings(distr, true);
-			}
-		}
-  
-		private void ReSettings(KeyValuePair<string, List<string>> distr, bool holy = false)
-		{
-			var Distr = Модель.Подразделения.First(подразделение => подразделение.Название == distr.Key);
-			if (Distr != null)
-			{
-				if (!holy)
-				{
-					Distr.Распред12Ч = 0;
-					Distr.Распред24Ч = 0;
-					Distr.Часы = 0;
-					Distr.ВыходныеЧасы = 0;
-				}
-				foreach (var nar in distr.Value)
-				{
-					var Nar = Модель.Наряды.First(наряд => наряд.Название == nar);
-					if (Nar != null)
-					{
-						if (Nar.Длительность == 12)
-							Distr.Распред12Ч++;
-						if (Nar.Длительность == 24)
-							Distr.Распред24Ч++;
-						Distr.Часы += Nar.Длительность;
-						if (holy)
-						{
-							Distr.ВыходныеЧасы += Nar.Длительность;
-						}
-					}
-				}
 			}
 		}
 
 		private void СохранитьНастройки()
 		{
-			try
-			{
-				//Модель.Наряды = (ObservableCollection<Наряд>)narydsGrid.DataContext;
-				//Модель.Подразделения = (ObservableCollection<Подразделение>)districtsGrid.DataContext;
-				//Модель.ЗакрываемыеЧасы = (int)AllHours.Value.GetValueOrDefault(0);
-				//Модель.ПроцентВыходных = (int)HolyProcent.Value.GetValueOrDefault(0);
-				//Модель.Усиления = new ObservableCollection<DateTime>(sealDates.SelectedDates);
-				//Модель.Праздники = new ObservableCollection<DateTime>(holyDates.SelectedDates);
-				//Модель.ПериодГрафика = new ObservableCollection<DateTime>(graficDates.SelectedDates);
-				
-				//narydsGrid.DataContext = null;
-				//narydsGrid.DataContext = Модель.Наряды;
-				//districtsGrid.DataContext = null;
-				//districtsGrid.DataContext = Модель.Подразделения;
-			}
-			catch (Exception ex)
-			{
-				MessageBox.Show(string.Format("{0}\n{1}", ex.Message, ex.StackTrace), "Исключение");
-			}
 			Модель.Serialize("Настройки.bin");
 		}
 
@@ -185,8 +94,6 @@ namespace Randomizer
 					district.ЧасыПредвар = dihour;
 					district.ВыходныеЧасыПредвар = (dihour * holy) / 100;
 				}
-				//districtsGrid.DataContext = null;
-				//districtsGrid.DataContext = Модель.Подразделения;
 			}
 			catch (Exception ex)
 			{
@@ -502,8 +409,6 @@ namespace Randomizer
 				{
 					Модель.Наряды.Add(dlg.Obj);
 				}
-				//narydsGrid.DataContext = null;
-				//narydsGrid.DataContext = Модель.Наряды;
 			}
 			catch (Exception ex)
 			{
@@ -521,8 +426,6 @@ namespace Randomizer
 				{
 					Модель.Подразделения.Add(dlg.Obj);
 				}
-				//districtsGrid.DataContext = null;
-				//districtsGrid.DataContext = Модель.Подразделения;
 			}
 			catch (Exception ex)
 			{
@@ -551,10 +454,6 @@ namespace Randomizer
 						Модель.Наряды.Remove(selectedItem);
 					}
 				}
-				//narydsGrid.DataContext = null;
-				//narydsGrid.DataContext = Модель.Наряды;
-				//districtsGrid.DataContext = null;
-				//districtsGrid.DataContext = Модель.Подразделения;
 			}
 			catch (Exception ex)
 			{
@@ -579,8 +478,6 @@ namespace Randomizer
 						Модель.Подразделения.Remove(selectedItem);
 					}
 				}
-				//districtsGrid.DataContext = null;
-				//districtsGrid.DataContext = Модель.Подразделения;
 			}
 			catch (Exception ex)
 			{
@@ -599,8 +496,6 @@ namespace Randomizer
 				}
 				var dlg = new NewNaryad(item);
 				dlg.ShowDialog();
-				//narydsGrid.DataContext = null;
-				//narydsGrid.DataContext = Модель.Наряды;
 			}
 			catch (Exception ex)
 			{
@@ -619,8 +514,6 @@ namespace Randomizer
 				}
 				var dlg = new NewDistrict(Модель.Наряды, item);
 				dlg.ShowDialog();
-				//districtsGrid.DataContext = null;
-				//districtsGrid.DataContext = Модель.Подразделения;
 			}
 			catch (Exception ex)
 			{
@@ -638,9 +531,28 @@ namespace Randomizer
 			Модель.RefreshTable();
 		}
 
-		private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+		private void ВкладкаВывод_OnGotFocus(object sender, RoutedEventArgs e)
 		{
-			
+			Модель.RefreshTable();
+		}
+
+		private void ToggleButton_Заблокировать(object sender, RoutedEventArgs e)
+		{
+			foreach (var data in Модель.ДатыГрафика)
+			{
+				data.Блокировки.Clear();
+				data.Блокировки.AddRange(data.Смены.Keys);
+			}
+			Модель.ДатыГрафика = new ObservableCollection<ДатаГрафика>(Модель.ДатыГрафика);
+		}
+
+		private void ToggleButton_Разблокировать(object sender, RoutedEventArgs e)
+		{
+			foreach (var data in Модель.ДатыГрафика)
+			{
+				data.Блокировки.Clear();
+			}
+			Модель.ДатыГрафика = new ObservableCollection<ДатаГрафика>(Модель.ДатыГрафика);
 		}
 	}
 }
