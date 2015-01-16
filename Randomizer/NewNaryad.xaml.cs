@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 
 namespace Randomizer
 {
@@ -12,6 +13,8 @@ namespace Randomizer
 		public NewNaryad(Наряд editobj = null)
 		{
 			InitializeComponent();
+			days.ItemsSource = Enum.GetValues(typeof(WeekDays));
+			days.SelectedItem = WeekDays.Все;
 			name.Focus();
 			if (editobj != null)
 			{
@@ -19,27 +22,18 @@ namespace Randomizer
 				name.Text = editobj.Название;
 				hours.Value = editobj.Длительность;
 				seal.IsChecked = editobj.Усиление;
+				days.SelectedItem = editobj.Дни;
 			}
 		}
 
 		private void Сохранить(object sender, RoutedEventArgs e)
 		{
 			if (Obj == null)
-			{
-				Obj = new Наряд
-				      {
-					      Название = name.Text,
-					      Длительность = (int) hours.Value.GetValueOrDefault(0),
-					      Усиление = seal.IsChecked == true
-				      };
-			}
-			else
-			{
-				Obj.Название = name.Text;
-				Obj.Длительность = (int) hours.Value.GetValueOrDefault(0);
-				Obj.Усиление = seal.IsChecked == true;
-			}
-
+				Obj = new Наряд();
+			Obj.Название = name.Text;
+			Obj.Длительность = (int)hours.Value.GetValueOrDefault(0);
+			Obj.Усиление = seal.IsChecked == true;
+			Obj.Дни = (WeekDays)days.SelectedItem;
 			Close();
 		}
 	}

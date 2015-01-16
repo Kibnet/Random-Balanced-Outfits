@@ -30,6 +30,6 @@ using System.Resources;
 //      Номер построения
 //      Редакция
 //
-[assembly: AssemblyVersion("1.3.*")]
-[assembly: AssemblyFileVersion("1.3")]
+[assembly: AssemblyVersion("1.5.*")]
+[assembly: AssemblyFileVersion("1.5")]
 [assembly: NeutralResourcesLanguageAttribute("ru-RU")]

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows.Media;
 using Randomizer.Annotations;
 
 namespace Randomizer
@@ -12,13 +13,13 @@ namespace Randomizer
 	{
 		public DateTime Date { get; set; }
 
-		public bool Holyday { get { return MainWindow.Модель.Праздники.Contains(Date); } }
+		public bool Holyday { get { return App.Модель.Праздники.Contains(Date); } }
 
 		public string Display { get { return Date.ToString("yyyy.MM.dd ddd"); } }
 
 		public Dictionary<Наряд, Подразделение> Смены { get; set; }
 
-		public List<Наряд> Блокировки = new List<Наряд>();
+		public HashSet<Наряд> Блокировки = new HashSet<Наряд>();
 
 		public ObservableCollection<HostPod> Подразделения
 		{
@@ -27,13 +28,28 @@ namespace Randomizer
 				var ret = new ObservableCollection<HostPod>();
 				if (Блокировки == null)
 				{
-					Блокировки = new List<Наряд>();
+					Блокировки = new HashSet<Наряд>();
 				}
-				foreach (var наряд in MainWindow.Модель.Наряды)
+				foreach (var наряд in App.Модель.Наряды)
 				{
 					ret.Add(new HostPod { Nar = наряд, Parent = this, IsEnabled = Смены.ContainsKey(наряд), Locked = Блокировки.Contains(наряд) });
 				}
 				return ret;
+			}
+		}
+
+		public Brush BackColor
+		{
+			get
+			{
+				if (Holyday)
+				{
+					return Brushes.LightGray;
+				}
+				else
+				{
+					return Brushes.Transparent;
+				}
 			}
 		}
 
@@ -74,7 +90,7 @@ namespace Randomizer
 			{
 				get
 				{
-					var ret = new ObservableCollection<Подразделение>(MainWindow.Модель.Подразделения);
+					var ret = new ObservableCollection<Подразделение>(App.Модель.Подразделения);
 					ret.Insert(0, new Подразделение());
 					return ret;
 				}

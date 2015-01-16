@@ -24,7 +24,7 @@ namespace Randomizer
 					foreach (var naryad in naryads)
 					{
 						NarydsPanel.Children.Add(
-							new CheckBox {Content = naryad, IsChecked = editobj.Наряды.IndexOf(naryad) != -1});
+							new CheckBox { Content = naryad, IsChecked = editobj.Наряды.IndexOf(naryad) != -1 });
 					}
 				}
 				Obj = editobj;
@@ -38,7 +38,7 @@ namespace Randomizer
 				foreach (var naryad in naryads)
 				{
 					NarydsPanel.Children.Add(
-						new CheckBox {Content = naryad, IsChecked = false});
+						new CheckBox { Content = naryad, IsChecked = false });
 				}
 			}
 		}
@@ -46,29 +46,36 @@ namespace Randomizer
 		private void Save(object sender, RoutedEventArgs e)
 		{
 			List<Наряд> list = (from CheckBox child in NarydsPanel.Children
-				where child.IsChecked == true
-				select (Наряд) child.Content).ToList();
+								where child.IsChecked == true
+								select (Наряд)child.Content).ToList();
 			if (Obj == null)
 			{
-				Obj = new Подразделение
-				      {
-					      Наряды = new ObservableCollection<Наряд>(list),
-					      Название = NameBox.Text,
-					      Люди = (int) PeopleBox.Value.GetValueOrDefault(0),
-					      ЧасыПредвар = (int) HoursBox.Value.GetValueOrDefault(0),
-                          ВыходныеЧасыПредвар = (int) HolyHoursBox.Value.GetValueOrDefault(0)
-				      };
+				Obj = new Подразделение();
+
 			}
-			else
-			{
-				Obj.Наряды = new ObservableCollection<Наряд>(list);
-				Obj.Название = NameBox.Text;
-				Obj.Люди = (int) PeopleBox.Value.GetValueOrDefault(0);
-				Obj.ЧасыПредвар = (int) HoursBox.Value.GetValueOrDefault(0);
-				Obj.ВыходныеЧасыПредвар = (int) HolyHoursBox.Value.GetValueOrDefault(0);
-			}
+			Obj.Наряды = new ObservableCollection<Наряд>(list);
+			Obj.Название = NameBox.Text;
+			Obj.Люди = (int)PeopleBox.Value.GetValueOrDefault(0);
+			Obj.ЧасыПредвар = (int)HoursBox.Value.GetValueOrDefault(0);
+			Obj.ВыходныеЧасыПредвар = (int)HolyHoursBox.Value.GetValueOrDefault(0);
 
 			Close();
+		}
+
+		private void ToggleButton_OnChecked(object sender, RoutedEventArgs e)
+		{
+			foreach (CheckBox child in NarydsPanel.Children)
+			{
+				child.IsChecked = true;
+			}
+		}
+
+		private void ToggleButton_OnUnchecked(object sender, RoutedEventArgs e)
+		{
+			foreach (CheckBox child in NarydsPanel.Children)
+			{
+				child.IsChecked = false;
+			}
 		}
 	}
 }

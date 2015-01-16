@@ -17,8 +17,14 @@ namespace Randomizer
 		{
 			get
 			{
-				return MainWindow.Модель.ПериодГрафика
-					.Count(dateTime => !Усиление || MainWindow.Модель.Усиления.Contains(dateTime));
+				var count = App.Модель.ПериодГрафика
+					.Count(time => !Усиление || App.Модель.Усиления.Contains(time));
+
+				if (!App.Модель.ИсключитьБлокированные) return count;
+				var blocked = App.Модель.ДатыГрафика.SelectMany(gr => gr.Блокировки)
+					.Count(наряд => наряд == this);
+				count -= blocked;
+				return count;
 			}
 		}
 
@@ -26,9 +32,17 @@ namespace Randomizer
 		{
 			get
 			{
-				return MainWindow.Модель.ПериодГрафика
-					.Where(time => time.Date.DayOfWeek == DayOfWeek.Saturday || time.Date.DayOfWeek == DayOfWeek.Sunday)
-					.Count(dateTime => !Усиление || MainWindow.Модель.Усиления.Contains(dateTime));
+				var count = App.Модель.ПериодГрафика
+					.Where(time => App.Модель.Праздники.Contains(time))
+					.Count(time => !Усиление || App.Модель.Усиления.Contains(time));
+				if (!App.Модель.ИсключитьБлокированные) return count;
+
+				var blocked = App.Модель.ДатыГрафика
+					.Where(time => App.Модель.Праздники.Contains(time.Date))
+					.SelectMany(gr => gr.Блокировки)
+					.Count(наряд => наряд == this);
+				count -= blocked;
+				return count;
 			}
 		}
 
@@ -44,9 +58,16 @@ namespace Randomizer
 
 		public bool Усиление { get; set; }
 
+		public WeekDays Дни { get; set; }
+
 		public override string ToString()
 		{
 			return string.Format("{0} ({1} часов{2})", Название, Длительность, Усиление ? " только в Усиление" : "");
 		}
+	}
+
+	public enum WeekDays
+	{
+		Все,Будние,Выходные
 	}
 }

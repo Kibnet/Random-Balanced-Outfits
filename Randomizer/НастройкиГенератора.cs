@@ -19,6 +19,7 @@ namespace Randomizer
 			ДатыГрафика = new ObservableCollection<ДатаГрафика>();
 			ЗакрываемыеЧасы = 0;
 			ПроцентВыходных = 29;
+			ИсключитьБлокированные = true;
 			ПутьСохранения = "C:\\";
 		}
 
@@ -39,6 +40,8 @@ namespace Randomizer
 		public int ПроцентВыходных { get; set; }
 
 		public string ПутьСохранения { get; set; }
+
+		public bool ИсключитьБлокированные { get; set; }
 
 		public static НастройкиГенератора Deserialize(string filename)
 		{

@@ -54,6 +54,7 @@ namespace Randomizer
 				}
 				настройки.Подразделения = value;
 				OnPropertyChanged("Подразделения");
+				OnPropertyChanged("ДлительностьРаспределеныхНарядов");
 				OnPropertyChanged("Распределено");
 			}
 		}
@@ -181,8 +182,18 @@ namespace Randomizer
 		{
 			get
 			{
-				int sum = Подразделения.Sum(подразделение => подразделение.Часы);
-				return string.Format("Распределено {0} часов", sum);
+				var midload = (double) App.Модель.ДлительностьНарядов / (double) App.Модель.Подразделения.Sum(подразделение => подразделение.Люди);
+				var holyload = (double) App.Модель.ДлительностьВыходныхНарядов / (double) App.Модель.Подразделения.Sum(подразделение => подразделение.Люди);
+
+				return string.Format("Распределено {0} часов из {1}. Общая нагрузка {2} ч/чел., на выходных {3} ч/чел.", ДлительностьРаспределеныхНарядов, ДлительностьНарядов, midload.ToString("F2"), holyload.ToString("F2"));
+			}
+		}
+
+		public int ДлительностьРаспределеныхНарядов
+		{
+			get
+			{
+				return Подразделения.Sum(подразделение => подразделение.Часы);
 			}
 		}
 
@@ -190,19 +201,61 @@ namespace Randomizer
 		{
 			get
 			{
-				int sum = Наряды.Sum(наряд => наряд.Всего);
-				int count = Наряды.Sum(наряд => наряд.Количество);
-				int holysum = Наряды.Sum(наряд => наряд.Выходных);
-				int holcount = Наряды.Sum(наряд => наряд.КоличествоВыходных);
-				int hproc = 0;
-				if (sum != 0)
-				{
-					hproc = (holysum * 100) / sum;
-				}
-				return string.Format("Всего {3} ({0} часов) из них {4} ({1} часов) выходных ({2}%)", sum, holysum, hproc, count, holcount);
+				OnPropertyChanged("ДлительностьНарядов");
+				OnPropertyChanged("ДлительностьВыходныхНарядов");
+				OnPropertyChanged("КоэффициэнтВыходных");
+				OnPropertyChanged("КоличествоНарядов");
+				OnPropertyChanged("КоличествоВыходныхНарядов");
+				return string.Format("Всего {3} шт. ({0} часов) из них {4} шт. ({1} часов) выходных ({2}%)",
+					ДлительностьНарядов,
+					ДлительностьВыходныхНарядов,
+					(КоэффициэнтВыходных * 100).ToString("F1"),
+					КоличествоНарядов,
+					КоличествоВыходныхНарядов);
 			}
 		}
 
+		public double КоэффициэнтВыходных
+		{
+			get
+			{
+				var hproc = 0d;
+				if (ДлительностьНарядов != 0)
+				{
+					hproc = (double)(ДлительностьВыходныхНарядов) / (double)ДлительностьНарядов;
+				}
+				return hproc;
+			}
+		}
+
+		public int ДлительностьНарядов
+		{
+			get
+			{
+				return Наряды.Sum(наряд => наряд.Всего);
+			}
+		}
+		public int КоличествоНарядов
+		{
+			get
+			{
+				return Наряды.Sum(наряд => наряд.Количество);
+			}
+		}
+		public int ДлительностьВыходныхНарядов
+		{
+			get
+			{
+				return Наряды.Sum(наряд => наряд.Выходных);
+			}
+		}
+		public int КоличествоВыходныхНарядов
+		{
+			get
+			{
+				return Наряды.Sum(наряд => наряд.КоличествоВыходных);
+			}
+		}
 		public void GenerateEvents()
 		{
 			var dates = ПериодГрафика.Select(date => new ДатаГрафика
@@ -210,6 +263,9 @@ namespace Randomizer
 				Date = date,
 				Смены =
 					Наряды.Where(nar => !nar.Усиление || Усиления.Contains(date))
+						  .Where(nar => nar.Дни == WeekDays.Все
+							  || (nar.Дни == WeekDays.Выходные && Праздники.Contains(date))
+							  || (nar.Дни == WeekDays.Будние && !Праздники.Contains(date)))
 						  .ToDictionary<Наряд, Наряд, Подразделение>(nar => nar, nar => null)
 			}).ToList();
 			foreach (var date in dates)
@@ -287,13 +343,14 @@ namespace Randomizer
 			}
 			RefreshTable();
 		}
-		
+
 		public void RefreshTable()
 		{
+			//OnPropertyChanged("Наряды");
 			OnPropertyChanged("Подразделения");
 			OnPropertyChanged("GenerateTable");
 		}
-
+		
 		public DataTable GenerateTable
 		{
 			get
@@ -301,7 +358,7 @@ namespace Randomizer
 				var table = new DataTable();
 				try
 				{
-					table.Columns.Add("Число", typeof (string));
+					table.Columns.Add("Дата", typeof(string));
 					foreach (var naryad in Наряды)
 					{
 						table.Columns.Add(naryad.Название);
@@ -333,7 +390,18 @@ namespace Randomizer
 				return table;
 			}
 		}
-		
+
+		public bool ИсключитьБлокированные
+		{
+			get { return настройки.ИсключитьБлокированные; }
+			set
+			{
+				if (value.Equals(настройки.ИсключитьБлокированные)) return;
+				настройки.ИсключитьБлокированные = value;
+				OnPropertyChanged("ИсключитьБлокированные");
+			}
+		}
+
 		public void Serialize(string filename)
 		{
 			настройки.Serialize(filename);
@@ -344,7 +412,7 @@ namespace Randomizer
 		[NotifyPropertyChangedInvocator]
 		protected virtual void OnPropertyChanged(string propertyName)
 		{
-			PropertyChangedEventHandler handler = PropertyChanged;
+			var handler = PropertyChanged;
 			if (handler != null)
 				handler(this, new PropertyChangedEventArgs(propertyName));
 		}

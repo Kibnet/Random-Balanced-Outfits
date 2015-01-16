@@ -5,6 +5,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
@@ -18,8 +19,6 @@ namespace Randomizer
 	/// </summary>
 	public partial class MainWindow
 	{
-		public static ModelView Модель;
-
 		public MainWindow()
 		{
 			InitializeComponent();
@@ -27,19 +26,18 @@ namespace Randomizer
 			{
 				narydsGrid.MouseDoubleClick += (sender, args) => РедактироватьНаряд(null, null);
 				districtsGrid.MouseDoubleClick += (sender, args) => РедактироватьПодразделение(null, null);
-				Модель = MainGrid.DataContext as ModelView;
 				DateTime fd = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(1);
 				DateTime sd = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(2).AddDays(-1);
 				graficDates.DisplayDate = fd;
 				graficDates.SelectedDates.AddRange(fd, sd);
-				Модель.ПериодГрафика = new ObservableCollection<DateTime>(graficDates.SelectedDates);
+				App.Модель.ПериодГрафика = new ObservableCollection<DateTime>(graficDates.SelectedDates);
 				sealDates.DisplayDate = fd;
-				foreach (var dateTime in Модель.Усиления)
+				foreach (var dateTime in App.Модель.Усиления)
 				{
 					sealDates.SelectedDates.Add(dateTime);
 				}
 				holyDates.DisplayDate = fd;
-				if (!Модель.Праздники.Any(time => sealDates.SelectedDates.Contains(time)))
+				if (!App.Модель.Праздники.Any(time => sealDates.SelectedDates.Contains(time)))
 				{
 					foreach (var date in graficDates.SelectedDates.Where(date => date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday))
 					{
@@ -48,13 +46,11 @@ namespace Randomizer
 				}
 				else
 				{
-					foreach (var date in Модель.Праздники)
+					foreach (var date in App.Модель.Праздники)
 					{
 						holyDates.SelectedDates.Add(date);
 					}
 				}
-				AllHours.Value = Модель.ЗакрываемыеЧасы;
-				HolyProcent.Value = Модель.ПроцентВыходных;
 			}
 			catch (Exception ex)
 			{
@@ -67,7 +63,7 @@ namespace Randomizer
 			try
 			{
 				СохранитьНастройки();
-				Модель.GenerateEvents();
+				App.Модель.GenerateEvents();
 			}
 			catch (Exception ex)
 			{
@@ -77,22 +73,36 @@ namespace Randomizer
 
 		private void СохранитьНастройки()
 		{
-			Модель.Serialize("Настройки.bin");
+			App.Модель.Serialize("Настройки.bin");
 		}
 
 		private void КнопкаПересчётаЧасов(object sender, RoutedEventArgs e)
 		{
 			try
 			{
-				int mans = Модель.Подразделения.Sum(подразделение => подразделение.Люди);
-				var hours = (int)AllHours.Value.GetValueOrDefault(0);
-				var holy = (int)HolyProcent.Value.GetValueOrDefault(0);
-				float soot = hours / (float)mans;
-				foreach (Подразделение district in Модель.Подразделения)
+				var midload = (double) App.Модель.ДлительностьНарядов / (double) App.Модель.Подразделения.Sum(подразделение => подразделение.Люди);
+				var holyload = (double) App.Модель.ДлительностьВыходныхНарядов / (double) App.Модель.Подразделения.Sum(подразделение => подразделение.Люди);
+
+				foreach (Подразделение district in App.Модель.Подразделения)
 				{
-					var dihour = (int)(district.Люди * soot);
-					district.ЧасыПредвар = dihour;
-					district.ВыходныеЧасыПредвар = (dihour * holy) / 100;
+					var krat = district.Наряды.Min(наряд => наряд.Длительность);
+					var toch = (double)krat / (double)district.Люди;
+
+					{
+						var mnoj = (double)midload / (double)toch;
+						var valmnoj = Math.Round(mnoj);
+						var valload = valmnoj * toch;
+						var dihour = (int)(district.Люди * valload);
+						district.ЧасыПредвар = dihour;
+					}
+					{
+						var mnoj = (double)holyload / (double)toch;
+						var valmnoj = Math.Round(mnoj);
+						var valload = valmnoj * toch;
+						var dihour = (int)(district.Люди * valload);
+						district.ВыходныеЧасыПредвар = dihour;
+					}
+
 				}
 			}
 			catch (Exception ex)
@@ -106,15 +116,17 @@ namespace Randomizer
 		{
 			try
 			{
-				if (Модель == null)
+				if (App.Модель == null)
 				{
 					return;
 				}
-				Распределено.Content = Модель.Распределено;
-				Модель.ПериодГрафика = new ObservableCollection<DateTime>(graficDates.SelectedDates);
-				Модель.Усиления = new ObservableCollection<DateTime>(sealDates.SelectedDates);
-				Модель.Праздники = new ObservableCollection<DateTime>(holyDates.SelectedDates);
-				ВсегоНарядов.Content = Модель.ВсегоНарядов;
+
+				Распределено.Content = App.Модель.Распределено;
+				App.Модель.ПериодГрафика = new ObservableCollection<DateTime>(graficDates.SelectedDates);
+				App.Модель.Усиления = new ObservableCollection<DateTime>(sealDates.SelectedDates);
+				App.Модель.Праздники = new ObservableCollection<DateTime>(holyDates.SelectedDates);
+				ВсегоНарядов.Content = App.Модель.ВсегоНарядов;
+				//App.Модель.RefreshTable();
 			}
 			catch (Exception ex)
 			{
@@ -130,7 +142,7 @@ namespace Randomizer
 					graficDates.SelectedDates.FirstOrDefault().ToString("MMMM yyyy"));
 				var dlg = new SaveFileDialog
 				{
-					InitialDirectory = Модель.ПутьСохранения,
+					InitialDirectory = App.Модель.ПутьСохранения,
 					AddExtension = true,
 					CheckPathExists = true,
 					DefaultExt = "doc",
@@ -159,7 +171,7 @@ namespace Randomizer
 				paragraph = section.AddParagraph();
 				paragraph.ParagraphFormat.BeforeSpacing = 2f;
 
-				var table = (DataTable)eventsGrid.DataContext;
+				var table = App.Модель.GenerateTable;
 
 				WTextBody textBody = section.Body;
 				IWTable docTable = textBody.AddTable();
@@ -206,7 +218,7 @@ namespace Randomizer
 						IWTextRange theadertext = docTable.Rows[r + 1].Cells[c].AddParagraph().AppendText(svalue);
 						theadertext.CharacterFormat.FontSize = 10;
 
-						if (Модель.Праздники.Contains(fir))
+						if (App.Модель.Праздники.Contains(fir))
 						{
 							docTable.Rows[r + 1].Cells[c].CellFormat.BackColor = Color.DarkGray;
 						}
@@ -256,7 +268,7 @@ namespace Randomizer
 					graficDates.SelectedDates.FirstOrDefault().ToString("MMMM yyyy"));
 				var dlg = new SaveFileDialog
 				{
-					InitialDirectory = Модель.ПутьСохранения,
+					InitialDirectory = App.Модель.ПутьСохранения,
 					AddExtension = true,
 					CheckPathExists = true,
 					DefaultExt = "doc",
@@ -285,7 +297,7 @@ namespace Randomizer
 				paragraph = section.AddParagraph();
 				paragraph.ParagraphFormat.BeforeSpacing = 2f;
 
-				var nar = (ICollection<Подразделение>)districtsGrid.DataContext;
+				var nar = App.Модель.Подразделения;
 				var table = new DataTable();
 				table.Columns.Add("Подразделение");
 				table.Columns.Add("Людей, чел");
@@ -407,7 +419,7 @@ namespace Randomizer
 				dlg.ShowDialog();
 				if (dlg.Obj != null)
 				{
-					Модель.Наряды.Add(dlg.Obj);
+					App.Модель.Наряды.Add(dlg.Obj);
 				}
 			}
 			catch (Exception ex)
@@ -420,11 +432,11 @@ namespace Randomizer
 		{
 			try
 			{
-				var dlg = new NewDistrict(Модель.Наряды);
+				var dlg = new NewDistrict(App.Модель.Наряды);
 				dlg.ShowDialog();
 				if (dlg.Obj != null)
 				{
-					Модель.Подразделения.Add(dlg.Obj);
+					App.Модель.Подразделения.Add(dlg.Obj);
 				}
 			}
 			catch (Exception ex)
@@ -447,11 +459,11 @@ namespace Randomizer
 					var selectedItem = selected[i] as Наряд;
 					if (selectedItem != null)
 					{
-						foreach (Подразделение distr in Модель.Подразделения)
+						foreach (Подразделение distr in App.Модель.Подразделения)
 						{
 							distr.Наряды.Remove(selectedItem);
 						}
-						Модель.Наряды.Remove(selectedItem);
+						App.Модель.Наряды.Remove(selectedItem);
 					}
 				}
 			}
@@ -475,7 +487,7 @@ namespace Randomizer
 					var selectedItem = selected[i] as Подразделение;
 					if (selectedItem != null)
 					{
-						Модель.Подразделения.Remove(selectedItem);
+						App.Модель.Подразделения.Remove(selectedItem);
 					}
 				}
 			}
@@ -512,7 +524,7 @@ namespace Randomizer
 				{
 					return;
 				}
-				var dlg = new NewDistrict(Модель.Наряды, item);
+				var dlg = new NewDistrict(App.Модель.Наряды, item);
 				dlg.ShowDialog();
 			}
 			catch (Exception ex)
@@ -528,31 +540,39 @@ namespace Randomizer
 
 		private void ПрименитьИзменения(object sender, RoutedEventArgs e)
 		{
-			Модель.RefreshTable();
+			App.Модель.RefreshTable();
 		}
 
 		private void ВкладкаВывод_OnGotFocus(object sender, RoutedEventArgs e)
 		{
-			Модель.RefreshTable();
+			App.Модель.RefreshTable();
 		}
 
 		private void ToggleButton_Заблокировать(object sender, RoutedEventArgs e)
 		{
-			foreach (var data in Модель.ДатыГрафика)
+			foreach (var data in App.Модель.ДатыГрафика)
 			{
 				data.Блокировки.Clear();
-				data.Блокировки.AddRange(data.Смены.Keys);
+				foreach (var key in data.Смены.Keys)
+				{
+					data.Блокировки.Add(key);
+				}
 			}
-			Модель.ДатыГрафика = new ObservableCollection<ДатаГрафика>(Модель.ДатыГрафика);
+			App.Модель.ДатыГрафика = new ObservableCollection<ДатаГрафика>(App.Модель.ДатыГрафика);
 		}
 
 		private void ToggleButton_Разблокировать(object sender, RoutedEventArgs e)
 		{
-			foreach (var data in Модель.ДатыГрафика)
+			foreach (var data in App.Модель.ДатыГрафика)
 			{
 				data.Блокировки.Clear();
 			}
-			Модель.ДатыГрафика = new ObservableCollection<ДатаГрафика>(Модель.ДатыГрафика);
+			App.Модель.ДатыГрафика = new ObservableCollection<ДатаГрафика>(App.Модель.ДатыГрафика);
+		}
+
+		private void КнопкаКалькулятора(object sender, RoutedEventArgs e)
+		{
+			Process.Start("calc");
 		}
 	}
 }

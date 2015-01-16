@@ -22,7 +22,7 @@ namespace Randomizer
 		{
 			get
 			{
-				return (((float)Люди * 100.0f / (float)MainWindow.Модель.Подразделения.Sum(подразделение => подразделение.Люди))).ToString("F1") + "%";
+				return (((float)Люди * 100.0f / (float)App.Модель.Подразделения.Sum(подразделение => подразделение.Люди))).ToString("F1") + "%";
 			}
 		}
 
@@ -34,7 +34,7 @@ namespace Randomizer
 		{
 			get
 			{
-				return MainWindow.Модель.ДатыГрафика
+				return App.Модель.ДатыГрафика
 					.SelectMany(графика => графика.Смены)
 					.Count(pair => pair.Key.Длительность == 12 && pair.Value == this);
 			}
@@ -44,7 +44,7 @@ namespace Randomizer
 		{
 			get
 			{
-				return MainWindow.Модель.ДатыГрафика
+				return App.Модель.ДатыГрафика
 					.SelectMany(графика => графика.Смены)
 					.Count(pair => pair.Key.Длительность == 24 && pair.Value == this);
 			}
@@ -54,7 +54,7 @@ namespace Randomizer
 		{
 			get
 			{
-				return MainWindow.Модель.ДатыГрафика
+				return App.Модель.ДатыГрафика
 					.SelectMany(графика => графика.Смены)
 					.Where(pair => pair.Value == this)
 					.Sum(pair => pair.Key.Длительность);
@@ -65,12 +65,22 @@ namespace Randomizer
 		{
 			get
 			{
-				return MainWindow.Модель.ДатыГрафика
+				return App.Модель.ДатыГрафика
 					.Where(графика => графика.Holyday)
 					.SelectMany(графика => графика.Смены)
 					.Where(pair => pair.Value == this)
 					.Sum(pair => pair.Key.Длительность);
 			}
+		}
+
+		public double Загруженность
+		{
+			get { return Math.Round(((double)Часы / Люди)*100)/100; }
+		}
+
+		public double ЗагруженностьВыходных
+		{
+			get { return Math.Round(((double)ВыходныеЧасы / Люди) * 100) / 100; }
 		}
 
 		public string СписокНарядов
