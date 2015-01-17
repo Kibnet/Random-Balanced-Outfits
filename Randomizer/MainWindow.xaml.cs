@@ -80,29 +80,74 @@ namespace Randomizer
 		{
 			try
 			{
-				var midload = (double) App.Модель.ДлительностьНарядов / (double) App.Модель.Подразделения.Sum(подразделение => подразделение.Люди);
-				var holyload = (double) App.Модель.ДлительностьВыходныхНарядов / (double) App.Модель.Подразделения.Sum(подразделение => подразделение.Люди);
+				var peoples = (double) App.Модель.Подразделения.Sum(подразделение => подразделение.Люди);
+				//var midload = (double) App.Модель.ДлительностьНарядов/peoples;
+				//var holyload = (double) App.Модель.ДлительностьВыходныхНарядов / peoples;
 
 				foreach (Подразделение district in App.Модель.Подразделения)
 				{
-					var krat = district.Наряды.Min(наряд => наряд.Длительность);
-					var toch = (double)krat / (double)district.Люди;
+					var proc = district.Люди/peoples;
+					//var toch = (double)krat / (double)district.Люди;
 
 					{
-						var mnoj = (double)midload / (double)toch;
-						var valmnoj = Math.Round(mnoj);
-						var valload = valmnoj * toch;
-						var dihour = (int)(district.Люди * valload);
-						district.ЧасыПредвар = dihour;
+						//var mnoj = (double)midload / (double)toch;
+						//var valmnoj = Math.Round(mnoj);
+						//var valload = valmnoj * toch;
+						//var dihour = (int)(district.Люди * valload);
+
+
+
+						//TODO искать кратное из доступных нарядов
+						var krat = (double)district.Наряды.Min(наряд => наряд.Длительность);
+						var predv = (double)(App.Модель.ДлительностьНарядов) * proc;
+						var nars = predv/krat;
+						var narsr = Math.Round(nars);
+						var hours = narsr*krat;
+						district.ЧасыПредвар = (int) hours;
 					}
 					{
-						var mnoj = (double)holyload / (double)toch;
-						var valmnoj = Math.Round(mnoj);
-						var valload = valmnoj * toch;
-						var dihour = (int)(district.Люди * valload);
-						district.ВыходныеЧасыПредвар = dihour;
+						//var mnoj = (double)holyload / (double)toch;
+						//var valmnoj = Math.Round(mnoj);
+						//var valload = valmnoj * toch;
+						//var dihour = (int)(district.Люди * valload);
+
+						//TODO искать кратное из доступных нарядов
+						var krat = (double)district.Наряды.Min(наряд => наряд.Длительность);
+						var predv = (double)App.Модель.ДлительностьВыходныхНарядов * proc;
+						var nars = predv / krat;
+						var narsr = Math.Round(nars);
+						var hours = narsr * krat;
+						district.ВыходныеЧасыПредвар = (int) hours;
 					}
 
+				}
+
+				while (App.Модель.Подразделения.Sum(d => d.ЧасыПредвар) < App.Модель.ДлительностьНарядов)
+				{
+					var dict = new Dictionary<Подразделение,double>();
+					foreach (var d in App.Модель.Подразделения)
+					{
+						var krat = (double)d.Наряды.Min(наряд => наряд.Длительность);
+						var load = (d.ЧасыПредвар + krat)/d.Люди;
+						dict[d] = load;
+					}
+					var min = dict.Min(pair => pair.Value);
+					var first = dict.First(pair => pair.Value <= min).Key;
+					first.ЧасыПредвар += first.Наряды.Min(наряд => наряд.Длительность);
+				}
+
+				while (App.Модель.Подразделения.Sum(d => d.ВыходныеЧасыПредвар) < App.Модель.ДлительностьВыходныхНарядов)
+				{
+					var dict = new Dictionary<Подразделение, double>();
+					foreach (var d in App.Модель.Подразделения)
+					{
+						var krat = (double)d.Наряды.Min(наряд => наряд.Длительность);
+						var load = (d.ВыходныеЧасыПредвар + krat) / d.Люди;
+						dict[d] = load;
+					}
+					var min = dict.Min(pair => pair.Value);
+					var first = dict.First(pair => pair.Value <= min).Key;
+					first.ВыходныеЧасыПредвар += first.Наряды.Min(наряд => наряд.Длительность);
 				}
 			}
 			catch (Exception ex)

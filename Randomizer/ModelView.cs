@@ -182,8 +182,8 @@ namespace Randomizer
 		{
 			get
 			{
-				var midload = (double) App.Модель.ДлительностьНарядов / (double) App.Модель.Подразделения.Sum(подразделение => подразделение.Люди);
-				var holyload = (double) App.Модель.ДлительностьВыходныхНарядов / (double) App.Модель.Подразделения.Sum(подразделение => подразделение.Люди);
+				var midload = (double)App.Модель.ДлительностьНарядов / (double)App.Модель.Подразделения.Sum(подразделение => подразделение.Люди);
+				var holyload = (double)App.Модель.ДлительностьВыходныхНарядов / (double)App.Модель.Подразделения.Sum(подразделение => подразделение.Люди);
 
 				return string.Format("Распределено {0} часов из {1}. Общая нагрузка {2} ч/чел., на выходных {3} ч/чел.", ДлительностьРаспределеныхНарядов, ДлительностьНарядов, midload.ToString("F2"), holyload.ToString("F2"));
 			}
@@ -258,90 +258,103 @@ namespace Randomizer
 		}
 		public void GenerateEvents()
 		{
+			//Формирование всех дат и доступных нарядов в них
 			var dates = ПериодГрафика.Select(date => new ДатаГрафика
 			{
 				Date = date,
 				Смены =
 					Наряды.Where(nar => !nar.Усиление || Усиления.Contains(date))
 						  .Where(nar => nar.Дни == WeekDays.Все
-							  || (nar.Дни == WeekDays.Выходные && Праздники.Contains(date))
-							  || (nar.Дни == WeekDays.Будние && !Праздники.Contains(date)))
+									|| (nar.Дни == WeekDays.Выходные && Праздники.Contains(date))
+									|| (nar.Дни == WeekDays.Будние && !Праздники.Contains(date)))
 						  .ToDictionary<Наряд, Наряд, Подразделение>(nar => nar, nar => null)
 			}).ToList();
+
+			//Заполнение заблокированных нарядов
 			foreach (var date in dates)
 			{
 				var find = ДатыГрафика.FirstOrDefault(gr => gr.Date == date.Date);
-				if (find != null)
+				if (find == null) continue;
+				foreach (var nar in find.Блокировки)
 				{
-					foreach (var nar in find.Блокировки)
+					date.Блокировки.Add(nar);
+					if (!find.Смены.ContainsKey(nar)) continue;
+					if (nar.Усиление && !Усиления.Contains(date.Date)) continue;
+					if (Подразделения.Contains(find.Смены[nar]))
 					{
-						date.Блокировки.Add(nar);
-						if (find.Смены.ContainsKey(nar))
-						{
-							if (!nar.Усиление || Усиления.Contains(date.Date))
-							{
-								date.Смены[nar] = find.Смены[nar];
-								if (date.Смены[nar] == null)
-								{
-									date.Смены[nar] = new Подразделение();
-								}
-							}
-						}
+						date.Смены[nar] = find.Смены[nar];
 					}
 				}
 			}
+
+			//Перезапись старого графика новым
 			ДатыГрафика = new ObservableCollection<ДатаГрафика>(dates);
 			var rand = new Random();
-			foreach (var district in Подразделения)
+
+			//Формирование конкретных нарядов на выходные
+			var holypairs = new List<KeyValuePair<ДатаГрафика, Наряд>>();
+			foreach (var day in ДатыГрафика)
 			{
-				//Генерация пар дней и нарядов подразделений в случайном порядке. Отдельно выходные и остальные.
-				var pairs = new List<KeyValuePair<ДатаГрафика, Наряд>>();
-				var holypairs = new List<KeyValuePair<ДатаГрафика, Наряд>>();
-				foreach (var day in ДатыГрафика)
+				var day1 = day;
+				foreach (var smen in day.Смены
+					.Where(pair => !day1.Блокировки.Contains(pair.Key) && pair.Value == null && day1.Holyday)
+					.Select(pair => pair.Key))
 				{
-					var thisday = day;
-					foreach (var smen in district.Наряды.Where(smen => thisday != null && thisday.Смены.ContainsKey(smen) && thisday.Смены[smen] == null))
-					{
-						if (day.Holyday)
-						{
-							holypairs.Insert(rand.Next(holypairs.Count), (new KeyValuePair<ДатаГрафика, Наряд>(day, smen)));
-						}
-						else
-						{
-							pairs.Insert(rand.Next(pairs.Count), (new KeyValuePair<ДатаГрафика, Наряд>(day, smen)));
-						}
-					}
-				}
-
-				//Проверка что выходных не больше чем всего
-				if (district.ЧасыПредвар < district.ВыходныеЧасыПредвар)
-				{
-					district.ВыходныеЧасыПредвар = district.ЧасыПредвар;
-				}
-
-				//Распределение нарядов на выходных не превышающих предварительных расчётов
-				foreach (var pair in holypairs)
-				{
-					var day = pair.Key;
-					var smen = pair.Value;
-					if (district.ВыходныеЧасыПредвар >= district.ВыходныеЧасы + smen.Длительность)
-					{
-						day.Смены[smen] = district;
-					}
-				}
-
-				//Распределение остальных нарядов не превышающих предварительных расчётов
-				foreach (var pair in pairs)
-				{
-					var day = pair.Key;
-					var smen = pair.Value;
-					if (district.ЧасыПредвар >= district.Часы + smen.Длительность)
-					{
-						day.Смены[smen] = district;
-					}
+					holypairs.Insert(rand.Next(holypairs.Count), (new KeyValuePair<ДатаГрафика, Наряд>(day, smen)));
 				}
 			}
+
+			//Сортировка нарядов по длительности в порядке убывания
+			holypairs.Sort((pair, valuePair) => valuePair.Value.Длительность.CompareTo(pair.Value.Длительность));
+
+			РаспределитьНаряды(holypairs);
+
+			//Формирование конкретных нарядов
+			var pairs = new List<KeyValuePair<ДатаГрафика, Наряд>>();
+			foreach (var day in ДатыГрафика)
+			{
+				var day1 = day;
+				foreach (var smen in day.Смены
+					.Where(pair => !day1.Блокировки.Contains(pair.Key) && pair.Value == null)
+					.Select(pair => pair.Key))
+				{
+					pairs.Insert(rand.Next(pairs.Count), (new KeyValuePair<ДатаГрафика, Наряд>(day, smen)));
+				}
+			}
+
+			//Сортировка нарядов по длительности в порядке убывания
+			pairs.Sort((pair, valuePair) => valuePair.Value.Длительность.CompareTo(pair.Value.Длительность));
+
+			РаспределитьНаряды(pairs);
+
+
 			RefreshTable();
+		}
+
+		/// <summary>
+		/// Распределение нарядов по подразделениям
+		/// </summary>
+		/// <param name="pairs">Список пар даты и наряда</param>
+		private void РаспределитьНаряды(List<KeyValuePair<ДатаГрафика, Наряд>> pairs)
+		{
+			foreach (var datpair in pairs)
+			{
+				var dict = new Dictionary<Подразделение, double>();
+				var datpair1 = datpair;
+				foreach (var d in Подразделения.Where(nar => nar.Наряды.Contains(datpair1.Value)))
+				{
+					//Для каждого подразделения которое может пойти в этот наряд
+					var krat = (double) datpair1.Value.Длительность;
+					//Вычисляется нагрузка которая будет если оно пойдёт
+					var load = (d.Часы + krat)/d.Люди;
+					dict[d] = load;
+				}
+				//Выбирается подразделение с самой низкой вычисленной нагрузкой
+				var min = dict.Min(pair => pair.Value);
+				var first = dict.First(pair => pair.Value <= min).Key;
+				//Это подразделение берёт наряд
+				datpair1.Key.Смены[datpair1.Value] = first;
+			}
 		}
 
 		public void RefreshTable()
@@ -350,7 +363,7 @@ namespace Randomizer
 			OnPropertyChanged("Подразделения");
 			OnPropertyChanged("GenerateTable");
 		}
-		
+
 		public DataTable GenerateTable
 		{
 			get

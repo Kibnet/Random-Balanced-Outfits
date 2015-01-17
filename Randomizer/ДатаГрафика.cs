@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Media;
 using Randomizer.Annotations;
 
@@ -63,15 +64,28 @@ namespace Randomizer
 			return string.Format("{0} {1}({2})", Date.ToString("yyyy.MM.dd dddd"), Holyday ? "H" : "", Смены.Count);
 		}
 
-		public class HostPod
+		public class HostPod: INotifyPropertyChanged
 		{
+			private bool _isEnabled;
+			private Brush _color;
 			public ДатаГрафика Parent { get; set; }
 
 			public bool Locked
 			{
-				get { return Parent.Блокировки.Contains(Nar); }
+				get
+				{
+					var res = Parent.Блокировки.Contains(Nar);
+					var brush = res ? Brushes.Firebrick.Clone() : Brushes.LawnGreen.Clone();
+					brush.Opacity = 0.1;
+					Color = brush;
+					return res;
+				}
 				set
 				{
+					var brush = value ? Brushes.Firebrick.Clone() : Brushes.LawnGreen.Clone();
+					brush.Opacity = 0.1;
+					Color = brush;
+
 					if (value)
 						Parent.Блокировки.Add(Nar);
 					else
@@ -82,7 +96,17 @@ namespace Randomizer
 				}
 			}
 
-			public bool IsEnabled { get; set; }
+			public bool IsEnabled
+			{
+				get { return _isEnabled; }
+				set
+				{
+					if (value.Equals(_isEnabled)) return;
+					_isEnabled = value;
+					OnPropertyChanged("IsEnabled");
+					OnPropertyChanged("Visibility");
+				}
+			}
 
 			public Наряд Nar { get; set; }
 
@@ -113,6 +137,31 @@ namespace Randomizer
 						Parent.Смены[Nar] = value;
 					}
 				}
+			}
+
+			public Visibility Visibility
+			{
+				get { return IsEnabled ? Visibility.Visible : Visibility.Hidden; }
+			}
+
+			public Brush Color
+			{
+				get { return _color; }
+				set
+				{
+					if (Equals(value, _color)) return;
+					_color = value;
+					OnPropertyChanged("Color");
+				}
+			}
+
+			public event PropertyChangedEventHandler PropertyChanged;
+
+			[NotifyPropertyChangedInvocator]
+			protected virtual void OnPropertyChanged(string propertyName)
+			{
+				var handler = PropertyChanged;
+				if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
 	}
