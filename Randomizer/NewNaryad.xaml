@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
         Title="Наряд" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen">
-    <Grid Margin="10">
+    <Grid Margin="20">
         <StackPanel MinWidth="200">
             <Label Height="24" Padding="0" VerticalContentAlignment="Center">Название наряда</Label>
             <TextBox Height="24" Padding="0" VerticalContentAlignment="Center" Name="name" ToolTip="Название Наряда" />

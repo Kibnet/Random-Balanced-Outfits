@@ -5,18 +5,44 @@ using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Windows;
+using System.Windows.Threading;
 using Randomizer.Annotations;
+using Syncfusion.Windows.Shared;
 
 namespace Randomizer
 {
-	public class ModelView : INotifyPropertyChanged
+	public class ModelView : NotificationObject
 	{
+
+		//DispatcherTimer timer;
 		private readonly НастройкиГенератора настройки;
 
 		public ModelView()
 		{
 			настройки = НастройкиГенератора.Deserialize("Настройки.bin");
+
+			//this.timer = new DispatcherTimer();
+			//timer.Interval = TimeSpan.FromMilliseconds(100);
+			//timer.Tick += new EventHandler(timer_Tick);
+			//this.StartTimer();
 		}
+
+		//void timer_Tick(object sender, EventArgs e)
+		//{
+		//	foreach (var наряд in Наряды)
+		//	{
+		//		наряд.Refresh();
+		//	}
+		//}
+
+		//public void StartTimer()
+		//{
+		//	if (!this.timer.IsEnabled)
+		//	{
+		//		this.timer.Start();
+		//	}
+		//}
+
 
 		public ModelView(string filename)
 		{
@@ -25,7 +51,10 @@ namespace Randomizer
 
 		public ObservableCollection<Наряд> Наряды
 		{
-			get { return настройки.Наряды; }
+			get
+			{
+				return настройки.Наряды;
+			}
 			set
 			{
 				if (Equals(value, настройки.Наряды))
@@ -33,7 +62,8 @@ namespace Randomizer
 					return;
 				}
 				настройки.Наряды = value;
-				OnPropertyChanged("Наряды");
+				RaisePropertyChanged(() => Подразделения);
+				RaisePropertyChanged(() => Наряды);
 			}
 		}
 
@@ -47,9 +77,10 @@ namespace Randomizer
 					return;
 				}
 				настройки.Подразделения = value;
-				OnPropertyChanged("Подразделения");
-				OnPropertyChanged("ДлительностьРаспределеныхНарядов");
-				OnPropertyChanged("Распределено");
+				RaisePropertyChanged(() => Подразделения);
+				RaisePropertyChanged(() => Наряды);
+				RaisePropertyChanged(() => ДлительностьРаспределеныхНарядов);
+				RaisePropertyChanged(() => Распределено);
 			}
 		}
 
@@ -63,7 +94,7 @@ namespace Randomizer
 					return;
 				}
 				настройки.Усиления = value;
-				OnPropertyChanged("Усиления");
+				RaisePropertyChanged("Усиления");
 			}
 		}
 
@@ -77,7 +108,7 @@ namespace Randomizer
 					return;
 				}
 				настройки.ПериодГрафика = value;
-				OnPropertyChanged("ПериодГрафика");
+				RaisePropertyChanged("ПериодГрафика");
 			}
 		}
 
@@ -91,7 +122,7 @@ namespace Randomizer
 					return;
 				}
 				настройки.Праздники = value;
-				OnPropertyChanged("Праздники");
+				RaisePropertyChanged("Праздники");
 			}
 		}
 
@@ -105,37 +136,37 @@ namespace Randomizer
 					return;
 				}
 				настройки.ДатыГрафика = value;
-				OnPropertyChanged("ДатыГрафика");
+				RaisePropertyChanged("ДатыГрафика");
 			}
 		}
 
-		public int ЗакрываемыеЧасы
-		{
-			get { return настройки.ЗакрываемыеЧасы; }
-			set
-			{
-				if (value == настройки.ЗакрываемыеЧасы)
-				{
-					return;
-				}
-				настройки.ЗакрываемыеЧасы = value;
-				OnPropertyChanged("ЗакрываемыеЧасы");
-			}
-		}
+		//public int ЗакрываемыеЧасы
+		//{
+		//	get { return настройки.ЗакрываемыеЧасы; }
+		//	set
+		//	{
+		//		if (value == настройки.ЗакрываемыеЧасы)
+		//		{
+		//			return;
+		//		}
+		//		настройки.ЗакрываемыеЧасы = value;
+		//		OnPropertyChanged("ЗакрываемыеЧасы");
+		//	}
+		//}
 
-		public int ПроцентВыходных
-		{
-			get { return настройки.ПроцентВыходных; }
-			set
-			{
-				if (value == настройки.ПроцентВыходных)
-				{
-					return;
-				}
-				настройки.ПроцентВыходных = value;
-				OnPropertyChanged("ПроцентВыходных");
-			}
-		}
+		//public int ПроцентВыходных
+		//{
+		//	get { return настройки.ПроцентВыходных; }
+		//	set
+		//	{
+		//		if (value == настройки.ПроцентВыходных)
+		//		{
+		//			return;
+		//		}
+		//		настройки.ПроцентВыходных = value;
+		//		OnPropertyChanged("ПроцентВыходных");
+		//	}
+		//}
 
 		public string ПутьСохранения
 		{
@@ -147,7 +178,7 @@ namespace Randomizer
 					return;
 				}
 				настройки.ПутьСохранения = value;
-				OnPropertyChanged("ПутьСохранения");
+				RaisePropertyChanged("ПутьСохранения");
 			}
 		}
 
@@ -174,11 +205,13 @@ namespace Randomizer
 		{
 			get
 			{
-				OnPropertyChanged("ДлительностьНарядов");
-				OnPropertyChanged("ДлительностьВыходныхНарядов");
-				OnPropertyChanged("КоэффициэнтВыходных");
-				OnPropertyChanged("КоличествоНарядов");
-				OnPropertyChanged("КоличествоВыходныхНарядов");
+				RaisePropertyChanged(() => Подразделения);
+				RaisePropertyChanged(() => Наряды);
+				RaisePropertyChanged("ДлительностьНарядов");
+				RaisePropertyChanged("ДлительностьВыходныхНарядов");
+				RaisePropertyChanged("КоэффициэнтВыходных");
+				RaisePropertyChanged("КоличествоНарядов");
+				RaisePropertyChanged("КоличествоВыходныхНарядов");
 				return string.Format("Всего {3} шт. ({0} часов) из них {4} шт. ({1} часов) выходных ({2}%)",
 					ДлительностьНарядов,
 					ДлительностьВыходныхНарядов,
@@ -268,7 +301,43 @@ namespace Randomizer
 			{
 				if (value.Equals(настройки.ИсключитьБлокированные)) return;
 				настройки.ИсключитьБлокированные = value;
-				OnPropertyChanged("ИсключитьБлокированные");
+				RaisePropertyChanged("ИсключитьБлокированные");
+			}
+		}
+
+		public object ИтогоДаты
+		{
+			get
+			{
+				return string.Format("Всего {0} {3}, из них {1} выходных {4} и {2} {5} c усилениями",
+					ПериодГрафика.Count, Праздники.Count, Усиления.Count, Day(ПериодГрафика.Count), Day(Праздники.Count), Day(Усиления.Count));
+			}
+		}
+
+		public string Day(int day)
+		{
+			switch (day)
+			{
+				case 11:
+				case 12:
+				case 13:
+				case 14:
+					return "дней";
+				default:
+				{
+					var ost = day%10;
+					switch (ost)
+					{
+						case 1:
+							return "день";
+						case 2:
+						case 3:
+						case 4:
+							return "дня";
+						default:
+							return "дней";
+					}
+				}
 			}
 		}
 
@@ -460,21 +529,15 @@ namespace Randomizer
 		public void RefreshTable()
 		{
 			//OnPropertyChanged("Наряды");
-			OnPropertyChanged("Подразделения");
-			OnPropertyChanged("GenerateTable");
+			RaisePropertyChanged("Подразделения");
+			RaisePropertyChanged("GenerateTable");
 		}
 
 		public void Serialize(string filename)
 		{
 			настройки.Serialize(filename);
+			//настройки.SerializeXML(filename);
 		}
 
-		[NotifyPropertyChangedInvocator]
-		protected virtual void OnPropertyChanged(string propertyName)
-		{
-			var handler = PropertyChanged;
-			if (handler != null)
-				handler(this, new PropertyChangedEventArgs(propertyName));
-		}
 	}
 }

@@ -90,7 +90,7 @@ namespace Randomizer
 				App.Модель.Усиления = new ObservableCollection<DateTime>(sealDates.SelectedDates);
 				App.Модель.Праздники = new ObservableCollection<DateTime>(holyDates.SelectedDates);
 				ВсегоНарядов.Content = App.Модель.ВсегоНарядов;
-				//App.Модель.RefreshTable();
+				ИтогоДаты.Content = App.Модель.ИтогоДаты;
 			}
 			catch (Exception ex)
 			{

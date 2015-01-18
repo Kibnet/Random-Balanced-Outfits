@@ -33,6 +33,6 @@ using System.Runtime.InteropServices;
 //      Редакция
 //
 
-[assembly: AssemblyVersion("1.6.*")]
-[assembly: AssemblyFileVersion("1.6")]
+[assembly: AssemblyVersion("2.0.*")]
+[assembly: AssemblyFileVersion("2.0")]
 [assembly: NeutralResourcesLanguage("ru-RU")]

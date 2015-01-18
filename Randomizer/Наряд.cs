@@ -1,14 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Syncfusion.Windows.Shared;
 
 namespace Randomizer
 {
 	[Serializable]
-	public class Наряд
+	public class Наряд:NotificationObject
 	{
 		public string Название { get; set; }
 		public int Длительность { get; set; }
+		public bool Усиление { get; set; }
+		public WeekDays Дни { get; set; }
+
+		public void Refresh()
+		{
+			RaisePropertyChanged(() => Количество);
+			RaisePropertyChanged(() => Выходных);
+			RaisePropertyChanged(() => Длительность);
+			RaisePropertyChanged(() => Дни);
+			RaisePropertyChanged(() => ДниНаряда);
+			RaisePropertyChanged(() => КоличествоВыходных);
+			RaisePropertyChanged(() => Название);
+			RaisePropertyChanged(() => РаспределеноКоличество);
+			RaisePropertyChanged(() => РаспределеноКоличествоВыходных);
+			RaisePropertyChanged(() => Усиление);
+			RaisePropertyChanged(() => Всего);
+		}
 
 		public IEnumerable<DateTime> ДниНаряда
 		{
@@ -55,9 +73,6 @@ namespace Randomizer
 		{
 			get
 			{
-				//var nars = ДниНаряда.Where(time => App.Модель.Праздники.Contains(time));
-				//var count =	nars.Count(time => !Усиление || App.Модель.Усиления.Contains(time));
-				//if (!App.Модель.ИсключитьБлокированные) return count;
 				var i = 0;
 				foreach (var data in App.Модель.ДатыГрафика.Where(time => App.Модель.Праздники.Contains(time.Date)))
 				{
@@ -71,21 +86,7 @@ namespace Randomizer
 						i++;
 					}
 				}
-
-				//var cnt = App.Модель.ДатыГрафика
-				//	.Where(time => App.Модель.Праздники.Contains(time.Date))
-				//	.SelectMany(gr => gr.Подразделения)
-				//	.Count(nar => nar.Nar == this && (!App.Модель.ИсключитьБлокированные || !nar.Locked));
 				return i;
-
-
-				//var blocked = App.Модель.ДатыГрафика
-				//	.Where(date => (Дни == WeekDays.Выходные && App.Модель.Праздники.Contains(date.Date)))
-				//	.Where(time => App.Модель.Праздники.Contains(time.Date))
-				//	.SelectMany(gr => gr.Блокировки)
-				//	.Count(наряд => наряд == this);
-				//count -= blocked;
-				//return count;
 			}
 		}
 
@@ -110,9 +111,6 @@ namespace Randomizer
 		{
 			get { return КоличествоВыходных*Длительность; }
 		}
-
-		public bool Усиление { get; set; }
-		public WeekDays Дни { get; set; }
 
 		public override string ToString()
 		{

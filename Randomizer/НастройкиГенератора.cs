@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows;
+using System.Xml.Serialization;
 
 namespace Randomizer
 {
@@ -17,8 +18,8 @@ namespace Randomizer
 			ПериодГрафика = new ObservableCollection<DateTime>();
 			Праздники = new ObservableCollection<DateTime>();
 			ДатыГрафика = new ObservableCollection<ДатаГрафика>();
-			ЗакрываемыеЧасы = 0;
-			ПроцентВыходных = 29;
+			//ЗакрываемыеЧасы = 0;
+			//ПроцентВыходных = 29;
 			ИсключитьБлокированные = true;
 			ПутьСохранения = "C:\\";
 		}
@@ -71,5 +72,20 @@ namespace Randomizer
 				MessageBox.Show(string.Format("Настройки не были сохранены!\n{0}", ex.Message), "Ошибка");
 			}
 		}
+
+		//public void SerializeXML(string filename)
+		//{
+		//	try
+		//	{
+		//		var fs = new FileStream(filename+".xml", FileMode.Create);
+		//		var formatter = new XmlSerializer(typeof(НастройкиГенератора));
+		//		formatter.Serialize(fs, this);
+		//		fs.Close();
+		//	}
+		//	catch (Exception ex)
+		//	{
+		//		MessageBox.Show(string.Format("Настройки не были сохранены!\n{0}", ex.Message), "Ошибка");
+		//	}
+		//}
 	}
 }
