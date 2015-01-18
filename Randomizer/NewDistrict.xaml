@@ -9,10 +9,6 @@
             <TextBox Height="24" Name="NameBox" Padding="0" VerticalContentAlignment="Center" TextWrapping="Wrap" Text="" />
             <Label Height="24" Padding="0" VerticalContentAlignment="Center">Количество Людей</Label>
             <syncfusion:IntegerTextBox Height="24" Padding="0" VerticalContentAlignment="Center" Name="PeopleBox" />
-            <Label Height="24" Padding="0" VerticalContentAlignment="Center">Количество Часов</Label>
-            <syncfusion:IntegerTextBox Height="24"  Padding="0" VerticalContentAlignment="Center" Name="HoursBox" />
-            <Label Height="24" Padding="0" VerticalContentAlignment="Center">Количество Часов на Выходных</Label>
-            <syncfusion:IntegerTextBox Height="24"  Padding="0" VerticalContentAlignment="Center" Name="HolyHoursBox" />
             <Label Height="24" Padding="0" VerticalContentAlignment="Center">
                 <CheckBox Checked="ToggleButton_OnChecked" Unchecked="ToggleButton_OnUnchecked">Доступные Наряды:</CheckBox></Label>
             <StackPanel Name="NarydsPanel" />

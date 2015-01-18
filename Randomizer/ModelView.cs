@@ -327,8 +327,90 @@ namespace Randomizer
 
 			РаспределитьНаряды(pairs);
 
+			Раскидать();
 
 			RefreshTable();
+		}
+
+		/// <summary>
+		/// Раскидывание подразделений по разным дням
+		/// Чтобы в один день не было в наряде несколько человек с одного подразделения
+		/// </summary>
+		public void Раскидать()
+		{
+			//Счётчик сделаных замен
+			var count=0;
+
+			do
+			{
+				count = 0;
+				var collisions = new Dictionary<ДатаГрафика, Dictionary<Наряд, Подразделение>>();
+
+				//Ищем повторы в днях
+				foreach (var day in ДатыГрафика)
+				{
+					//Берём все заполненные наряды
+					var nars = day.Смены.Where(pair => pair.Value != null).ToList();
+					//Сортируем по имени подразделения, чтобы легко найти дубликаты
+					nars.Sort((p1, p2) => String.Compare(p1.Value.Название, p2.Value.Название, StringComparison.Ordinal));
+					KeyValuePair<Наряд, Подразделение> last = new KeyValuePair<Наряд, Подразделение>();
+					foreach (var nar in nars)
+					{
+						//Если два подряд одинаковые
+						if (nar.Value == last.Value && last.Value != null)
+						{
+							if (!collisions.ContainsKey(day))
+							{
+								collisions[day] = new Dictionary<Наряд, Подразделение>();
+							}
+							//Добавляем в словарь повторов
+							collisions[day][last.Key] = last.Value;
+							collisions[day][nar.Key] = nar.Value;
+						}
+						last = nar;
+					}
+				}
+
+
+				//Пробегаем по повторам
+				foreach (var collision in collisions)
+				{
+					//Выделяем подобные дни
+					var days = ДатыГрафика.Where(day => day.Holyday == collision.Key.Holyday).ToList();
+					//Выделяем подразделения с повторами
+					foreach (var district in collision.Value.Select(vp => vp.Value).Distinct().ToList())
+					{
+						var finded = false;
+						//Выделяем наряды в которые в этот день идёт конкретное подразделение
+						var naryads = collision.Value.Where(vp => vp.Value == district).Select(vp => vp.Key).ToList();
+						//Выделяем дни в которые данное подразделение ещё не стоит в наряде
+						foreach (var vday in days.Where(d => !d.Смены.ContainsValue(district)).ToList())
+						{
+							//Проверяем каждый день до первой замены
+							if (finded) break;
+							foreach (var nar in naryads)
+							{
+								//Ищем наряд в который уже идёт какое-нибудь подразделение
+								var podob = vday.Смены.Where(vp => vp.Value != null
+									//Такой же длительности
+									&& vp.Key.Длительность == nar.Длительность
+									//И подразделение которое в него идёт не идёт в выбранный день
+									&& !collision.Key.Смены.ContainsValue(vp.Value)
+									//И подразделение которое в него идёт может пойти в выбранный наряд
+									&& vp.Value.Наряды.Contains(nar)).ToList();
+
+								if (podob.Count <= 0) continue;
+								finded = true;
+								count++;
+								//Меняем наряды местами
+								collision.Key.Смены[nar] = podob[0].Value;
+								vday.Смены[podob[0].Key] = district;
+								break;
+							}
+						}
+					}
+				}
+			} while (count > 0); //Пока есть что заменять
 		}
 
 		/// <summary>
@@ -344,9 +426,9 @@ namespace Randomizer
 				foreach (var d in Подразделения.Where(nar => nar.Наряды.Contains(datpair1.Value)))
 				{
 					//Для каждого подразделения которое может пойти в этот наряд
-					var krat = (double) datpair1.Value.Длительность;
+					var krat = (double)datpair1.Value.Длительность;
 					//Вычисляется нагрузка которая будет если оно пойдёт
-					var load = (d.Часы + krat)/d.Люди;
+					var load = (d.Часы + krat) / d.Люди;
 					dict[d] = load;
 				}
 				//Выбирается подразделение с самой низкой вычисленной нагрузкой

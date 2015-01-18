@@ -76,87 +76,6 @@ namespace Randomizer
 			App.Модель.Serialize("Настройки.bin");
 		}
 
-		private void КнопкаПересчётаЧасов(object sender, RoutedEventArgs e)
-		{
-			try
-			{
-				var peoples = (double) App.Модель.Подразделения.Sum(подразделение => подразделение.Люди);
-				//var midload = (double) App.Модель.ДлительностьНарядов/peoples;
-				//var holyload = (double) App.Модель.ДлительностьВыходныхНарядов / peoples;
-
-				foreach (Подразделение district in App.Модель.Подразделения)
-				{
-					var proc = district.Люди/peoples;
-					//var toch = (double)krat / (double)district.Люди;
-
-					{
-						//var mnoj = (double)midload / (double)toch;
-						//var valmnoj = Math.Round(mnoj);
-						//var valload = valmnoj * toch;
-						//var dihour = (int)(district.Люди * valload);
-
-
-
-						//TODO искать кратное из доступных нарядов
-						var krat = (double)district.Наряды.Min(наряд => наряд.Длительность);
-						var predv = (double)(App.Модель.ДлительностьНарядов) * proc;
-						var nars = predv/krat;
-						var narsr = Math.Round(nars);
-						var hours = narsr*krat;
-						district.ЧасыПредвар = (int) hours;
-					}
-					{
-						//var mnoj = (double)holyload / (double)toch;
-						//var valmnoj = Math.Round(mnoj);
-						//var valload = valmnoj * toch;
-						//var dihour = (int)(district.Люди * valload);
-
-						//TODO искать кратное из доступных нарядов
-						var krat = (double)district.Наряды.Min(наряд => наряд.Длительность);
-						var predv = (double)App.Модель.ДлительностьВыходныхНарядов * proc;
-						var nars = predv / krat;
-						var narsr = Math.Round(nars);
-						var hours = narsr * krat;
-						district.ВыходныеЧасыПредвар = (int) hours;
-					}
-
-				}
-
-				while (App.Модель.Подразделения.Sum(d => d.ЧасыПредвар) < App.Модель.ДлительностьНарядов)
-				{
-					var dict = new Dictionary<Подразделение,double>();
-					foreach (var d in App.Модель.Подразделения)
-					{
-						var krat = (double)d.Наряды.Min(наряд => наряд.Длительность);
-						var load = (d.ЧасыПредвар + krat)/d.Люди;
-						dict[d] = load;
-					}
-					var min = dict.Min(pair => pair.Value);
-					var first = dict.First(pair => pair.Value <= min).Key;
-					first.ЧасыПредвар += first.Наряды.Min(наряд => наряд.Длительность);
-				}
-
-				while (App.Модель.Подразделения.Sum(d => d.ВыходныеЧасыПредвар) < App.Модель.ДлительностьВыходныхНарядов)
-				{
-					var dict = new Dictionary<Подразделение, double>();
-					foreach (var d in App.Модель.Подразделения)
-					{
-						var krat = (double)d.Наряды.Min(наряд => наряд.Длительность);
-						var load = (d.ВыходныеЧасыПредвар + krat) / d.Люди;
-						dict[d] = load;
-					}
-					var min = dict.Min(pair => pair.Value);
-					var first = dict.First(pair => pair.Value <= min).Key;
-					first.ВыходныеЧасыПредвар += first.Наряды.Min(наряд => наряд.Длительность);
-				}
-			}
-			catch (Exception ex)
-			{
-				MessageBox.Show(string.Format("{0}\n{1}", ex.Message, ex.StackTrace), "Исключение");
-			}
-			СохранитьНастройки();
-		}
-
 		private void DistrictsGridLayoutUpdated(object sender, EventArgs e)
 		{
 			try
@@ -350,9 +269,7 @@ namespace Randomizer
 				table.Columns.Add("Выходных, ч");
 				table.Columns.Add("Распред 12ч, шт");
 				table.Columns.Add("Распред 24ч, шт");
-				table.Columns.Add("Распред Всего, ч");
-				table.Columns.Add("Распред Выходных, чт");
-				table.Columns.Add("Доступные Наряды");
+				//table.Columns.Add("Доступные Наряды");
 				foreach (var distr in nar)
 				{
 					var row = table.NewRow();
@@ -360,13 +277,11 @@ namespace Randomizer
 					{
 						distr.Название,
 						distr.Люди,
-						distr.ЧасыПредвар,
-						distr.ВыходныеЧасыПредвар,
-						distr.Распред12Ч,
-						distr.Распред24Ч,
 						distr.Часы,
 						distr.ВыходныеЧасы,
-						distr.СписокНарядов
+						distr.Распред12Ч,
+						distr.Распред24Ч,
+						//distr.СписокНарядов
 					};
 					table.Rows.Add(row);
 				}
@@ -618,6 +533,11 @@ namespace Randomizer
 		private void КнопкаКалькулятора(object sender, RoutedEventArgs e)
 		{
 			Process.Start("calc");
+		}
+
+		private void КнопкаРаскидать(object sender, RoutedEventArgs e)
+		{
+			App.Модель.Раскидать();
 		}
 	}
 }

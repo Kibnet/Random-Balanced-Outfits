@@ -30,8 +30,6 @@ namespace Randomizer
 				Obj = editobj;
 				NameBox.Text = editobj.Название;
 				PeopleBox.Value = editobj.Люди;
-				HoursBox.Value = editobj.ЧасыПредвар;
-				HolyHoursBox.Value = editobj.ВыходныеЧасыПредвар;
 			}
 			else
 			{
@@ -56,8 +54,6 @@ namespace Randomizer
 			Obj.Наряды = new ObservableCollection<Наряд>(list);
 			Obj.Название = NameBox.Text;
 			Obj.Люди = (int)PeopleBox.Value.GetValueOrDefault(0);
-			Obj.ЧасыПредвар = (int)HoursBox.Value.GetValueOrDefault(0);
-			Obj.ВыходныеЧасыПредвар = (int)HolyHoursBox.Value.GetValueOrDefault(0);
 
 			Close();
 		}

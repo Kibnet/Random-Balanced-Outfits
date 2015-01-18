@@ -26,10 +26,6 @@ namespace Randomizer
 			}
 		}
 
-		public int ЧасыПредвар { get; set; }
-
-		public int ВыходныеЧасыПредвар { get; set; }
-
 		public int Распред12Ч
 		{
 			get

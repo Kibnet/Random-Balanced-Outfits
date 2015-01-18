@@ -125,8 +125,6 @@
 								</Grid>
 							</Viewbox>
 						</Button>
-						<Label Height="24" Content="Подразделения" Padding="5,0" VerticalContentAlignment="Center"/>
-						<Button Content="Распределить Часы" Click="КнопкаПересчётаЧасов" Height="24" Width="120" />
 						<Button Click="КнопкаКалькулятора" Height="24" Width="24" BorderThickness="0" Background="#00DDDDDD">
 							<Viewbox>
 								<Grid>
@@ -135,7 +133,9 @@
 								</Grid>
 							</Viewbox>
 						</Button>
-						<Label x:Name="Распределено" Margin="5" Height="24" />
+                        <Button Content="Раскидать" Click="КнопкаРаскидать"/>
+						<Label Content="Подразделения" Height="24" Padding="5,0" VerticalContentAlignment="Center"/>
+						<Label x:Name="Распределено" Height="24" Padding="5,0" VerticalContentAlignment="Center"/>
 					</StackPanel>
 					<syncfusion:GridDataControl x:Name="districtsGrid" Margin="5" ItemsSource="{Binding Подразделения}"
 						AllowEdit="False" ShowAddNewRow="False"
@@ -147,14 +147,12 @@
 							<syncfusion:GridDataVisibleColumn MappingName="Название" HeaderText="Подразделение" />
 							<syncfusion:GridDataVisibleColumn MappingName="Люди" HeaderText="Людей, чел" />
 							<syncfusion:GridDataVisibleColumn MappingName="Процент" />
-							<syncfusion:GridDataVisibleColumn MappingName="ЧасыПредвар" HeaderText="Всего, ч"/>
-							<syncfusion:GridDataVisibleColumn MappingName="ВыходныеЧасыПредвар" HeaderText="Выходных, ч"/>
-							<syncfusion:GridDataVisibleColumn MappingName="Распред12Ч" HeaderText="Распред 12ч, шт"/>
-							<syncfusion:GridDataVisibleColumn MappingName="Распред24Ч" HeaderText="Распред 24ч, шт"/>
-							<syncfusion:GridDataVisibleColumn MappingName="Часы" HeaderText="Распред Всего, ч" />
-							<syncfusion:GridDataVisibleColumn MappingName="ВыходныеЧасы" HeaderText="Распред Выходных, ч" />
-							<syncfusion:GridDataVisibleColumn MappingName="Загруженность" HeaderText="Нагрузка, ч/чел" />
-							<syncfusion:GridDataVisibleColumn MappingName="ЗагруженностьВыходных" HeaderText="Нагрузка Выходных, ч/чел" />
+							<syncfusion:GridDataVisibleColumn MappingName="Часы" HeaderText="Всего, ч" />
+							<syncfusion:GridDataVisibleColumn MappingName="ВыходныеЧасы" HeaderText="Выходных, ч" />
+							<syncfusion:GridDataVisibleColumn MappingName="Распред12Ч" HeaderText="12ч, шт"/>
+							<syncfusion:GridDataVisibleColumn MappingName="Распред24Ч" HeaderText="24ч, шт"/>
+							<syncfusion:GridDataVisibleColumn MappingName="Загруженность" HeaderText="Нагр., ч/чел" />
+							<syncfusion:GridDataVisibleColumn MappingName="ЗагруженностьВыходных" HeaderText="Нагр.Вых., ч/чел" />
 							<syncfusion:GridDataVisibleColumn MappingName="СписокНарядов" HeaderText="Доступные Наряды" />
 						</syncfusion:GridDataControl.VisibleColumns>
 					</syncfusion:GridDataControl>
@@ -175,7 +173,7 @@
 						<CheckBox IsChecked="{Binding ИсключитьБлокированные}" Content="Исключить заблокированные из расчётов" VerticalAlignment="Center"/>
 					</StackPanel>
 					<StackPanel Grid.Row="1" Orientation="Horizontal" Margin="5,0,0,0">
-                        <Label Content="Дата" Width="100" />
+						<Label Content="Дата" Width="100" />
 						<ListView ItemsSource="{Binding Наряды}" BorderThickness="0" >
 							<ListView.ItemsPanel>
 								<ItemsPanelTemplate>
