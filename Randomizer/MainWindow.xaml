@@ -1,80 +1,103 @@
 ﻿<Window
-	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
-	x:Class="Randomizer.MainWindow" Language="Ru"
-	Title="Генератор Нарядов" Height="600" MinWidth="400" Width="800" WindowStartupLocation="CenterScreen" Icon="DiceRoll.ico"
-	WindowState="Maximized">
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
+    x:Class="Randomizer.MainWindow" Language="Ru"
+    Title="Генератор Нарядов" Height="600" MinWidth="400" Width="800" WindowStartupLocation="CenterScreen"
+    Icon="DiceRoll.ico"
+    WindowState="Maximized">
 
-	<!--<Window.Resources>
+    <!--<Window.Resources>
 		<randomizer:ModelView x:Key="model" />
 	</Window.Resources>-->
-	<Grid x:Name="MainGrid" DataContext="{StaticResource model}">
-		<Label HorizontalAlignment="Right" VerticalAlignment="Top" Content="© Платонов Павел Игоревич (Kibnet), 2015" Foreground="#7F000000" />
-		<TabControl x:Name="Вкладки" BorderThickness="0,1,0,0">
-			<TabItem Header="Настройки" Width="100" Background="{x:Null}" BorderBrush="{x:Null}">
-				<Grid Margin="5">
-					<Grid.RowDefinitions>
-						<RowDefinition Height="Auto" />
-						<RowDefinition Height="*" />
-						<RowDefinition Height="Auto" />
-						<RowDefinition Height="*" />
-					</Grid.RowDefinitions>
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="Auto" />
-						<ColumnDefinition Width="*" />
-					</Grid.ColumnDefinitions>
-					<ScrollViewer Grid.Row="0" Grid.Column="0" Margin="5" MinWidth="130" Grid.RowSpan="4" VerticalScrollBarVisibility="Auto">
-						<StackPanel CanVerticallyScroll="True">
-							<Label  Content="Период Графика" Padding="0"/>
-							<Calendar x:Name="graficDates" ToolTip="Период Графика. Выбирайте период мышкой. Shift чтобы выбирать непрерывный промежуток. Ctrl чтобы выбирать отдельные даты." SelectionMode="MultipleRange" BorderThickness="0" Height="152"/>
-							<Label Content="Усиления" Padding="0"/>
-							<Calendar x:Name="sealDates" ToolTip="Усиление. Выбирайте период мышкой. Shift чтобы выбирать непрерывный промежуток. Ctrl чтобы выбирать отдельные даты." SelectionMode="MultipleRange" BorderThickness="0" Height="152"/>
-							<Label Content="Выходные и Праздники" Padding="0"/>
-							<Calendar x:Name="holyDates" ToolTip="Выходные и Праздники. Выбирайте период мышкой. Shift чтобы выбирать непрерывный промежуток. Ctrl чтобы выбирать отдельные даты." SelectionMode="MultipleRange" BorderThickness="0" Height="152"/>
-						</StackPanel>
-					</ScrollViewer>
-					<StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" Margin="5">
+    <Grid x:Name="MainGrid" DataContext="{StaticResource model}">
+        <Label HorizontalAlignment="Right" VerticalAlignment="Top" Content="© Платонов Павел Игоревич (Kibnet), 2015"
+               Foreground="#7F000000" />
+        <TabControl x:Name="Вкладки" BorderThickness="0,1,0,0">
+            <TabItem Header="Настройки" Width="100" Background="{x:Null}" BorderBrush="{x:Null}">
+                <Grid Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <ScrollViewer Grid.Row="0" Grid.Column="0" Margin="5" MinWidth="130" Grid.RowSpan="4"
+                                  VerticalScrollBarVisibility="Auto">
+                        <StackPanel CanVerticallyScroll="True">
+                            <Label Content="Период Графика" Padding="0" />
+                            <Calendar x:Name="graficDates"
+                                      ToolTip="Период Графика. Выбирайте период мышкой. Shift чтобы выбирать непрерывный промежуток. Ctrl чтобы выбирать отдельные даты."
+                                      SelectionMode="MultipleRange" BorderThickness="0" Height="152" />
+                            <Label Content="Усиления" Padding="0" />
+                            <Calendar x:Name="sealDates"
+                                      ToolTip="Усиление. Выбирайте период мышкой. Shift чтобы выбирать непрерывный промежуток. Ctrl чтобы выбирать отдельные даты."
+                                      SelectionMode="MultipleRange" BorderThickness="0" Height="152" />
+                            <Label Content="Выходные и Праздники" Padding="0" />
+                            <Calendar x:Name="holyDates"
+                                      ToolTip="Выходные и Праздники. Выбирайте период мышкой. Shift чтобы выбирать непрерывный промежуток. Ctrl чтобы выбирать отдельные даты."
+                                      SelectionMode="MultipleRange" BorderThickness="0" Height="152" />
+                        </StackPanel>
+                    </ScrollViewer>
+                    <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" Margin="5">
 
-						<Button ToolTip="Добавить Наряд" Height="24" Width="24" BorderThickness="0" Background="#00000000" 
-							Click="ДобавитьНаряд"  >
-							<Viewbox>
-								<Grid>
-									<Grid Width="48" Height="48" Visibility="Visible"/>
-									<Path Data="M19.833,0L32.5,0 32.5,19.833999 52.334,19.833999 52.334,32.500999 32.5,32.500999 32.5,52.333 19.833,52.333 19.833,32.500999 0,32.500999 0,19.833999 19.833,19.833999z" Stretch="Uniform" Fill="#FF000000" Width="26" Height="26" Margin="0,0,0,0"/>
-								</Grid>
-							</Viewbox>
-						</Button>
-						<Button ToolTip="Редактировать Наряд" Height="24" Width="24" BorderThickness="0" Background="#00000000" Click="РедактироватьНаряд" >
-							<Viewbox>
-								<Grid>
-									<Grid Width="48" Height="48" Visibility="Visible"/>
-									<Path Data="M0,44.439791L18.98951,54.569246 0.47998798,62.66881z M17.428029,12.359973L36.955557,23.568769 21.957478,49.686174 20.847757,46.346189 15.11851,45.756407 14.138656,42.166935 8.5292659,41.966761 6.9493899,38.037481 2.4399572,38.477377z M26.812517,0.0009765625C27.350616,-0.012230873,27.875986,0.10826397,28.348372,0.3782568L42.175028,8.3180408C43.85462,9.2780154,44.234529,11.777948,43.02482,13.89789L41.375219,16.767812 21.460039,5.3381228 23.10964,2.4582005C23.979116,0.941679,25.437378,0.034730911,26.812517,0.0009765625z" Stretch="Uniform" Fill="#FF000000" Width="26" Height="26" Margin="0,0,0,0" />
-								</Grid>
-							</Viewbox>
-						</Button>
-						<Button ToolTip="Удалить Наряд" Height="24" Width="24" BorderThickness="0" Background="#00000000" Click="УдалитьНаряд" >
-							<Viewbox>
-								<Grid>
-									<Grid Width="48" Height="48" Visibility="Visible"/>
-									<Path Data="M19.833,0L32.5,0 32.5,19.833999 52.334,19.833999 52.334,32.500999 32.5,32.500999 32.5,52.333 19.833,52.333 19.833,32.500999 0,32.500999 0,19.833999 19.833,19.833999z" Stretch="Uniform" Fill="#FF000000" Width="26" Height="26" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
-										<Path.RenderTransform>
-											<TransformGroup>
-												<ScaleTransform/>
-												<SkewTransform/>
-												<RotateTransform Angle="45"/>
-												<TranslateTransform/>
-											</TransformGroup>
-										</Path.RenderTransform>
-									</Path>
-								</Grid>
-							</Viewbox>
-						</Button>
-                        <Button ToolTip="Переместить Наряд выше" Height="24" Width="24" BorderThickness="0" Background="#00000000" Click="ВверхНаряд" >
+                        <Button ToolTip="Добавить Наряд" Height="24" Width="24" BorderThickness="0"
+                                Background="#00000000"
+                                Click="ДобавитьНаряд">
                             <Viewbox>
                                 <Grid>
-                                    <Grid Width="48" Height="48" Visibility="Visible"/>
-                                    <Path Data="M90.3583334740251,0L90.3583334740251,47.8300698141538C271.127895241603,47.8300698141538 285.305019265041,167.585227284857 285.305019265041,191.500998769232 246.30469883047,95.720137868353 90.3583334740251,143.610205922552 90.3583334740251,143.610205922552L90.3583334740251,191.500998769232 0,101.773886952826z" Stretch="Uniform" Fill="#FF000000" Width="26" Height="26" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
+                                    <Grid Width="48" Height="48" Visibility="Visible" />
+                                    <Path
+                                        Data="M19.833,0L32.5,0 32.5,19.833999 52.334,19.833999 52.334,32.500999 32.5,32.500999 32.5,52.333 19.833,52.333 19.833,32.500999 0,32.500999 0,19.833999 19.833,19.833999z"
+                                        Stretch="Uniform" Fill="#FF000000" Width="26" Height="26" Margin="0,0,0,0" />
+                                </Grid>
+                            </Viewbox>
+                        </Button>
+                        <Button ToolTip="Редактировать Наряд" Height="24" Width="24" BorderThickness="0"
+                                Background="#00000000" Click="РедактироватьНаряд">
+                            <Viewbox>
+                                <Grid>
+                                    <Grid Width="48" Height="48" Visibility="Visible" />
+                                    <Path
+                                        Data="M0,44.439791L18.98951,54.569246 0.47998798,62.66881z M17.428029,12.359973L36.955557,23.568769 21.957478,49.686174 20.847757,46.346189 15.11851,45.756407 14.138656,42.166935 8.5292659,41.966761 6.9493899,38.037481 2.4399572,38.477377z M26.812517,0.0009765625C27.350616,-0.012230873,27.875986,0.10826397,28.348372,0.3782568L42.175028,8.3180408C43.85462,9.2780154,44.234529,11.777948,43.02482,13.89789L41.375219,16.767812 21.460039,5.3381228 23.10964,2.4582005C23.979116,0.941679,25.437378,0.034730911,26.812517,0.0009765625z"
+                                        Stretch="Uniform" Fill="#FF000000" Width="26" Height="26" Margin="0,0,0,0" />
+                                </Grid>
+                            </Viewbox>
+                        </Button>
+                        <Button ToolTip="Удалить Наряд" Height="24" Width="24" BorderThickness="0"
+                                Background="#00000000" Click="УдалитьНаряд">
+                            <Viewbox>
+                                <Grid>
+                                    <Grid Width="48" Height="48" Visibility="Visible" />
+                                    <Path
+                                        Data="M19.833,0L32.5,0 32.5,19.833999 52.334,19.833999 52.334,32.500999 32.5,32.500999 32.5,52.333 19.833,52.333 19.833,32.500999 0,32.500999 0,19.833999 19.833,19.833999z"
+                                        Stretch="Uniform" Fill="#FF000000" Width="26" Height="26" Margin="0,0,0,0"
+                                        RenderTransformOrigin="0.5,0.5">
+                                        <Path.RenderTransform>
+                                            <TransformGroup>
+                                                <ScaleTransform />
+                                                <SkewTransform />
+                                                <RotateTransform Angle="45" />
+                                                <TranslateTransform />
+                                            </TransformGroup>
+                                        </Path.RenderTransform>
+                                    </Path>
+                                </Grid>
+                            </Viewbox>
+                        </Button>
+                        <Button ToolTip="Переместить Наряд выше" Height="24" Width="24" BorderThickness="0"
+                                Background="#00000000" Click="ВверхНаряд">
+                            <Viewbox>
+                                <Grid>
+                                    <Grid Width="48" Height="48" Visibility="Visible" />
+                                    <Path
+                                        Data="M90.3583334740251,0L90.3583334740251,47.8300698141538C271.127895241603,47.8300698141538 285.305019265041,167.585227284857 285.305019265041,191.500998769232 246.30469883047,95.720137868353 90.3583334740251,143.610205922552 90.3583334740251,143.610205922552L90.3583334740251,191.500998769232 0,101.773886952826z"
+                                        Stretch="Uniform" Fill="#FF000000" Width="26" Height="26" Margin="0,0,0,0"
+                                        RenderTransformOrigin="0.5,0.5">
                                         <Path.RenderTransform>
                                             <TransformGroup>
                                                 <TransformGroup.Children>
@@ -87,11 +110,15 @@
                                 </Grid>
                             </Viewbox>
                         </Button>
-                        <Button ToolTip="Переместить Наряд ниже" Height="24" Width="24" BorderThickness="0" Background="#00000000" Click="ВнизНаряд" >
+                        <Button ToolTip="Переместить Наряд ниже" Height="24" Width="24" BorderThickness="0"
+                                Background="#00000000" Click="ВнизНаряд">
                             <Viewbox>
                                 <Grid>
-                                    <Grid Width="48" Height="48" Visibility="Visible"/>
-                                    <Path Data="M194.946686588228,0L285.305023990572,101.774623095582 194.946686588228,191.501002490113 194.946686588228,143.610926806519C194.946686588228,143.610926806519 39.0003059729934,95.7808639403083 0,191.501002490113 0,167.585963427613 14.1771210059524,47.8907958861091 194.946686588228,47.8907958861091z" Stretch="Uniform" Fill="#FF000000" Width="26" Height="26" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
+                                    <Grid Width="48" Height="48" Visibility="Visible" />
+                                    <Path
+                                        Data="M194.946686588228,0L285.305023990572,101.774623095582 194.946686588228,191.501002490113 194.946686588228,143.610926806519C194.946686588228,143.610926806519 39.0003059729934,95.7808639403083 0,191.501002490113 0,167.585963427613 14.1771210059524,47.8907958861091 194.946686588228,47.8907958861091z"
+                                        Stretch="Uniform" Fill="#FF000000" Width="26" Height="26" Margin="0,0,0,0"
+                                        RenderTransformOrigin="0.5,0.5">
                                         <Path.RenderTransform>
                                             <TransformGroup>
                                                 <TransformGroup.Children>
@@ -104,228 +131,289 @@
                                 </Grid>
                             </Viewbox>
                         </Button>
-                        <Label Content="Наряды:" Height="24" Padding="5,0" VerticalContentAlignment="Center"/>
-						<Label x:Name="ВсегоНарядов" Height="24" Padding="5,0" VerticalContentAlignment="Center" />
-					</StackPanel>
-					<syncfusion:GridDataControl Grid.Row="1" Grid.Column="1" x:Name="narydsGrid" 
-						ItemsSource="{Binding Наряды}" AllowEdit="False" ShowAddNewRow="False"
-						Margin="5" ColumnSizer="Auto" AutoGenerateColumnsInfo="False"
-						AutoPopulateColumns="False" AllowSort="True" NotifyPropertyChanges="True" UpdateMode="PropertyChanged" AllowNestedGridPadding="False" ShowRowHeaderArrow="False" ShowRecordPlusMinus="False">
-						<syncfusion:GridDataControl.VisibleColumns>
-							<syncfusion:GridDataVisibleColumn MappingName="Название" HeaderText="Наряд"/>
-							<syncfusion:GridDataVisibleColumn MappingName="Длительность" HeaderText="Длительность, ч"/>
-							<syncfusion:GridDataVisibleColumn MappingName="Количество" HeaderText="Всего, шт"/>
-							<syncfusion:GridDataVisibleColumn MappingName="КоличествоВыходных" HeaderText="Выходных, шт"/>
-							<syncfusion:GridDataVisibleColumn MappingName="Всего" HeaderText="Всего, ч"/>
-							<syncfusion:GridDataVisibleColumn MappingName="Выходных" HeaderText="Выходных, ч"/>
-							<syncfusion:GridDataVisibleColumn MappingName="Дни" HeaderText="В какие дни"/>
-							<syncfusion:GridDataVisibleColumn MappingName="РаспределеноКоличество" HeaderText="Распред Всего, шт"/>
-							<syncfusion:GridDataVisibleColumn MappingName="РаспределеноКоличествоВыходных" HeaderText="Распред Выходных, шт"/>
-							<syncfusion:GridDataCheckBoxVisibleColumn MappingName="Усиление"
-								HeaderText="Только в Усиление" />
-						</syncfusion:GridDataControl.VisibleColumns>
-					</syncfusion:GridDataControl>
-					<StackPanel Grid.Row="2" Grid.Column="1" Margin="5" Orientation="Horizontal">
-						<Button ToolTip="Добавить Подразделение" Click="ДобавитьПодразделение" Height="24" Width="24" BorderThickness="0" Background="#00000000" >
-							<Viewbox>
-								<Grid>
-									<Grid Width="48" Height="48" Visibility="Visible"/>
-									<Path Data="M19.833,0L32.5,0 32.5,19.833999 52.334,19.833999 52.334,32.500999 32.5,32.500999 32.5,52.333 19.833,52.333 19.833,32.500999 0,32.500999 0,19.833999 19.833,19.833999z" Stretch="Uniform" Fill="#FF000000" Width="26" Height="26" Margin="0,0,0,0"/>
-								</Grid>
-							</Viewbox>
-						</Button>
-						<Button ToolTip="Редактировать Подразделение" Click="РедактироватьПодразделение" Height="24" Width="24" BorderThickness="0" Background="#00000000">
-							<Viewbox>
-								<Grid>
-									<Grid Width="48" Height="48" Visibility="Visible"/>
-									<Path Data="M0,44.439791L18.98951,54.569246 0.47998798,62.66881z M17.428029,12.359973L36.955557,23.568769 21.957478,49.686174 20.847757,46.346189 15.11851,45.756407 14.138656,42.166935 8.5292659,41.966761 6.9493899,38.037481 2.4399572,38.477377z M26.812517,0.0009765625C27.350616,-0.012230873,27.875986,0.10826397,28.348372,0.3782568L42.175028,8.3180408C43.85462,9.2780154,44.234529,11.777948,43.02482,13.89789L41.375219,16.767812 21.460039,5.3381228 23.10964,2.4582005C23.979116,0.941679,25.437378,0.034730911,26.812517,0.0009765625z" Stretch="Uniform" Fill="#FF000000" Width="26" Height="26" Margin="0,0,0,0" />
-								</Grid>
-							</Viewbox>
-						</Button>
-						<Button ToolTip="Удалить Подразделение" Click="УдалитьПодразделение" Height="24" Width="24" BorderThickness="0" Background="#00000000">
-							<Viewbox>
-								<Grid>
-									<Grid Width="48" Height="48" Visibility="Visible"/>
-									<Path Data="M19.833,0L32.5,0 32.5,19.833999 52.334,19.833999 52.334,32.500999 32.5,32.500999 32.5,52.333 19.833,52.333 19.833,32.500999 0,32.500999 0,19.833999 19.833,19.833999z" Stretch="Uniform" Fill="#FF000000" Width="26" Height="26" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
-										<Path.RenderTransform>
-											<TransformGroup>
-												<ScaleTransform/>
-												<SkewTransform/>
-												<RotateTransform Angle="45"/>
-												<TranslateTransform/>
-											</TransformGroup>
-										</Path.RenderTransform>
-									</Path>
-								</Grid>
-							</Viewbox>
-						</Button>
-						<Button Click="КнопкаКалькулятора" ToolTip="Открыть Калькулятор" Height="24" Width="24" BorderThickness="0" Background="#00DDDDDD">
-							<Viewbox>
-								<Grid>
-									<Grid Width="48" Height="48" Visibility="Visible"/>
-									<Path Data="M485.099,674.957C469.072,674.957,456.119,687.978,456.119,703.998L456.119,733.039C456.119,749.061,469.072,762.069,485.099,762.069L517.681,762.069C533.661,762.069,546.638,749.061,546.638,733.039L546.638,703.998C546.638,687.978,533.661,674.957,517.681,674.957z M307.71,674.957C291.73,674.957,278.754,687.978,278.754,703.998L278.754,733.039C278.754,749.061,291.73,762.069,307.71,762.069L340.277,762.069C356.267,762.069,369.247,749.061,369.247,733.039L369.247,703.998C369.247,687.978,356.267,674.957,340.277,674.957z M130.319,674.957C114.34,674.957,101.362,687.978,101.362,703.998L101.362,733.039C101.362,749.061,114.34,762.069,130.319,762.069L162.901,762.069C178.879,762.069,191.881,749.061,191.881,733.039L191.881,703.998C191.881,687.978,178.879,674.957,162.901,674.957z M485.099,522.549C469.072,522.549,456.119,535.559,456.119,551.565L456.119,580.594C456.119,596.639,469.072,609.647,485.099,609.647L517.681,609.647C533.661,609.647,546.638,596.639,546.638,580.594L546.638,551.565C546.638,535.559,533.661,522.549,517.681,522.549z M307.71,522.549C291.73,522.549,278.754,535.559,278.754,551.565L278.754,580.594C278.754,596.639,291.73,609.647,307.71,609.647L340.277,609.647C356.267,609.647,369.247,596.639,369.247,580.594L369.247,551.565C369.247,535.559,356.267,522.549,340.277,522.549z M130.319,522.549C114.34,522.549,101.362,535.559,101.362,551.565L101.362,580.594C101.362,596.639,114.34,609.647,130.319,609.647L162.901,609.647C178.879,609.647,191.881,596.639,191.881,580.594L191.881,551.565C191.881,535.559,178.879,522.549,162.901,522.549z M485.099,370.116C469.072,370.116,456.119,383.137,456.119,399.157L456.119,428.184C456.119,444.204,469.072,457.202,485.099,457.202L517.681,457.202C533.661,457.202,546.638,444.204,546.638,428.184L546.638,399.157C546.638,383.137,533.661,370.116,517.681,370.116z M307.71,370.116C291.73,370.116,278.754,383.137,278.754,399.157L278.754,428.184C278.754,444.204,291.73,457.202,307.71,457.202L340.277,457.202C356.267,457.202,369.247,444.204,369.247,428.184L369.247,399.157C369.247,383.137,356.267,370.116,340.277,370.116z M130.319,370.116C114.34,370.116,101.362,383.137,101.362,399.157L101.362,428.184C101.362,444.204,114.34,457.202,130.319,457.202L162.901,457.202C178.879,457.202,191.881,444.204,191.881,428.184L191.881,399.157C191.881,383.137,178.879,370.116,162.901,370.116z M133.943,101.565C109.997,101.565,90.4942,121.093,90.4942,145.097L90.4942,243.104C90.4942,267.133,109.997,286.647,133.943,286.647L514.057,286.647C538.03,286.647,557.505,267.133,557.505,243.104L557.505,145.097C557.505,121.093,538.03,101.565,514.057,101.565z M108.583,0L539.416,0C599.269,-4E-06,648,48.8053,648,108.828L648,791.112C648,851.122,599.269,900,539.416,900L108.583,900C48.7316,900,-3E-06,851.122,0,791.112L0,108.828C-3E-06,48.8053,48.7316,-4E-06,108.583,0z" Stretch="Uniform" Fill="#FF000000" Width="26" Height="26" Margin="0,0,0,0"/>
-								</Grid>
-							</Viewbox>
-						</Button>
-                        <Button Click="СохранитьСтатистику" ToolTip="Сохранить статистику Подразделений в Word-файл" Height="24" BorderThickness="0" Background="#00DDDDDD">
+                        <Label Content="Наряды:" Height="24" Padding="5,0" VerticalContentAlignment="Center" />
+                        <Label x:Name="ВсегоНарядов" Height="24" Padding="5,0" VerticalContentAlignment="Center" />
+                    </StackPanel>
+                    <syncfusion:GridDataControl Grid.Row="1" Grid.Column="1" x:Name="narydsGrid"
+                                                ItemsSource="{Binding Наряды}" AllowEdit="False" ShowAddNewRow="False"
+                                                Margin="5" ColumnSizer="Auto" AutoGenerateColumnsInfo="False"
+                                                AutoPopulateColumns="False" AllowSort="True"
+                                                NotifyPropertyChanges="True" UpdateMode="PropertyChanged"
+                                                AllowNestedGridPadding="False" ShowRowHeaderArrow="False"
+                                                ShowRecordPlusMinus="False">
+                        <syncfusion:GridDataControl.VisibleColumns>
+                            <syncfusion:GridDataVisibleColumn MappingName="Название" HeaderText="Наряд" />
+                            <syncfusion:GridDataVisibleColumn MappingName="Длительность" HeaderText="Длительность, ч" />
+                            <syncfusion:GridDataVisibleColumn MappingName="Количество" HeaderText="Всего, шт" />
+                            <syncfusion:GridDataVisibleColumn MappingName="КоличествоВыходных"
+                                                              HeaderText="Выходных, шт" />
+                            <syncfusion:GridDataVisibleColumn MappingName="Всего" HeaderText="Всего, ч" />
+                            <syncfusion:GridDataVisibleColumn MappingName="Выходных" HeaderText="Выходных, ч" />
+                            <syncfusion:GridDataVisibleColumn MappingName="Дни" HeaderText="В какие дни" />
+                            <syncfusion:GridDataVisibleColumn MappingName="РаспределеноКоличество"
+                                                              HeaderText="Распред Всего, шт" />
+                            <syncfusion:GridDataVisibleColumn MappingName="РаспределеноКоличествоВыходных"
+                                                              HeaderText="Распред Выходных, шт" />
+                            <syncfusion:GridDataCheckBoxVisibleColumn MappingName="Усиление"
+                                                                      HeaderText="Только в Усиление" />
+                        </syncfusion:GridDataControl.VisibleColumns>
+                    </syncfusion:GridDataControl>
+                    <StackPanel Grid.Row="2" Grid.Column="1" Margin="5" Orientation="Horizontal">
+                        <Button ToolTip="Добавить Подразделение" Click="ДобавитьПодразделение" Height="24" Width="24"
+                                BorderThickness="0" Background="#00000000">
+                            <Viewbox>
+                                <Grid>
+                                    <Grid Width="48" Height="48" Visibility="Visible" />
+                                    <Path
+                                        Data="M19.833,0L32.5,0 32.5,19.833999 52.334,19.833999 52.334,32.500999 32.5,32.500999 32.5,52.333 19.833,52.333 19.833,32.500999 0,32.500999 0,19.833999 19.833,19.833999z"
+                                        Stretch="Uniform" Fill="#FF000000" Width="26" Height="26" Margin="0,0,0,0" />
+                                </Grid>
+                            </Viewbox>
+                        </Button>
+                        <Button ToolTip="Редактировать Подразделение" Click="РедактироватьПодразделение" Height="24"
+                                Width="24" BorderThickness="0" Background="#00000000">
+                            <Viewbox>
+                                <Grid>
+                                    <Grid Width="48" Height="48" Visibility="Visible" />
+                                    <Path
+                                        Data="M0,44.439791L18.98951,54.569246 0.47998798,62.66881z M17.428029,12.359973L36.955557,23.568769 21.957478,49.686174 20.847757,46.346189 15.11851,45.756407 14.138656,42.166935 8.5292659,41.966761 6.9493899,38.037481 2.4399572,38.477377z M26.812517,0.0009765625C27.350616,-0.012230873,27.875986,0.10826397,28.348372,0.3782568L42.175028,8.3180408C43.85462,9.2780154,44.234529,11.777948,43.02482,13.89789L41.375219,16.767812 21.460039,5.3381228 23.10964,2.4582005C23.979116,0.941679,25.437378,0.034730911,26.812517,0.0009765625z"
+                                        Stretch="Uniform" Fill="#FF000000" Width="26" Height="26" Margin="0,0,0,0" />
+                                </Grid>
+                            </Viewbox>
+                        </Button>
+                        <Button ToolTip="Удалить Подразделение" Click="УдалитьПодразделение" Height="24" Width="24"
+                                BorderThickness="0" Background="#00000000">
+                            <Viewbox>
+                                <Grid>
+                                    <Grid Width="48" Height="48" Visibility="Visible" />
+                                    <Path
+                                        Data="M19.833,0L32.5,0 32.5,19.833999 52.334,19.833999 52.334,32.500999 32.5,32.500999 32.5,52.333 19.833,52.333 19.833,32.500999 0,32.500999 0,19.833999 19.833,19.833999z"
+                                        Stretch="Uniform" Fill="#FF000000" Width="26" Height="26" Margin="0,0,0,0"
+                                        RenderTransformOrigin="0.5,0.5">
+                                        <Path.RenderTransform>
+                                            <TransformGroup>
+                                                <ScaleTransform />
+                                                <SkewTransform />
+                                                <RotateTransform Angle="45" />
+                                                <TranslateTransform />
+                                            </TransformGroup>
+                                        </Path.RenderTransform>
+                                    </Path>
+                                </Grid>
+                            </Viewbox>
+                        </Button>
+                        <Button Click="КнопкаКалькулятора" ToolTip="Открыть Калькулятор" Height="24" Width="24"
+                                BorderThickness="0" Background="#00DDDDDD">
+                            <Viewbox>
+                                <Grid>
+                                    <Grid Width="48" Height="48" Visibility="Visible" />
+                                    <Path
+                                        Data="M485.099,674.957C469.072,674.957,456.119,687.978,456.119,703.998L456.119,733.039C456.119,749.061,469.072,762.069,485.099,762.069L517.681,762.069C533.661,762.069,546.638,749.061,546.638,733.039L546.638,703.998C546.638,687.978,533.661,674.957,517.681,674.957z M307.71,674.957C291.73,674.957,278.754,687.978,278.754,703.998L278.754,733.039C278.754,749.061,291.73,762.069,307.71,762.069L340.277,762.069C356.267,762.069,369.247,749.061,369.247,733.039L369.247,703.998C369.247,687.978,356.267,674.957,340.277,674.957z M130.319,674.957C114.34,674.957,101.362,687.978,101.362,703.998L101.362,733.039C101.362,749.061,114.34,762.069,130.319,762.069L162.901,762.069C178.879,762.069,191.881,749.061,191.881,733.039L191.881,703.998C191.881,687.978,178.879,674.957,162.901,674.957z M485.099,522.549C469.072,522.549,456.119,535.559,456.119,551.565L456.119,580.594C456.119,596.639,469.072,609.647,485.099,609.647L517.681,609.647C533.661,609.647,546.638,596.639,546.638,580.594L546.638,551.565C546.638,535.559,533.661,522.549,517.681,522.549z M307.71,522.549C291.73,522.549,278.754,535.559,278.754,551.565L278.754,580.594C278.754,596.639,291.73,609.647,307.71,609.647L340.277,609.647C356.267,609.647,369.247,596.639,369.247,580.594L369.247,551.565C369.247,535.559,356.267,522.549,340.277,522.549z M130.319,522.549C114.34,522.549,101.362,535.559,101.362,551.565L101.362,580.594C101.362,596.639,114.34,609.647,130.319,609.647L162.901,609.647C178.879,609.647,191.881,596.639,191.881,580.594L191.881,551.565C191.881,535.559,178.879,522.549,162.901,522.549z M485.099,370.116C469.072,370.116,456.119,383.137,456.119,399.157L456.119,428.184C456.119,444.204,469.072,457.202,485.099,457.202L517.681,457.202C533.661,457.202,546.638,444.204,546.638,428.184L546.638,399.157C546.638,383.137,533.661,370.116,517.681,370.116z M307.71,370.116C291.73,370.116,278.754,383.137,278.754,399.157L278.754,428.184C278.754,444.204,291.73,457.202,307.71,457.202L340.277,457.202C356.267,457.202,369.247,444.204,369.247,428.184L369.247,399.157C369.247,383.137,356.267,370.116,340.277,370.116z M130.319,370.116C114.34,370.116,101.362,383.137,101.362,399.157L101.362,428.184C101.362,444.204,114.34,457.202,130.319,457.202L162.901,457.202C178.879,457.202,191.881,444.204,191.881,428.184L191.881,399.157C191.881,383.137,178.879,370.116,162.901,370.116z M133.943,101.565C109.997,101.565,90.4942,121.093,90.4942,145.097L90.4942,243.104C90.4942,267.133,109.997,286.647,133.943,286.647L514.057,286.647C538.03,286.647,557.505,267.133,557.505,243.104L557.505,145.097C557.505,121.093,538.03,101.565,514.057,101.565z M108.583,0L539.416,0C599.269,-4E-06,648,48.8053,648,108.828L648,791.112C648,851.122,599.269,900,539.416,900L108.583,900C48.7316,900,-3E-06,851.122,0,791.112L0,108.828C-3E-06,48.8053,48.7316,-4E-06,108.583,0z"
+                                        Stretch="Uniform" Fill="#FF000000" Width="26" Height="26" Margin="0,0,0,0" />
+                                </Grid>
+                            </Viewbox>
+                        </Button>
+                        <Button Click="СохранитьСтатистику" ToolTip="Сохранить статистику Подразделений в Word-файл"
+                                Height="24" BorderThickness="0" Background="#00DDDDDD">
                             <StackPanel Orientation="Horizontal">
-                            <Viewbox>
-                                <Grid>
-                                    <Grid Width="48" Height="48" Visibility="Visible"/>
-                                    <Path Data="M29.601601,19.605532L25.4193,19.965033 22.862,35.799561 19.542999,20.510435 15.6211,20.510435 12.6028,35.095158 10.3398,20.912834 6.8203106,20.912834 10.4909,40.979267 14.4636,41.079567 17.380199,26.948046 20.75,41.532669 24.873699,41.532669z M38.250999,7.0340004L63.19529,7.0340004C63.640594,7.0340004,64,7.3934326,64,7.8374653L64,53.400093C64,53.845497,63.640594,54.204998,63.19529,54.204998L38.250999,54.204998 38.250999,47.969154 58.065029,47.969154 58.065029,45.354633 38.250999,45.354633 38.250999,41.532909 58.065029,41.532909 58.065029,38.916988 38.250999,38.916988 38.250999,35.09536 58.065029,35.09536 58.065029,32.480843 38.250999,32.480843 38.250999,28.657816 58.065029,28.657816 58.065029,26.043297 38.250999,26.043297 38.250999,22.22147 58.065029,22.22147 58.065029,19.60565 38.250999,19.60565 38.250999,15.784023 58.065029,15.784023 58.065029,13.168104 38.250999,13.168104z M37.013,0L37.013,61.288002 0,54.850391 0,6.1693802z" Stretch="Uniform" Fill="#FF000000" Width="26" Height="26" Margin="0,0,0,0"/>
-                                </Grid>
+                                <Viewbox>
+                                    <Grid>
+                                        <Grid Width="48" Height="48" Visibility="Visible" />
+                                        <Path
+                                            Data="M29.601601,19.605532L25.4193,19.965033 22.862,35.799561 19.542999,20.510435 15.6211,20.510435 12.6028,35.095158 10.3398,20.912834 6.8203106,20.912834 10.4909,40.979267 14.4636,41.079567 17.380199,26.948046 20.75,41.532669 24.873699,41.532669z M38.250999,7.0340004L63.19529,7.0340004C63.640594,7.0340004,64,7.3934326,64,7.8374653L64,53.400093C64,53.845497,63.640594,54.204998,63.19529,54.204998L38.250999,54.204998 38.250999,47.969154 58.065029,47.969154 58.065029,45.354633 38.250999,45.354633 38.250999,41.532909 58.065029,41.532909 58.065029,38.916988 38.250999,38.916988 38.250999,35.09536 58.065029,35.09536 58.065029,32.480843 38.250999,32.480843 38.250999,28.657816 58.065029,28.657816 58.065029,26.043297 38.250999,26.043297 38.250999,22.22147 58.065029,22.22147 58.065029,19.60565 38.250999,19.60565 38.250999,15.784023 58.065029,15.784023 58.065029,13.168104 38.250999,13.168104z M37.013,0L37.013,61.288002 0,54.850391 0,6.1693802z"
+                                            Stretch="Uniform" Fill="#FF000000" Width="26" Height="26" Margin="0,0,0,0" />
+                                    </Grid>
                                 </Viewbox>
-                                <TextBlock Text="Сохранить" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                <TextBlock Text="Сохранить" VerticalAlignment="Center" Margin="0,0,5,0" />
                             </StackPanel>
                         </Button>
-                        <Label Content="Подразделения:" Height="24" Padding="5,0" VerticalContentAlignment="Center"/>
-						<Label x:Name="Распределено" Height="24" Padding="5,0" VerticalContentAlignment="Center"/>
-					</StackPanel>
-					<syncfusion:GridDataControl x:Name="districtsGrid" Margin="5" ItemsSource="{Binding Подразделения}"
-						AllowEdit="False" ShowAddNewRow="False"
-						LayoutUpdated="DistrictsGridLayoutUpdated" Grid.Row="3"
-						Grid.Column="1" ColumnSizer="Auto" AutoGenerateColumnsInfo="False"
-						AutoPopulateColumns="False" AllowSort="True"
-						AutoPopulateRelations="False">
-						<syncfusion:GridDataControl.VisibleColumns>
-							<syncfusion:GridDataVisibleColumn MappingName="Название" HeaderText="Подразделение" />
-							<syncfusion:GridDataVisibleColumn MappingName="Люди" HeaderText="Людей, чел" />
-							<syncfusion:GridDataVisibleColumn MappingName="Процент" />
-							<syncfusion:GridDataVisibleColumn MappingName="Часы" HeaderText="Всего, ч" />
-							<syncfusion:GridDataVisibleColumn MappingName="ВыходныеЧасы" HeaderText="Выходных, ч" />
-							<syncfusion:GridDataVisibleColumn MappingName="Распред12Ч" HeaderText="12ч, шт"/>
-							<syncfusion:GridDataVisibleColumn MappingName="Распред24Ч" HeaderText="24ч, шт"/>
-							<syncfusion:GridDataVisibleColumn MappingName="Загруженность" HeaderText="Нагр., ч/чел" />
-							<syncfusion:GridDataVisibleColumn MappingName="ЗагруженностьВыходных" HeaderText="Нагр.Вых., ч/чел" />
-							<syncfusion:GridDataVisibleColumn MappingName="СписокНарядов" HeaderText="Доступные Наряды" />
-						</syncfusion:GridDataControl.VisibleColumns>
-					</syncfusion:GridDataControl>
-				</Grid>
-			</TabItem>
-			<TabItem Header="График" Width="100" Background="{x:Null}" BorderBrush="{x:Null}">
-				<Grid Margin="5">
-					<Grid.RowDefinitions>
-						<RowDefinition Height="Auto" />
-						<RowDefinition Height="Auto" />
-						<RowDefinition Height="*" />
-					</Grid.RowDefinitions>
-					<StackPanel Orientation="Horizontal">
-						<Button Content="Генерировать График" Margin="5" Width="150" Height="24"
-							Click="Button_Генерировать" />
-						<ToggleButton Content="Заблокировать Все" Margin="5" Width="150" Height="24"
-							Checked="ToggleButton_Заблокировать" Unchecked="ToggleButton_Разблокировать"/>
-						<CheckBox IsChecked="{Binding ИсключитьБлокированные}" Content="Исключить заблокированные из расчётов" VerticalAlignment="Center"/>
-					</StackPanel>
-					<StackPanel Grid.Row="1" Orientation="Horizontal" Margin="5,0,0,0">
-						<Label Content="Дата" Width="100" />
-						<ListView ItemsSource="{Binding Наряды}" BorderThickness="0" >
-							<ListView.ItemsPanel>
-								<ItemsPanelTemplate>
-									<VirtualizingStackPanel IsItemsHost="True" Orientation="Horizontal"/>
-								</ItemsPanelTemplate>
-							</ListView.ItemsPanel>
-							<ListView.ItemTemplate>
-								<DataTemplate>
-									<Label Width="100" Content="{Binding Название}" Margin="-4,-2"/>
-								</DataTemplate>
-							</ListView.ItemTemplate>
-						</ListView>
-					</StackPanel>
-					<ListView Grid.Row="2" x:Name="GraphList" ItemsSource="{Binding ДатыГрафика}" BorderThickness="0" Margin="5,0,5,5" Background="Transparent">
-						<ListView.ItemTemplate>
-							<DataTemplate>
-								<StackPanel Orientation="Horizontal" Background="{Binding BackColor}" Margin="-5,-2">
-									<TextBlock Text="{Binding Display}" Width="100" VerticalAlignment="Center" HorizontalAlignment="Stretch" TextAlignment="Center"/>
-									<ListView ItemsSource="{Binding Подразделения}" BorderThickness="0" Background="Transparent" >
-										<ListView.Style>
-											<Style TargetType="{x:Type ListView}">
-												<Setter Property="OverridesDefaultStyle" Value="True"/>
-												<Setter Property="BorderBrush" Value="{DynamicResource ListBackgroundBrush}"/>
-												<Setter Property="Background" Value="{DynamicResource ListBackgroundBrush}"/>
-												<Setter Property="Foreground" Value="{DynamicResource Deprecated_Text1Brush}"/>
-												<Setter Property="BorderThickness" Value="0"/>
-												<Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
-												<Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
-												<Setter Property="ScrollViewer.CanContentScroll" Value="True"/>
-												<Setter Property="VerticalContentAlignment" Value="Center"/>
-												<Setter Property="Template">
-													<Setter.Value>
-														<ControlTemplate TargetType="{x:Type ListView}">
-															<ScrollViewer Padding="0" Uid="ScrollViewer_11">
-																<ItemsPresenter Uid="ItemsPresenter_6"/>
-															</ScrollViewer>
-														</ControlTemplate>
-													</Setter.Value>
-												</Setter>
-											</Style>
-										</ListView.Style>
-										<ListView.ItemsPanel>
-											<ItemsPanelTemplate>
-												<VirtualizingStackPanel IsItemsHost="True" Orientation="Horizontal"/>
-											</ItemsPanelTemplate>
-										</ListView.ItemsPanel>
-										<ListView.ItemTemplate>
-											<DataTemplate>
-												<Border BorderThickness="0,0,1,0" BorderBrush="#FFAAAAAA" Margin="-5,-2">
-													<StackPanel Orientation="Horizontal" Margin="0">
-														<syncfusion:ComboBoxAdv Visibility="{Binding Visibility}" SelectedValue="{Binding Pod}" ItemsSource="{Binding All}" Width="85" BorderBrush="{Binding Color}" Background="{Binding Color}"/>
-														<ToggleButton Width="15" IsChecked="{Binding Locked}"  Visibility="{Binding Visibility}">
-															<ToggleButton.Template>
-																<ControlTemplate TargetType="{x:Type ButtonBase}">
-																	<Border x:Name="border" Background="{TemplateBinding Background}" SnapsToDevicePixels="True" Opacity="0.0">
-																		<ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-																	</Border>
-																	<ControlTemplate.Triggers>
-																		<Trigger Property="IsMouseOver" Value="True">
-																			<Setter Property="Opacity" TargetName="border" Value="0.5"/>
-																		</Trigger>
-																		<Trigger Property="ToggleButton.IsChecked" Value="True">
-																			<Setter Property="Opacity" TargetName="border" Value="1"/>
-																		</Trigger>
-																	</ControlTemplate.Triggers>
-																</ControlTemplate>
-															</ToggleButton.Template>
-															<ToggleButton.Background>
-																<ImageBrush ImageSource="Black_Lock.png" Stretch="Uniform"/>
-															</ToggleButton.Background>
-														</ToggleButton>
-													</StackPanel>
-												</Border>
-											</DataTemplate>
-										</ListView.ItemTemplate>
-									</ListView>
-								</StackPanel>
-							</DataTemplate>
-						</ListView.ItemTemplate>
-						<ListView.Template>
-							<ControlTemplate TargetType="{x:Type ListBox}">
-								<ScrollViewer Focusable="False" Padding="0">
-									<ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
-								</ScrollViewer>
-							</ControlTemplate>
-						</ListView.Template>
-					</ListView>
-				</Grid>
-			</TabItem>
-			<TabItem Header="Вывод" Width="100" Background="{x:Null}" BorderBrush="{x:Null}" GotFocus="ВкладкаВывод_OnGotFocus">
-				<Grid Margin="5">
-					<Grid.RowDefinitions>
-						<RowDefinition Height="Auto" />
-						<RowDefinition Height="*" />
-					</Grid.RowDefinitions>
-					<StackPanel Orientation="Horizontal">
-						<Button Content="Сохранить График..." ToolTip="Открывает диалоговое окно для выбора пути и имени файла графика в формате Word." Margin="5" Width="150" Height="24"
-							Click="СохранитьГрафикНарядов" />
-						<Button Content="Сохранить Статистику..." ToolTip="Открывает диалоговое окно для выбора пути и имени файла статистики в формате Word." Margin="5" Width="150" Height="24"
-							Click="СохранитьСтатистику" />
+                        <Label Content="Подразделения:" Height="24" Padding="5,0" VerticalContentAlignment="Center" />
+                        <Label x:Name="Распределено" Height="24" Padding="5,0" VerticalContentAlignment="Center" />
+                    </StackPanel>
+                    <syncfusion:GridDataControl x:Name="districtsGrid" Margin="5" ItemsSource="{Binding Подразделения}"
+                                                AllowEdit="False" ShowAddNewRow="False"
+                                                LayoutUpdated="DistrictsGridLayoutUpdated" Grid.Row="3"
+                                                Grid.Column="1" ColumnSizer="Auto" AutoGenerateColumnsInfo="False"
+                                                AutoPopulateColumns="False" AllowSort="True"
+                                                AutoPopulateRelations="False">
+                        <syncfusion:GridDataControl.VisibleColumns>
+                            <syncfusion:GridDataVisibleColumn MappingName="Название" HeaderText="Подразделение" />
+                            <syncfusion:GridDataVisibleColumn MappingName="Люди" HeaderText="Людей, чел" />
+                            <syncfusion:GridDataVisibleColumn MappingName="Процент" />
+                            <syncfusion:GridDataVisibleColumn MappingName="Часы" HeaderText="Всего, ч" />
+                            <syncfusion:GridDataVisibleColumn MappingName="ВыходныеЧасы" HeaderText="Выходных, ч" />
+                            <syncfusion:GridDataVisibleColumn MappingName="Распред12Ч" HeaderText="12ч, шт" />
+                            <syncfusion:GridDataVisibleColumn MappingName="Распред24Ч" HeaderText="24ч, шт" />
+                            <syncfusion:GridDataVisibleColumn MappingName="Загруженность" HeaderText="Нагр., ч/чел" />
+                            <syncfusion:GridDataVisibleColumn MappingName="ЗагруженностьВыходных"
+                                                              HeaderText="Нагр.Вых., ч/чел" />
+                            <syncfusion:GridDataVisibleColumn MappingName="СписокНарядов" HeaderText="Доступные Наряды" />
+                        </syncfusion:GridDataControl.VisibleColumns>
+                    </syncfusion:GridDataControl>
+                </Grid>
+            </TabItem>
+            <TabItem Header="График" Width="100" Background="{x:Null}" BorderBrush="{x:Null}">
+                <Grid Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="Генерировать График" Margin="5" Width="150" Height="24"
+                                Click="Button_Генерировать" />
+                        <ToggleButton Content="Заблокировать Все" Margin="5" Width="150" Height="24"
+                                      Checked="ToggleButton_Заблокировать" Unchecked="ToggleButton_Разблокировать" />
+                        <CheckBox IsChecked="{Binding ИсключитьБлокированные}"
+                                  Content="Исключить заблокированные из расчётов" VerticalAlignment="Center" />
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="5,0,0,0">
+                        <Label Content="Дата" Width="100" />
+                        <ListView ItemsSource="{Binding Наряды}" BorderThickness="0">
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <VirtualizingStackPanel IsItemsHost="True" Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Label Width="100" Content="{Binding Название}" Margin="-4,-2" />
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </StackPanel>
+                    <ListView Grid.Row="2" x:Name="GraphList" ItemsSource="{Binding ДатыГрафика}" BorderThickness="0"
+                              Margin="5,0,5,5" Background="Transparent">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Background="{Binding BackColor}" Margin="-5,-2">
+                                    <TextBlock Text="{Binding Display}" Width="100" VerticalAlignment="Center"
+                                               HorizontalAlignment="Stretch" TextAlignment="Center" />
+                                    <ListView ItemsSource="{Binding Подразделения}" BorderThickness="0"
+                                              Background="Transparent">
+                                        <ListView.Style>
+                                            <Style TargetType="{x:Type ListView}">
+                                                <Setter Property="OverridesDefaultStyle" Value="True" />
+                                                <Setter Property="BorderBrush"
+                                                        Value="{DynamicResource ListBackgroundBrush}" />
+                                                <Setter Property="Background"
+                                                        Value="{DynamicResource ListBackgroundBrush}" />
+                                                <Setter Property="Foreground"
+                                                        Value="{DynamicResource Deprecated_Text1Brush}" />
+                                                <Setter Property="BorderThickness" Value="0" />
+                                                <Setter Property="ScrollViewer.HorizontalScrollBarVisibility"
+                                                        Value="Auto" />
+                                                <Setter Property="ScrollViewer.VerticalScrollBarVisibility"
+                                                        Value="Auto" />
+                                                <Setter Property="ScrollViewer.CanContentScroll" Value="True" />
+                                                <Setter Property="VerticalContentAlignment" Value="Center" />
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="{x:Type ListView}">
+                                                            <ScrollViewer Padding="0" Uid="ScrollViewer_11">
+                                                                <ItemsPresenter Uid="ItemsPresenter_6" />
+                                                            </ScrollViewer>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </ListView.Style>
+                                        <ListView.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <VirtualizingStackPanel IsItemsHost="True" Orientation="Horizontal" />
+                                            </ItemsPanelTemplate>
+                                        </ListView.ItemsPanel>
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border BorderThickness="0,0,1,0" BorderBrush="#FFAAAAAA"
+                                                        Margin="-5,-2">
+                                                    <StackPanel Orientation="Horizontal" Margin="0">
+                                                        <syncfusion:ComboBoxAdv Visibility="{Binding Visibility}"
+                                                                                SelectedValue="{Binding Pod}"
+                                                                                ItemsSource="{Binding All}" Width="85"
+                                                                                BorderBrush="{Binding Color}"
+                                                                                Background="{Binding Color}" />
+                                                        <ToggleButton Width="15" IsChecked="{Binding Locked}"
+                                                                      Visibility="{Binding Visibility}">
+                                                            <ToggleButton.Template>
+                                                                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                                                                    <Border x:Name="border"
+                                                                            Background="{TemplateBinding Background}"
+                                                                            SnapsToDevicePixels="True" Opacity="0.0">
+                                                                        <ContentPresenter x:Name="contentPresenter"
+                                                                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                                                          Content="{TemplateBinding Content}"
+                                                                                          ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                                                                          Focusable="False"
+                                                                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                                                          Margin="{TemplateBinding Padding}"
+                                                                                          RecognizesAccessKey="True"
+                                                                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                                                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                                                    </Border>
+                                                                    <ControlTemplate.Triggers>
+                                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                                            <Setter Property="Opacity"
+                                                                                    TargetName="border" Value="0.5" />
+                                                                        </Trigger>
+                                                                        <Trigger Property="ToggleButton.IsChecked"
+                                                                                 Value="True">
+                                                                            <Setter Property="Opacity"
+                                                                                    TargetName="border" Value="1" />
+                                                                        </Trigger>
+                                                                    </ControlTemplate.Triggers>
+                                                                </ControlTemplate>
+                                                            </ToggleButton.Template>
+                                                            <ToggleButton.Background>
+                                                                <ImageBrush ImageSource="Black_Lock.png"
+                                                                            Stretch="Uniform" />
+                                                            </ToggleButton.Background>
+                                                        </ToggleButton>
+                                                    </StackPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.Template>
+                            <ControlTemplate TargetType="{x:Type ListBox}">
+                                <ScrollViewer Focusable="False" Padding="0">
+                                    <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                </ScrollViewer>
+                            </ControlTemplate>
+                        </ListView.Template>
+                    </ListView>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Вывод" Width="100" Background="{x:Null}" BorderBrush="{x:Null}"
+                     GotFocus="ВкладкаВывод_OnGotFocus">
+                <Grid Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="Сохранить График..."
+                                ToolTip="Открывает диалоговое окно для выбора пути и имени файла графика в формате Word."
+                                Margin="5" Width="150" Height="24"
+                                Click="СохранитьГрафикНарядов" />
+                        <Button Content="Сохранить Статистику..."
+                                ToolTip="Открывает диалоговое окно для выбора пути и имени файла статистики в формате Word."
+                                Margin="5" Width="150" Height="24"
+                                Click="СохранитьСтатистику" />
 
-					</StackPanel>
-					<syncfusion:GridDataControl x:Name="eventsGrid" Margin="5" ItemsSource="{Binding GenerateTable}" AllowEdit="True"
-						ShowAddNewRow="False" Grid.Row="1" ColumnSizer="Auto" AllowSort="False" AllowDelete="False"/>
-				</Grid>
-			</TabItem>
-		</TabControl>
+                    </StackPanel>
+                    <syncfusion:GridDataControl x:Name="eventsGrid" Margin="5" ItemsSource="{Binding GenerateTable}"
+                                                AllowEdit="True"
+                                                ShowAddNewRow="False" Grid.Row="1" ColumnSizer="Auto" AllowSort="False"
+                                                AllowDelete="False" />
+                </Grid>
+            </TabItem>
+        </TabControl>
 
-		<Button Content="Сохранить" Margin="302,0,0,0" Click="СохранитьНастройки" HorizontalAlignment="Left" Width="100" Height="23" VerticalAlignment="Top" />
-	</Grid>
+        <Button Content="Сохранить" Margin="302,0,0,0" Click="СохранитьНастройки" HorizontalAlignment="Left"
+                Width="100" Height="23" VerticalAlignment="Top" />
+    </Grid>
 </Window>

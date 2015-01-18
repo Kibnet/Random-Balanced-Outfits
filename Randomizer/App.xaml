@@ -4,6 +4,6 @@
              xmlns:randomizer="clr-namespace:Randomizer"
              StartupUri="MainWindow.xaml" Startup="App_OnStartup">
     <Application.Resources>
-        <randomizer:ModelView x:Key="model"/>
+        <randomizer:ModelView x:Key="model" />
     </Application.Resources>
 </Application>

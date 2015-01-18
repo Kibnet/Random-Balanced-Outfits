@@ -24,7 +24,7 @@ namespace Randomizer
 					foreach (var naryad in naryads)
 					{
 						NarydsPanel.Children.Add(
-							new CheckBox { Content = naryad, IsChecked = editobj.Наряды.IndexOf(naryad) != -1 });
+							new CheckBox {Content = naryad, IsChecked = editobj.Наряды.IndexOf(naryad) != -1});
 					}
 				}
 				Obj = editobj;
@@ -36,24 +36,23 @@ namespace Randomizer
 				foreach (var naryad in naryads)
 				{
 					NarydsPanel.Children.Add(
-						new CheckBox { Content = naryad, IsChecked = false });
+						new CheckBox {Content = naryad, IsChecked = false});
 				}
 			}
 		}
 
 		private void Save(object sender, RoutedEventArgs e)
 		{
-			List<Наряд> list = (from CheckBox child in NarydsPanel.Children
-								where child.IsChecked == true
-								select (Наряд)child.Content).ToList();
+			var list = (from CheckBox child in NarydsPanel.Children
+				where child.IsChecked == true
+				select (Наряд) child.Content).ToList();
 			if (Obj == null)
 			{
 				Obj = new Подразделение();
-
 			}
 			Obj.Наряды = new ObservableCollection<Наряд>(list);
 			Obj.Название = NameBox.Text;
-			Obj.Люди = (int)PeopleBox.Value.GetValueOrDefault(0);
+			Obj.Люди = (int) PeopleBox.Value.GetValueOrDefault(0);
 
 			Close();
 		}

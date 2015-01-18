@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using Randomizer.Annotations;
@@ -12,15 +11,20 @@ namespace Randomizer
 	[Serializable]
 	public class ДатаГрафика
 	{
+		public HashSet<Наряд> Блокировки = new HashSet<Наряд>();
 		public DateTime Date { get; set; }
 
-		public bool Holyday { get { return App.Модель.Праздники.Contains(Date); } }
+		public bool Holyday
+		{
+			get { return App.Модель.Праздники.Contains(Date); }
+		}
 
-		public string Display { get { return Date.ToString("yyyy.MM.dd ddd"); } }
+		public string Display
+		{
+			get { return Date.ToString("yyyy.MM.dd ddd"); }
+		}
 
 		public Dictionary<Наряд, Подразделение> Смены { get; set; }
-
-		public HashSet<Наряд> Блокировки = new HashSet<Наряд>();
 
 		public ObservableCollection<HostPod> Подразделения
 		{
@@ -33,7 +37,13 @@ namespace Randomizer
 				}
 				foreach (var наряд in App.Модель.Наряды)
 				{
-					ret.Add(new HostPod { Nar = наряд, Parent = this, IsEnabled = Смены.ContainsKey(наряд), Locked = Блокировки.Contains(наряд) });
+					ret.Add(new HostPod
+					{
+						Nar = наряд,
+						Parent = this,
+						IsEnabled = Смены.ContainsKey(наряд),
+						Locked = Блокировки.Contains(наряд)
+					});
 				}
 				return ret;
 			}
@@ -47,13 +57,9 @@ namespace Randomizer
 				{
 					return Brushes.LightGray;
 				}
-				else
-				{
-					return Brushes.Transparent;
-				}
+				return Brushes.Transparent;
 			}
 		}
-
 
 		public override string ToString()
 		{
@@ -64,10 +70,10 @@ namespace Randomizer
 			return string.Format("{0} {1}({2})", Date.ToString("yyyy.MM.dd dddd"), Holyday ? "H" : "", Смены.Count);
 		}
 
-		public class HostPod: INotifyPropertyChanged
+		public class HostPod : INotifyPropertyChanged
 		{
-			private bool _isEnabled;
 			private Brush _color;
+			private bool _isEnabled;
 			public ДатаГрафика Parent { get; set; }
 
 			public bool Locked

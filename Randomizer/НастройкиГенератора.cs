@@ -24,23 +24,14 @@ namespace Randomizer
 		}
 
 		public ObservableCollection<Наряд> Наряды { get; set; }
-
 		public ObservableCollection<Подразделение> Подразделения { get; set; }
-
 		public ObservableCollection<DateTime> Усиления { get; set; }
-
 		public ObservableCollection<DateTime> ПериодГрафика { get; set; }
-
 		public ObservableCollection<DateTime> Праздники { get; set; }
-
 		public ObservableCollection<ДатаГрафика> ДатыГрафика { get; set; }
-
 		public int ЗакрываемыеЧасы { get; set; }
-
 		public int ПроцентВыходных { get; set; }
-
 		public string ПутьСохранения { get; set; }
-
 		public bool ИсключитьБлокированные { get; set; }
 
 		public static НастройкиГенератора Deserialize(string filename)
@@ -49,14 +40,14 @@ namespace Randomizer
 			{
 				var fs = new FileStream(filename, FileMode.Open);
 				var formatter = new BinaryFormatter();
-				var ret = (НастройкиГенератора)formatter.Deserialize(fs);
+				var ret = (НастройкиГенератора) formatter.Deserialize(fs);
 				fs.Close();
-				if (ret.ДатыГрафика == null || 
-					ret.Наряды == null || 
-					ret.ПериодГрафика == null || 
-					ret.Подразделения == null || 
-					ret.Праздники == null || 
-					ret.Усиления == null)
+				if (ret.ДатыГрафика == null ||
+				    ret.Наряды == null ||
+				    ret.ПериодГрафика == null ||
+				    ret.Подразделения == null ||
+				    ret.Праздники == null ||
+				    ret.Усиления == null)
 					throw new Exception();
 				return ret;
 			}

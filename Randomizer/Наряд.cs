@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using Randomizer.Annotations;
 
 namespace Randomizer
 {
@@ -10,7 +8,6 @@ namespace Randomizer
 	public class Наряд
 	{
 		public string Название { get; set; }
-
 		public int Длительность { get; set; }
 
 		public IEnumerable<DateTime> ДниНаряда
@@ -19,23 +16,23 @@ namespace Randomizer
 			{
 				return App.Модель.ПериодГрафика
 					.Where(date => Дни == WeekDays.Все
-						|| (Дни == WeekDays.Выходные && App.Модель.Праздники.Contains(date))
-						|| (Дни == WeekDays.Будние && !App.Модель.Праздники.Contains(date)));
+					               || (Дни == WeekDays.Выходные && App.Модель.Праздники.Contains(date))
+					               || (Дни == WeekDays.Будние && !App.Модель.Праздники.Contains(date)));
 			}
-		} 
+		}
 
 		public int Количество
 		{
 			get
 			{
 				var count = ДниНаряда.Count(time => !Усиление || App.Модель.Усиления.Contains(time));
-				
-				
+
+
 				if (!App.Модель.ИсключитьБлокированные) return count;
 				var blocked = App.Модель.ДатыГрафика
 					.Where(date => Дни == WeekDays.Все
-							  || (Дни == WeekDays.Выходные && App.Модель.Праздники.Contains(date.Date))
-							  || (Дни == WeekDays.Будние && !App.Модель.Праздники.Contains(date.Date)))
+					               || (Дни == WeekDays.Выходные && App.Модель.Праздники.Contains(date.Date))
+					               || (Дни == WeekDays.Будние && !App.Модель.Праздники.Contains(date.Date)))
 					.SelectMany(gr => gr.Блокировки)
 					.Count(наряд => наряд == this);
 				count -= blocked;
@@ -111,11 +108,10 @@ namespace Randomizer
 
 		public int Выходных
 		{
-			get { return КоличествоВыходных * Длительность; }
+			get { return КоличествоВыходных*Длительность; }
 		}
 
 		public bool Усиление { get; set; }
-
 		public WeekDays Дни { get; set; }
 
 		public override string ToString()
@@ -126,6 +122,8 @@ namespace Randomizer
 
 	public enum WeekDays
 	{
-		Все,Будние,Выходные
+		Все,
+		Будние,
+		Выходные
 	}
 }

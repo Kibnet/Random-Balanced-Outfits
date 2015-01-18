@@ -6,11 +6,13 @@
     <Grid Margin="10">
         <StackPanel MinWidth="200">
             <Label Height="24" Padding="0" VerticalContentAlignment="Center">Название Подразделения</Label>
-            <TextBox Height="24" Name="NameBox" Padding="0" VerticalContentAlignment="Center" TextWrapping="Wrap" Text="" />
+            <TextBox Height="24" Name="NameBox" Padding="0" VerticalContentAlignment="Center" TextWrapping="Wrap"
+                     Text="" />
             <Label Height="24" Padding="0" VerticalContentAlignment="Center">Количество Людей</Label>
             <syncfusion:IntegerTextBox Height="24" Padding="0" VerticalContentAlignment="Center" Name="PeopleBox" />
             <Label Height="24" Padding="0" VerticalContentAlignment="Center">
-                <CheckBox Checked="ToggleButton_OnChecked" Unchecked="ToggleButton_OnUnchecked">Доступные Наряды:</CheckBox></Label>
+                <CheckBox Checked="ToggleButton_OnChecked" Unchecked="ToggleButton_OnUnchecked">Доступные Наряды:</CheckBox>
+            </Label>
             <StackPanel Name="NarydsPanel" />
             <Button Margin="0,10,0,0" Height="24" Content="Сохранить" Click="Save" />
         </StackPanel>

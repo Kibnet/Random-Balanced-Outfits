@@ -13,7 +13,7 @@ namespace Randomizer
 		public NewNaryad(Наряд editobj = null)
 		{
 			InitializeComponent();
-			days.ItemsSource = Enum.GetValues(typeof(WeekDays));
+			days.ItemsSource = Enum.GetValues(typeof (WeekDays));
 			days.SelectedItem = WeekDays.Все;
 			name.Focus();
 			if (editobj != null)
@@ -31,9 +31,9 @@ namespace Randomizer
 			if (Obj == null)
 				Obj = new Наряд();
 			Obj.Название = name.Text;
-			Obj.Длительность = (int)hours.Value.GetValueOrDefault(0);
+			Obj.Длительность = (int) hours.Value.GetValueOrDefault(0);
 			Obj.Усиление = seal.IsChecked == true;
-			Obj.Дни = (WeekDays)days.SelectedItem;
+			Obj.Дни = (WeekDays) days.SelectedItem;
 			Close();
 		}
 	}

@@ -13,16 +13,14 @@ namespace Randomizer
 		}
 
 		public ObservableCollection<Наряд> Наряды { get; set; }
-
 		public string Название { get; set; }
-
 		public int Люди { get; set; }
 
 		public string Процент
 		{
 			get
 			{
-				return (((float)Люди * 100.0f / (float)App.Модель.Подразделения.Sum(подразделение => подразделение.Люди))).ToString("F1") + "%";
+				return ((Люди*100.0f/App.Модель.Подразделения.Sum(подразделение => подразделение.Люди))).ToString("F1") + "%";
 			}
 		}
 
@@ -71,12 +69,12 @@ namespace Randomizer
 
 		public double Загруженность
 		{
-			get { return Math.Round(((double)Часы / Люди)*100)/100; }
+			get { return Math.Round(((double) Часы/Люди)*100)/100; }
 		}
 
 		public double ЗагруженностьВыходных
 		{
-			get { return Math.Round(((double)ВыходныеЧасы / Люди) * 100) / 100; }
+			get { return Math.Round(((double) ВыходныеЧасы/Люди)*100)/100; }
 		}
 
 		public string СписокНарядов

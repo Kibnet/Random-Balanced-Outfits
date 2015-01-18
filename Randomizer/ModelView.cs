@@ -11,7 +11,7 @@ namespace Randomizer
 {
 	public class ModelView : INotifyPropertyChanged
 	{
-		private НастройкиГенератора настройки;
+		private readonly НастройкиГенератора настройки;
 
 		public ModelView()
 		{
@@ -25,10 +25,7 @@ namespace Randomizer
 
 		public ObservableCollection<Наряд> Наряды
 		{
-			get
-			{
-				return настройки.Наряды;
-			}
+			get { return настройки.Наряды; }
 			set
 			{
 				if (Equals(value, настройки.Наряды))
@@ -42,10 +39,7 @@ namespace Randomizer
 
 		public ObservableCollection<Подразделение> Подразделения
 		{
-			get
-			{
-				return настройки.Подразделения;
-			}
+			get { return настройки.Подразделения; }
 			set
 			{
 				if (Equals(value, настройки.Подразделения))
@@ -61,10 +55,7 @@ namespace Randomizer
 
 		public ObservableCollection<DateTime> Усиления
 		{
-			get
-			{
-				return настройки.Усиления;
-			}
+			get { return настройки.Усиления; }
 			set
 			{
 				if (Equals(value, настройки.Усиления))
@@ -78,10 +69,7 @@ namespace Randomizer
 
 		public ObservableCollection<DateTime> ПериодГрафика
 		{
-			get
-			{
-				return настройки.ПериодГрафика;
-			}
+			get { return настройки.ПериодГрафика; }
 			set
 			{
 				if (Equals(value, настройки.ПериодГрафика))
@@ -95,10 +83,7 @@ namespace Randomizer
 
 		public ObservableCollection<DateTime> Праздники
 		{
-			get
-			{
-				return настройки.Праздники;
-			}
+			get { return настройки.Праздники; }
 			set
 			{
 				if (Equals(value, настройки.Праздники))
@@ -112,10 +97,7 @@ namespace Randomizer
 
 		public ObservableCollection<ДатаГрафика> ДатыГрафика
 		{
-			get
-			{
-				return настройки.ДатыГрафика;
-			}
+			get { return настройки.ДатыГрафика; }
 			set
 			{
 				if (Equals(value, настройки.ДатыГрафика))
@@ -129,10 +111,7 @@ namespace Randomizer
 
 		public int ЗакрываемыеЧасы
 		{
-			get
-			{
-				return настройки.ЗакрываемыеЧасы;
-			}
+			get { return настройки.ЗакрываемыеЧасы; }
 			set
 			{
 				if (value == настройки.ЗакрываемыеЧасы)
@@ -146,10 +125,7 @@ namespace Randomizer
 
 		public int ПроцентВыходных
 		{
-			get
-			{
-				return настройки.ПроцентВыходных;
-			}
+			get { return настройки.ПроцентВыходных; }
 			set
 			{
 				if (value == настройки.ПроцентВыходных)
@@ -163,10 +139,7 @@ namespace Randomizer
 
 		public string ПутьСохранения
 		{
-			get
-			{
-				return настройки.ПутьСохранения;
-			}
+			get { return настройки.ПутьСохранения; }
 			set
 			{
 				if (value == настройки.ПутьСохранения)
@@ -182,19 +155,19 @@ namespace Randomizer
 		{
 			get
 			{
-				var midload = (double)App.Модель.ДлительностьНарядов / (double)App.Модель.Подразделения.Sum(подразделение => подразделение.Люди);
-				var holyload = (double)App.Модель.ДлительностьВыходныхНарядов / (double)App.Модель.Подразделения.Sum(подразделение => подразделение.Люди);
+				var midload = App.Модель.ДлительностьНарядов/
+				              (double) App.Модель.Подразделения.Sum(подразделение => подразделение.Люди);
+				var holyload = App.Модель.ДлительностьВыходныхНарядов/
+				               (double) App.Модель.Подразделения.Sum(подразделение => подразделение.Люди);
 
-				return string.Format("Распределено {0} часов из {1}. Общая нагрузка {2} ч/чел., на выходных {3} ч/чел.", ДлительностьРаспределеныхНарядов, ДлительностьНарядов, midload.ToString("F2"), holyload.ToString("F2"));
+				return string.Format("Распределено {0} часов из {1}. Общая нагрузка {2} ч/чел., на выходных {3} ч/чел.",
+					ДлительностьРаспределеныхНарядов, ДлительностьНарядов, midload.ToString("F2"), holyload.ToString("F2"));
 			}
 		}
 
 		public int ДлительностьРаспределеныхНарядов
 		{
-			get
-			{
-				return Подразделения.Sum(подразделение => подразделение.Часы);
-			}
+			get { return Подразделения.Sum(подразделение => подразделение.Часы); }
 		}
 
 		public string ВсегоНарядов
@@ -209,7 +182,7 @@ namespace Randomizer
 				return string.Format("Всего {3} шт. ({0} часов) из них {4} шт. ({1} часов) выходных ({2}%)",
 					ДлительностьНарядов,
 					ДлительностьВыходныхНарядов,
-					(КоэффициэнтВыходных * 100).ToString("F1"),
+					(КоэффициэнтВыходных*100).ToString("F1"),
 					КоличествоНарядов,
 					КоличествоВыходныхНарядов);
 			}
@@ -222,7 +195,7 @@ namespace Randomizer
 				var hproc = 0d;
 				if (ДлительностьНарядов != 0)
 				{
-					hproc = (double)(ДлительностьВыходныхНарядов) / (double)ДлительностьНарядов;
+					hproc = ДлительностьВыходныхНарядов/(double) ДлительностьНарядов;
 				}
 				return hproc;
 			}
@@ -230,32 +203,77 @@ namespace Randomizer
 
 		public int ДлительностьНарядов
 		{
-			get
-			{
-				return Наряды.Sum(наряд => наряд.Всего);
-			}
+			get { return Наряды.Sum(наряд => наряд.Всего); }
 		}
+
 		public int КоличествоНарядов
 		{
-			get
-			{
-				return Наряды.Sum(наряд => наряд.Количество);
-			}
+			get { return Наряды.Sum(наряд => наряд.Количество); }
 		}
+
 		public int ДлительностьВыходныхНарядов
 		{
-			get
-			{
-				return Наряды.Sum(наряд => наряд.Выходных);
-			}
+			get { return Наряды.Sum(наряд => наряд.Выходных); }
 		}
+
 		public int КоличествоВыходныхНарядов
+		{
+			get { return Наряды.Sum(наряд => наряд.КоличествоВыходных); }
+		}
+
+		public DataTable GenerateTable
 		{
 			get
 			{
-				return Наряды.Sum(наряд => наряд.КоличествоВыходных);
+				var table = new DataTable();
+				try
+				{
+					table.Columns.Add("Дата", typeof (string));
+					foreach (var naryad in Наряды)
+					{
+						table.Columns.Add(naryad.Название);
+					}
+					foreach (var eventDate in ДатыГрафика)
+					{
+						var row = table.NewRow();
+						var obj = new List<object>
+						{
+							eventDate.Date.ToString("yyyy.MM.dd ddd")
+						};
+						foreach (var naryad in Наряды)
+						{
+							var add = "---";
+							if (eventDate.Смены.ContainsKey(naryad))
+							{
+								add = eventDate.Смены[naryad] == null ? "" : eventDate.Смены[naryad].Название;
+							}
+							obj.Add(add);
+						}
+						row.ItemArray = obj.ToArray();
+						table.Rows.Add(row);
+					}
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show(string.Format("{0}\n{1}", ex.Message, ex.StackTrace), "Исключение");
+				}
+				return table;
 			}
 		}
+
+		public bool ИсключитьБлокированные
+		{
+			get { return настройки.ИсключитьБлокированные; }
+			set
+			{
+				if (value.Equals(настройки.ИсключитьБлокированные)) return;
+				настройки.ИсключитьБлокированные = value;
+				OnPropertyChanged("ИсключитьБлокированные");
+			}
+		}
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
 		public void GenerateEvents()
 		{
 			//Формирование всех дат и доступных нарядов в них
@@ -264,10 +282,10 @@ namespace Randomizer
 				Date = date,
 				Смены =
 					Наряды.Where(nar => !nar.Усиление || Усиления.Contains(date))
-						  .Where(nar => nar.Дни == WeekDays.Все
-									|| (nar.Дни == WeekDays.Выходные && Праздники.Contains(date))
-									|| (nar.Дни == WeekDays.Будние && !Праздники.Contains(date)))
-						  .ToDictionary<Наряд, Наряд, Подразделение>(nar => nar, nar => null)
+						.Where(nar => nar.Дни == WeekDays.Все
+						              || (nar.Дни == WeekDays.Выходные && Праздники.Contains(date))
+						              || (nar.Дни == WeekDays.Будние && !Праздники.Contains(date)))
+						.ToDictionary<Наряд, Наряд, Подразделение>(nar => nar, nar => null)
 			}).ToList();
 
 			//Заполнение заблокированных нарядов
@@ -333,13 +351,13 @@ namespace Randomizer
 		}
 
 		/// <summary>
-		/// Раскидывание подразделений по разным дням
-		/// Чтобы в один день не было в наряде несколько человек с одного подразделения
+		///     Раскидывание подразделений по разным дням
+		///     Чтобы в один день не было в наряде несколько человек с одного подразделения
 		/// </summary>
 		public void Раскидать()
 		{
 			//Счётчик сделаных замен
-			var count=0;
+			var count = 0;
 
 			do
 			{
@@ -353,7 +371,7 @@ namespace Randomizer
 					var nars = day.Смены.Where(pair => pair.Value != null).ToList();
 					//Сортируем по имени подразделения, чтобы легко найти дубликаты
 					nars.Sort((p1, p2) => String.Compare(p1.Value.Название, p2.Value.Название, StringComparison.Ordinal));
-					KeyValuePair<Наряд, Подразделение> last = new KeyValuePair<Наряд, Подразделение>();
+					var last = new KeyValuePair<Наряд, Подразделение>();
 					foreach (var nar in nars)
 					{
 						//Если два подряд одинаковые
@@ -393,11 +411,11 @@ namespace Randomizer
 								//Ищем наряд в который уже идёт какое-нибудь подразделение
 								var podob = vday.Смены.Where(vp => vp.Value != null
 									//Такой же длительности
-									&& vp.Key.Длительность == nar.Длительность
+								                                   && vp.Key.Длительность == nar.Длительность
 									//И подразделение которое в него идёт не идёт в выбранный день
-									&& !collision.Key.Смены.ContainsValue(vp.Value)
+								                                   && !collision.Key.Смены.ContainsValue(vp.Value)
 									//И подразделение которое в него идёт может пойти в выбранный наряд
-									&& vp.Value.Наряды.Contains(nar)).ToList();
+								                                   && vp.Value.Наряды.Contains(nar)).ToList();
 
 								if (podob.Count <= 0) continue;
 								finded = true;
@@ -414,7 +432,7 @@ namespace Randomizer
 		}
 
 		/// <summary>
-		/// Распределение нарядов по подразделениям
+		///     Распределение нарядов по подразделениям
 		/// </summary>
 		/// <param name="pairs">Список пар даты и наряда</param>
 		private void РаспределитьНаряды(List<KeyValuePair<ДатаГрафика, Наряд>> pairs)
@@ -426,9 +444,9 @@ namespace Randomizer
 				foreach (var d in Подразделения.Where(nar => nar.Наряды.Contains(datpair1.Value)))
 				{
 					//Для каждого подразделения которое может пойти в этот наряд
-					var krat = (double)datpair1.Value.Длительность;
+					var krat = (double) datpair1.Value.Длительность;
 					//Вычисляется нагрузка которая будет если оно пойдёт
-					var load = (d.Часы + krat) / d.Люди;
+					var load = (d.Часы + krat)/d.Люди;
 					dict[d] = load;
 				}
 				//Выбирается подразделение с самой низкой вычисленной нагрузкой
@@ -446,63 +464,10 @@ namespace Randomizer
 			OnPropertyChanged("GenerateTable");
 		}
 
-		public DataTable GenerateTable
-		{
-			get
-			{
-				var table = new DataTable();
-				try
-				{
-					table.Columns.Add("Дата", typeof(string));
-					foreach (var naryad in Наряды)
-					{
-						table.Columns.Add(naryad.Название);
-					}
-					foreach (var eventDate in ДатыГрафика)
-					{
-						var row = table.NewRow();
-						var obj = new List<object>
-						          {
-							          eventDate.Date.ToString("yyyy.MM.dd ddd")
-						          };
-						foreach (var naryad in Наряды)
-						{
-							var add = "---";
-							if (eventDate.Смены.ContainsKey(naryad))
-							{
-								add = eventDate.Смены[naryad] == null ? "" : eventDate.Смены[naryad].Название;
-							}
-							obj.Add(add);
-						}
-						row.ItemArray = obj.ToArray();
-						table.Rows.Add(row);
-					}
-				}
-				catch (Exception ex)
-				{
-					MessageBox.Show(string.Format("{0}\n{1}", ex.Message, ex.StackTrace), "Исключение");
-				}
-				return table;
-			}
-		}
-
-		public bool ИсключитьБлокированные
-		{
-			get { return настройки.ИсключитьБлокированные; }
-			set
-			{
-				if (value.Equals(настройки.ИсключитьБлокированные)) return;
-				настройки.ИсключитьБлокированные = value;
-				OnPropertyChanged("ИсключитьБлокированные");
-			}
-		}
-
 		public void Serialize(string filename)
 		{
 			настройки.Serialize(filename);
 		}
-
-		public event PropertyChangedEventHandler PropertyChanged;
 
 		[NotifyPropertyChangedInvocator]
 		protected virtual void OnPropertyChanged(string propertyName)

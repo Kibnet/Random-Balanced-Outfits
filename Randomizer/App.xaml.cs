@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using System.Windows.Navigation;
 
 namespace Randomizer
 {
@@ -14,7 +13,7 @@ namespace Randomizer
 		{
 			var en = Resources.GetEnumerator();
 			en.MoveNext();
-			App.Модель = (ModelView) en.Value;
+			Модель = (ModelView) en.Value;
 		}
 	}
 }

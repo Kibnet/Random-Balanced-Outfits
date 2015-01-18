@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows;
-using System.Windows.Controls;
 using Microsoft.Win32;
 using Syncfusion.DocIO;
 using Syncfusion.DocIO.DLS;
@@ -26,8 +23,8 @@ namespace Randomizer
 			{
 				narydsGrid.MouseDoubleClick += (sender, args) => РедактироватьНаряд(null, null);
 				districtsGrid.MouseDoubleClick += (sender, args) => РедактироватьПодразделение(null, null);
-				DateTime fd = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(1);
-				DateTime sd = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(2).AddDays(-1);
+				var fd = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(1);
+				var sd = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(2).AddDays(-1);
 				graficDates.DisplayDate = fd;
 				graficDates.SelectedDates.AddRange(fd, sd);
 				App.Модель.ПериодГрафика = new ObservableCollection<DateTime>(graficDates.SelectedDates);
@@ -39,7 +36,10 @@ namespace Randomizer
 				holyDates.DisplayDate = fd;
 				if (!App.Модель.Праздники.Any(time => sealDates.SelectedDates.Contains(time)))
 				{
-					foreach (var date in graficDates.SelectedDates.Where(date => date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday))
+					foreach (
+						var date in
+							graficDates.SelectedDates.Where(
+								date => date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday))
 					{
 						holyDates.SelectedDates.Add(date);
 					}
@@ -102,7 +102,7 @@ namespace Randomizer
 		{
 			try
 			{
-				string name = string.Format("График Нарядов на {0} года",
+				var name = string.Format("График Нарядов на {0} года",
 					graficDates.SelectedDates.FirstOrDefault().ToString("MMMM yyyy"));
 				var dlg = new SaveFileDialog
 				{
@@ -142,11 +142,11 @@ namespace Randomizer
 		{
 			var document = new WordDocument();
 
-			IWSection section = document.AddSection();
-			IWParagraph paragraph = section.AddParagraph();
+			var section = document.AddSection();
+			var paragraph = section.AddParagraph();
 			paragraph.ParagraphFormat.BeforeSpacing = 0f;
 
-			IWTextRange text = paragraph.AppendText(name);
+			var text = paragraph.AppendText(name);
 			text.CharacterFormat.Bold = true;
 			text.CharacterFormat.FontName = "Cambria";
 			text.CharacterFormat.FontSize = 14.0f;
@@ -155,8 +155,8 @@ namespace Randomizer
 			paragraph = section.AddParagraph();
 			paragraph.ParagraphFormat.BeforeSpacing = 2f;
 
-			WTextBody textBody = section.Body;
-			IWTable docTable = textBody.AddTable();
+			var textBody = section.Body;
+			var docTable = textBody.AddTable();
 
 			//Задание свойств строк
 			var format = new RowFormat();
@@ -177,17 +177,19 @@ namespace Randomizer
 			{
 				AddColumnHeader(docTable.Rows[0].Cells[c + 1], App.Модель.Наряды[c].Название);
 			}
-			
+
 			//Формирование строк таблицы
-			for (int c = 0; c < App.Модель.ДатыГрафика.Count; c++)
+			for (var c = 0; c < App.Модель.ДатыГрафика.Count; c++)
 			{
 				var eventDate = App.Модель.ДатыГрафика[c];
 				var row = docTable.Rows[c + 1];
 
 				AddRow(row.Cells[0], eventDate.Date.ToString("dd ddd"));
-				row.Cells[0].CellFormat.BackColor = eventDate.Holyday ? Color.FromArgb(140, 140, 140) : Color.FromArgb(230, 230, 230);
+				row.Cells[0].CellFormat.BackColor = eventDate.Holyday
+					? Color.FromArgb(140, 140, 140)
+					: Color.FromArgb(230, 230, 230);
 
-				for (int i = 0; i < App.Модель.Наряды.Count; i++)
+				for (var i = 0; i < App.Модель.Наряды.Count; i++)
 				{
 					var naryad = App.Модель.Наряды[i];
 					var add = "---";
@@ -197,17 +199,21 @@ namespace Randomizer
 					}
 					AddRow(row.Cells[i + 1], add);
 
-					if ((i+1 & 1) == 0)
+					if ((i + 1 & 1) == 0)
 					{
-						row.Cells[i + 1].CellFormat.BackColor = eventDate.Holyday ? Color.FromArgb(140, 140, 140) : Color.FromArgb(230, 230, 230);
+						row.Cells[i + 1].CellFormat.BackColor = eventDate.Holyday
+							? Color.FromArgb(140, 140, 140)
+							: Color.FromArgb(230, 230, 230);
 					}
 					else
 					{
-						row.Cells[i+1].CellFormat.BackColor = eventDate.Holyday ? Color.FromArgb(169, 169, 169) : Color.FromArgb(255, 255, 255);
+						row.Cells[i + 1].CellFormat.BackColor = eventDate.Holyday
+							? Color.FromArgb(169, 169, 169)
+							: Color.FromArgb(255, 255, 255);
 					}
 				}
 			}
-			
+
 			//Задание параметров страницы
 			section.PageSetup.Orientation = PageOrientation.Landscape;
 			section.PageSetup.Margins.Bottom = 20;
@@ -220,7 +226,7 @@ namespace Randomizer
 
 		private static void AddColumnHeader(WTableCell cell, string colname)
 		{
-			IWTextRange theadertext = cell.AddParagraph().AppendText(colname);
+			var theadertext = cell.AddParagraph().AppendText(colname);
 			theadertext.CharacterFormat.FontSize = 11f;
 			theadertext.CharacterFormat.Bold = true;
 			cell.CellFormat.BackColor = Color.Gainsboro;
@@ -232,7 +238,7 @@ namespace Randomizer
 
 		private static void AddRow(WTableCell cell, string colname)
 		{
-			IWTextRange theadertext = cell.AddParagraph().AppendText(colname);
+			var theadertext = cell.AddParagraph().AppendText(colname);
 			theadertext.CharacterFormat.FontSize = 10;
 			theadertext.CharacterFormat.Bold = true;
 			cell.CellFormat.BackColor = Color.Gainsboro;
@@ -246,7 +252,7 @@ namespace Randomizer
 		{
 			try
 			{
-				string name = string.Format("Статистика Нарядов на {0} года",
+				var name = string.Format("Статистика Нарядов на {0} года",
 					graficDates.SelectedDates.FirstOrDefault().ToString("MMMM yyyy"));
 				var dlg = new SaveFileDialog
 				{
@@ -266,11 +272,11 @@ namespace Randomizer
 
 				var document = new WordDocument();
 
-				IWSection section = document.AddSection();
-				IWParagraph paragraph = section.AddParagraph();
+				var section = document.AddSection();
+				var paragraph = section.AddParagraph();
 				paragraph.ParagraphFormat.BeforeSpacing = 0f;
 
-				IWTextRange text = paragraph.AppendText(name);
+				var text = paragraph.AppendText(name);
 				text.CharacterFormat.Bold = true;
 				text.CharacterFormat.FontName = "Cambria";
 				text.CharacterFormat.FontSize = 14.0f;
@@ -298,13 +304,13 @@ namespace Randomizer
 						distr.Часы,
 						distr.ВыходныеЧасы,
 						distr.Распред12Ч,
-						distr.Распред24Ч,
+						distr.Распред24Ч
 						//distr.СписокНарядов
 					};
 					table.Rows.Add(row);
 				}
-				WTextBody textBody = section.Body;
-				IWTable docTable = textBody.AddTable();
+				var textBody = section.Body;
+				var docTable = textBody.AddTable();
 
 				//Set the format for rows
 				var format = new RowFormat();
@@ -320,11 +326,11 @@ namespace Randomizer
 				docTable.Rows[0].IsHeader = true;
 
 				//Format the header rows
-				for (int c = 0; c <= table.Columns.Count - 1; c++)
+				for (var c = 0; c <= table.Columns.Count - 1; c++)
 				{
-					string[] cols = table.Columns[c].ColumnName.Split('|');
-					string colName = cols[cols.Length - 1];
-					IWTextRange theadertext = docTable.Rows[0].Cells[c].AddParagraph().AppendText(colName);
+					var cols = table.Columns[c].ColumnName.Split('|');
+					var colName = cols[cols.Length - 1];
+					var theadertext = docTable.Rows[0].Cells[c].AddParagraph().AppendText(colName);
 					theadertext.CharacterFormat.FontSize = 11f;
 					theadertext.CharacterFormat.Bold = true;
 					theadertext.OwnerParagraph.ParagraphFormat.BeforeSpacing = 10f;
@@ -338,19 +344,19 @@ namespace Randomizer
 				}
 
 				//Format the table body rows
-				for (int r = 0; r <= table.Rows.Count - 1; r++)
+				for (var r = 0; r <= table.Rows.Count - 1; r++)
 				{
 					//var first = (DateString)(table.Rows[r][0]);
-					for (int c = 0; c <= table.Columns.Count - 1; c++)
+					for (var c = 0; c <= table.Columns.Count - 1; c++)
 					{
-						string svalue = table.Rows[r][c].ToString();
-						IWTextRange theadertext = docTable.Rows[r + 1].Cells[c].AddParagraph().AppendText(svalue);
+						var svalue = table.Rows[r][c].ToString();
+						var theadertext = docTable.Rows[r + 1].Cells[c].AddParagraph().AppendText(svalue);
 						theadertext.CharacterFormat.FontSize = 10;
 
 						{
 							docTable.Rows[r + 1].Cells[c].CellFormat.BackColor = ((r & 1) == 0)
-																				 ? Color.FromArgb(237, 240, 246)
-																				 : Color.White;
+								? Color.FromArgb(237, 240, 246)
+								: Color.White;
 						}
 
 						docTable.Rows[r + 1].Cells[c].CellFormat.Borders.Color = Color.Black;
@@ -422,17 +428,17 @@ namespace Randomizer
 		{
 			try
 			{
-				ObservableCollection<object> selected = narydsGrid.SelectedItems;
+				var selected = narydsGrid.SelectedItems;
 				if (selected == null || selected.Count <= 0)
 				{
 					return;
 				}
-				for (int i = 0; i < selected.Count; i++)
+				for (var i = 0; i < selected.Count; i++)
 				{
 					var selectedItem = selected[i] as Наряд;
 					if (selectedItem != null)
 					{
-						foreach (Подразделение distr in App.Модель.Подразделения)
+						foreach (var distr in App.Модель.Подразделения)
 						{
 							distr.Наряды.Remove(selectedItem);
 						}
@@ -450,12 +456,12 @@ namespace Randomizer
 		{
 			try
 			{
-				ObservableCollection<object> selected = districtsGrid.SelectedItems;
+				var selected = districtsGrid.SelectedItems;
 				if (selected == null || selected.Count <= 0)
 				{
 					return;
 				}
-				for (int i = 0; i < selected.Count; i++)
+				for (var i = 0; i < selected.Count; i++)
 				{
 					var selectedItem = selected[i] as Подразделение;
 					if (selectedItem != null)
@@ -557,18 +563,18 @@ namespace Randomizer
 		{
 			try
 			{
-				ObservableCollection<object> selected = narydsGrid.SelectedItems;
+				var selected = narydsGrid.SelectedItems;
 				if (selected == null || selected.Count <= 0)
 				{
 					return;
 				}
-				foreach (object t in selected)
+				foreach (var t in selected)
 				{
 					var selectedItem = t as Наряд;
 					if (selectedItem != null)
 					{
 						var index = App.Модель.Наряды.IndexOf(selectedItem);
-						if (index >0)
+						if (index > 0)
 							App.Модель.Наряды.Move(index, index - 1);
 					}
 				}
@@ -583,18 +589,18 @@ namespace Randomizer
 		{
 			try
 			{
-				ObservableCollection<object> selected = narydsGrid.SelectedItems;
+				var selected = narydsGrid.SelectedItems;
 				if (selected == null || selected.Count <= 0)
 				{
 					return;
 				}
-				foreach (object t in selected)
+				foreach (var t in selected)
 				{
 					var selectedItem = t as Наряд;
 					if (selectedItem != null)
 					{
 						var index = App.Модель.Наряды.IndexOf(selectedItem);
-						if (index+1 < App.Модель.Наряды.Count)
+						if (index + 1 < App.Модель.Наряды.Count)
 							App.Модель.Наряды.Move(index, index + 1);
 					}
 				}
