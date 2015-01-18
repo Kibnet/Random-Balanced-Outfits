@@ -70,7 +70,41 @@
 								</Grid>
 							</Viewbox>
 						</Button>
-						<Label Content="Наряды" Height="24" Padding="5,0" VerticalContentAlignment="Center"/>
+                        <Button ToolTip="Переместить Наряд выше" Height="24" Width="24" BorderThickness="0" Background="#00000000" Click="ВверхНаряд" >
+                            <Viewbox>
+                                <Grid>
+                                    <Grid Width="48" Height="48" Visibility="Visible"/>
+                                    <Path Data="M90.3583334740251,0L90.3583334740251,47.8300698141538C271.127895241603,47.8300698141538 285.305019265041,167.585227284857 285.305019265041,191.500998769232 246.30469883047,95.720137868353 90.3583334740251,143.610205922552 90.3583334740251,143.610205922552L90.3583334740251,191.500998769232 0,101.773886952826z" Stretch="Uniform" Fill="#FF000000" Width="26" Height="26" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
+                                        <Path.RenderTransform>
+                                            <TransformGroup>
+                                                <TransformGroup.Children>
+                                                    <RotateTransform Angle="90" />
+                                                    <ScaleTransform ScaleX="1" ScaleY="1" />
+                                                </TransformGroup.Children>
+                                            </TransformGroup>
+                                        </Path.RenderTransform>
+                                    </Path>
+                                </Grid>
+                            </Viewbox>
+                        </Button>
+                        <Button ToolTip="Переместить Наряд ниже" Height="24" Width="24" BorderThickness="0" Background="#00000000" Click="ВнизНаряд" >
+                            <Viewbox>
+                                <Grid>
+                                    <Grid Width="48" Height="48" Visibility="Visible"/>
+                                    <Path Data="M194.946686588228,0L285.305023990572,101.774623095582 194.946686588228,191.501002490113 194.946686588228,143.610926806519C194.946686588228,143.610926806519 39.0003059729934,95.7808639403083 0,191.501002490113 0,167.585963427613 14.1771210059524,47.8907958861091 194.946686588228,47.8907958861091z" Stretch="Uniform" Fill="#FF000000" Width="26" Height="26" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
+                                        <Path.RenderTransform>
+                                            <TransformGroup>
+                                                <TransformGroup.Children>
+                                                    <RotateTransform Angle="90" />
+                                                    <ScaleTransform ScaleX="1" ScaleY="1" />
+                                                </TransformGroup.Children>
+                                            </TransformGroup>
+                                        </Path.RenderTransform>
+                                    </Path>
+                                </Grid>
+                            </Viewbox>
+                        </Button>
+                        <Label Content="Наряды:" Height="24" Padding="5,0" VerticalContentAlignment="Center"/>
 						<Label x:Name="ВсегоНарядов" Height="24" Padding="5,0" VerticalContentAlignment="Center" />
 					</StackPanel>
 					<syncfusion:GridDataControl Grid.Row="1" Grid.Column="1" x:Name="narydsGrid" 
@@ -125,7 +159,7 @@
 								</Grid>
 							</Viewbox>
 						</Button>
-						<Button Click="КнопкаКалькулятора" Height="24" Width="24" BorderThickness="0" Background="#00DDDDDD">
+						<Button Click="КнопкаКалькулятора" ToolTip="Открыть Калькулятор" Height="24" Width="24" BorderThickness="0" Background="#00DDDDDD">
 							<Viewbox>
 								<Grid>
 									<Grid Width="48" Height="48" Visibility="Visible"/>
@@ -133,8 +167,18 @@
 								</Grid>
 							</Viewbox>
 						</Button>
-                        <Button Content="Раскидать" Click="КнопкаРаскидать"/>
-						<Label Content="Подразделения" Height="24" Padding="5,0" VerticalContentAlignment="Center"/>
+                        <Button Click="СохранитьСтатистику" ToolTip="Сохранить статистику Подразделений в Word-файл" Height="24" BorderThickness="0" Background="#00DDDDDD">
+                            <StackPanel Orientation="Horizontal">
+                            <Viewbox>
+                                <Grid>
+                                    <Grid Width="48" Height="48" Visibility="Visible"/>
+                                    <Path Data="M29.601601,19.605532L25.4193,19.965033 22.862,35.799561 19.542999,20.510435 15.6211,20.510435 12.6028,35.095158 10.3398,20.912834 6.8203106,20.912834 10.4909,40.979267 14.4636,41.079567 17.380199,26.948046 20.75,41.532669 24.873699,41.532669z M38.250999,7.0340004L63.19529,7.0340004C63.640594,7.0340004,64,7.3934326,64,7.8374653L64,53.400093C64,53.845497,63.640594,54.204998,63.19529,54.204998L38.250999,54.204998 38.250999,47.969154 58.065029,47.969154 58.065029,45.354633 38.250999,45.354633 38.250999,41.532909 58.065029,41.532909 58.065029,38.916988 38.250999,38.916988 38.250999,35.09536 58.065029,35.09536 58.065029,32.480843 38.250999,32.480843 38.250999,28.657816 58.065029,28.657816 58.065029,26.043297 38.250999,26.043297 38.250999,22.22147 58.065029,22.22147 58.065029,19.60565 38.250999,19.60565 38.250999,15.784023 58.065029,15.784023 58.065029,13.168104 38.250999,13.168104z M37.013,0L37.013,61.288002 0,54.850391 0,6.1693802z" Stretch="Uniform" Fill="#FF000000" Width="26" Height="26" Margin="0,0,0,0"/>
+                                </Grid>
+                                </Viewbox>
+                                <TextBlock Text="Сохранить" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                            </StackPanel>
+                        </Button>
+                        <Label Content="Подразделения:" Height="24" Padding="5,0" VerticalContentAlignment="Center"/>
 						<Label x:Name="Распределено" Height="24" Padding="5,0" VerticalContentAlignment="Center"/>
 					</StackPanel>
 					<syncfusion:GridDataControl x:Name="districtsGrid" Margin="5" ItemsSource="{Binding Подразделения}"
@@ -271,9 +315,9 @@
 					</Grid.RowDefinitions>
 					<StackPanel Orientation="Horizontal">
 						<Button Content="Сохранить График..." ToolTip="Открывает диалоговое окно для выбора пути и имени файла графика в формате Word." Margin="5" Width="150" Height="24"
-							Click="СохранитьДокумент" />
+							Click="СохранитьГрафикНарядов" />
 						<Button Content="Сохранить Статистику..." ToolTip="Открывает диалоговое окно для выбора пути и имени файла статистики в формате Word." Margin="5" Width="150" Height="24"
-							Click="СохранитьТаблицу" />
+							Click="СохранитьСтатистику" />
 
 					</StackPanel>
 					<syncfusion:GridDataControl x:Name="eventsGrid" Margin="5" ItemsSource="{Binding GenerateTable}" AllowEdit="True"
