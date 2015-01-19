@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Syncfusion.Windows.Shared;
 
 namespace Randomizer
 {
 	[Serializable]
-	public class Подразделение
+	public class Подразделение : NotificationObject
 	{
 		public Подразделение()
 		{
@@ -77,6 +78,37 @@ namespace Randomizer
 			get { return Math.Round(((double) ВыходныеЧасы/Люди)*100)/100; }
 		}
 
+		public double ОтклонениеЗагруженности
+		{
+			get
+			{
+				if (App.Модель.ОбщаяНагрузка>0)
+				{
+
+					return (Загруженность - App.Модель.ОбщаяНагрузка) / App.Модель.ОбщаяНагрузка;
+				}
+				else
+				{
+					return 0;
+				}
+			}
+		}
+		public double ОтклонениеЗагруженностиВыходных
+		{
+			get
+			{
+				if (App.Модель.ОбщаяНагрузкаВыходных > 0)
+				{
+
+					return (ЗагруженностьВыходных - App.Модель.ОбщаяНагрузкаВыходных) / App.Модель.ОбщаяНагрузкаВыходных;
+				}
+				else
+				{
+					return 0;
+				}
+			}
+		}
+
 		public string СписокНарядов
 		{
 			get
@@ -90,6 +122,23 @@ namespace Randomizer
 		public override string ToString()
 		{
 			return Название;
+		}
+
+		public void Refresh()
+		{
+			RaisePropertyChanged(() => Название);
+			RaisePropertyChanged(() => Люди);
+			RaisePropertyChanged(() => Наряды);
+			RaisePropertyChanged(() => Процент);
+			RaisePropertyChanged(() => Распред12Ч);
+			RaisePropertyChanged(() => Распред24Ч);
+			RaisePropertyChanged(() => СписокНарядов);
+			RaisePropertyChanged(() => Часы);
+			RaisePropertyChanged(() => ВыходныеЧасы);
+			RaisePropertyChanged(() => Загруженность);
+			RaisePropertyChanged(() => Загруженность);
+			RaisePropertyChanged(() => ОтклонениеЗагруженности);
+			RaisePropertyChanged(() => ОтклонениеЗагруженностиВыходных);
 		}
 	}
 }

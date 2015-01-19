@@ -11,6 +11,7 @@
 		<randomizer:ModelView x:Key="model" />
 	</Window.Resources>-->
     <Grid x:Name="MainGrid" DataContext="{StaticResource model}">
+        <syncfusion:BusyIndicator IsBusy="{Binding IsBusy}" CancelButtonVisibility="Collapsed" IsIndeterminate="True" LoadingDescription="{Binding Status}" Header="Распределение Нарядов">
         <ScrollViewer>
             <StackPanel Margin="10">
                 <Expander>
@@ -57,8 +58,7 @@
                             <RowDefinition/>
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="5,0,5,5">
-                            <Button ToolTip="Добавить Новый Наряд" Height="24" Width="24" BorderThickness="0"
-								Background="#00000000"
+                            <Button ToolTip="Добавить Новый Наряд" Height="32" Margin="5" BorderThickness="1" Background="White"
 								Click="ДобавитьНаряд">
                                 <Viewbox>
                                     <Grid>
@@ -69,8 +69,7 @@
                                     </Grid>
                                 </Viewbox>
                             </Button>
-                            <Button ToolTip="Редактировать Выделенный Наряд" Height="24" Width="24" BorderThickness="0"
-								Background="#00000000" Click="РедактироватьНаряд">
+                            <Button ToolTip="Редактировать Выделенный Наряд" Height="32" Margin="5" BorderThickness="1" Background="White" Click="РедактироватьНаряд">
                                 <Viewbox>
                                     <Grid>
                                         <Grid Width="40" Height="40" Visibility="Visible" />
@@ -80,8 +79,7 @@
                                     </Grid>
                                 </Viewbox>
                             </Button>
-                            <Button ToolTip="Удалить Выделенный Наряд" Height="24" Width="24" BorderThickness="0"
-								Background="#00000000" Click="УдалитьНаряд">
+                            <Button ToolTip="Удалить Выделенный Наряд" Height="32" Margin="5" BorderThickness="1" Background="White" Click="УдалитьНаряд">
                                 <Viewbox>
                                     <Grid>
                                         <Grid Width="40" Height="40" Visibility="Visible" />
@@ -101,8 +99,7 @@
                                     </Grid>
                                 </Viewbox>
                             </Button>
-                            <Button ToolTip="Переместить Выделенный Наряд Выше" Height="24" Width="24" BorderThickness="0"
-								Background="#00000000" Click="ВверхНаряд">
+                            <Button ToolTip="Переместить Выделенный Наряд Выше" Height="32" Margin="5" BorderThickness="1" Background="White" Click="ВверхНаряд">
                                 <Viewbox>
                                     <Grid>
                                         <Grid Width="40" Height="40" Visibility="Visible" />
@@ -122,8 +119,7 @@
                                     </Grid>
                                 </Viewbox>
                             </Button>
-                            <Button ToolTip="Переместить Выделенный Наряд Ниже" Height="24" Width="24" BorderThickness="0"
-								Background="#00000000" Click="ВнизНаряд">
+                            <Button ToolTip="Переместить Выделенный Наряд Ниже" Height="32" Margin="5" BorderThickness="1" Background="White" Click="ВнизНаряд">
                                 <Viewbox>
                                     <Grid>
                                         <Grid Width="40" Height="40" Visibility="Visible" />
@@ -143,8 +139,18 @@
                                     </Grid>
                                 </Viewbox>
                             </Button>
-
-                            <Button Click="СохранитьНастройки" HorizontalAlignment="Left" Height="24" ToolTip="Сохранить все настройки в файл Настройки.bin" Background="#00DDDDDD" BorderThickness="0" >
+                            <Button Click="Button_ОбновитьНаряды" ToolTip="Обновить Таблицу с Нарядами" Height="32" Margin="5" BorderThickness="1" Background="White">
+                                <StackPanel Orientation="Horizontal">
+                                    <Viewbox>
+                                        <Grid>
+                                            <Grid Width="40" Height="40" Visibility="Visible" />
+                                            <Path Data="M9.9315472,30.022331C10.079168,30.036248 10.221069,30.093434 10.334394,30.187184 10.488594,30.314683 10.586294,30.502183 10.601295,30.700082 10.799795,33.215764 11.502995,35.728747 12.771795,38.090732 14.583698,41.460509 17.2738,44.048993 20.411201,45.728681L21.659304,40.895314C21.733402,40.609015 21.970404,40.395316 22.261503,40.351117 22.555004,40.306817 22.842703,40.439616 22.999704,40.689614L27.652707,48.179265 31.78291,54.83022C31.904611,55.054219 31.922311,55.270219 31.851311,55.470815 31.77451,55.684316 31.60521,55.845815 31.39171,55.918714L24.687205,58.166101 15.185999,61.350976C14.901398,61.447377 14.589598,61.361379 14.394197,61.134877 14.195698,60.905679 14.156696,60.585382 14.295897,60.317086L16.627298,55.749516C11.170895,53.153131 6.4619408,48.85896 3.3864975,43.129699 1.4529076,39.533422 0.34676361,35.707849 0.0030136108,31.877173 -0.032814026,31.478776 0.2549057,31.124679 0.65273285,31.077779L9.7828636,30.023086C9.8324966,30.01786,9.8823395,30.017692,9.9315472,30.022331z M50.486482,14.078776C50.651744,14.08645,50.810987,14.150894,50.939912,14.262197L56.238731,18.941983 63.750458,25.574907C63.975758,25.775511 64.05846,26.088017 63.957458,26.369222 63.85976,26.655726 63.601957,26.848432 63.299257,26.864032L58.181438,27.132336C58.661839,33.153247 57.300537,39.379865 53.878623,44.908666 51.731415,48.382733 48.970407,51.255086 45.827196,53.468728 45.500993,53.69793 45.050495,53.627526 44.810191,53.304723L39.329771,45.929585C39.211272,45.768083 39.163874,45.564878 39.193675,45.369573 39.229472,45.171769 39.342273,44.994567 39.504875,44.882668 41.583682,43.452939 43.407289,41.585704 44.819392,39.304461 46.832399,36.049104 47.725003,32.426633 47.612302,28.869268L42.799785,30.205295C42.514784,30.285995 42.212583,30.189591 42.028382,29.957788 41.841583,29.726085 41.812183,29.410979 41.951584,29.147973L46.105896,21.371729 49.798009,14.468001C49.931409,14.251797 50.11231,14.126794 50.320113,14.090393 50.375638,14.079968 50.431395,14.076218 50.486482,14.078776z M29.956733,6.6757202E-06C34.042579,-0.0026788712 37.936724,0.8332386 41.471065,2.3410139 41.841669,2.4999504 42.016671,2.9191303 41.868269,3.2941208L38.478931,11.835634C38.404629,12.020429 38.256928,12.168926 38.072726,12.244424 37.889124,12.320022 37.678121,12.317322 37.497818,12.236624 35.187192,11.221049 32.640363,10.653362 29.956733,10.653363 26.131188,10.653362 22.581547,11.799134 19.616014,13.767887L23.281356,17.155804C23.500858,17.3563 23.577759,17.666192 23.476758,17.944885 23.379157,18.223479 23.123955,18.416174 22.830351,18.434373L14.032049,18.99176 6.2181396,19.483948C5.9629478,19.486448 5.761776,19.39795 5.6224327,19.241754 5.468132,19.072458 5.405632,18.848464 5.4440193,18.624568L6.6334953,11.655937 8.3202744,1.7785282C8.373745,1.4816647 8.5964661,1.2472906 8.8900509,1.1822319 9.1836929,1.1171637 9.4831371,1.2343512 9.6550083,1.4816647L12.576233,5.6951828C17.442289,2.1171398,23.453458,-0.0026788712,29.956733,6.6757202E-06z" Stretch="Uniform" Fill="#FF000000" Width="26" Height="26" Margin="0,0,0,0" />
+                                        </Grid>
+                                    </Viewbox>
+                                    <TextBlock Text="Обновить" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Click="СохранитьНастройки" ToolTip="Сохранить все настройки в файл Настройки.bin" Height="32" Margin="5" BorderThickness="1" Background="White" >
                                 <StackPanel Orientation="Horizontal">
                                     <Viewbox >
                                         <Grid>
@@ -163,7 +169,7 @@
 												ItemsSource="{Binding Наряды}" AllowEdit="False" ShowAddNewRow="False"
 												Margin="5" ColumnSizer="Auto" AutoGenerateColumnsInfo="False"
 												AutoPopulateColumns="False" AllowNestedGridPadding="False" ShowRowHeaderArrow="False"
-												ShowRecordPlusMinus="False" NotifyComplexPropertyChanges="False" NotifyPropertyChanges="True" >
+												ShowRecordPlusMinus="False" NotifyComplexPropertyChanges="False" NotifyPropertyChanges="True" BorderThickness="0" >
                             <syncfusion:GridDataControl.VisibleColumns>
                                 <syncfusion:GridDataVisibleColumn MappingName="Название" HeaderText="Наряд" />
                                 <syncfusion:GridDataVisibleColumn MappingName="Длительность" HeaderText="Длительность, ч" />
@@ -196,9 +202,8 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <StackPanel Margin="5,0,5,5" Orientation="Horizontal">
-                            <Button ToolTip="Добавить Новое Подразделение" Click="ДобавитьПодразделение" Height="24" Width="24"
-								BorderThickness="0" Background="#00000000">
+                        <StackPanel Orientation="Horizontal">
+                            <Button ToolTip="Добавить Новое Подразделение" Click="ДобавитьПодразделение" Height="32" Margin="5" BorderThickness="1" Background="White">
                                 <Viewbox>
                                     <Grid>
                                         <Grid Width="40" Height="40" Visibility="Visible" />
@@ -208,8 +213,7 @@
                                     </Grid>
                                 </Viewbox>
                             </Button>
-                            <Button ToolTip="Редактировать Выделенное Подразделение" Click="РедактироватьПодразделение" Height="24"
-								Width="24" BorderThickness="0" Background="#00000000">
+                            <Button ToolTip="Редактировать Выделенное Подразделение" Click="РедактироватьПодразделение" Height="32" Margin="5" BorderThickness="1" Background="White">
                                 <Viewbox>
                                     <Grid>
                                         <Grid Width="40" Height="40" Visibility="Visible" />
@@ -219,8 +223,7 @@
                                     </Grid>
                                 </Viewbox>
                             </Button>
-                            <Button ToolTip="Удалить Выделенное Подразделение" Click="УдалитьПодразделение" Height="24" Width="24"
-								BorderThickness="0" Background="#00000000">
+                            <Button ToolTip="Удалить Выделенное Подразделение" Click="УдалитьПодразделение" Height="32" Margin="5" BorderThickness="1" Background="White">
                                 <Viewbox>
                                     <Grid>
                                         <Grid Width="40" Height="40" Visibility="Visible" />
@@ -240,8 +243,7 @@
                                     </Grid>
                                 </Viewbox>
                             </Button>
-                            <Button Click="КнопкаКалькулятора" ToolTip="Открыть Калькулятор" Height="24" Width="24"
-								BorderThickness="0" Background="#00DDDDDD">
+                            <Button Click="КнопкаКалькулятора" ToolTip="Открыть Калькулятор" Height="32" Margin="5" BorderThickness="1" Background="White">
                                 <Viewbox>
                                     <Grid>
                                         <Grid Width="40" Height="40" Visibility="Visible" />
@@ -251,8 +253,20 @@
                                     </Grid>
                                 </Viewbox>
                             </Button>
+                            <Button Click="Button_ОбновитьПодразделения" ToolTip="Обновить Таблицу с Подразделениями" Height="32" Margin="5" BorderThickness="1" Background="White">
+                                <StackPanel Orientation="Horizontal">
+                                    <Viewbox>
+                                        <Grid>
+                                            <Grid Width="40" Height="40" Visibility="Visible" />
+                                            <Path Data="M9.9315472,30.022331C10.079168,30.036248 10.221069,30.093434 10.334394,30.187184 10.488594,30.314683 10.586294,30.502183 10.601295,30.700082 10.799795,33.215764 11.502995,35.728747 12.771795,38.090732 14.583698,41.460509 17.2738,44.048993 20.411201,45.728681L21.659304,40.895314C21.733402,40.609015 21.970404,40.395316 22.261503,40.351117 22.555004,40.306817 22.842703,40.439616 22.999704,40.689614L27.652707,48.179265 31.78291,54.83022C31.904611,55.054219 31.922311,55.270219 31.851311,55.470815 31.77451,55.684316 31.60521,55.845815 31.39171,55.918714L24.687205,58.166101 15.185999,61.350976C14.901398,61.447377 14.589598,61.361379 14.394197,61.134877 14.195698,60.905679 14.156696,60.585382 14.295897,60.317086L16.627298,55.749516C11.170895,53.153131 6.4619408,48.85896 3.3864975,43.129699 1.4529076,39.533422 0.34676361,35.707849 0.0030136108,31.877173 -0.032814026,31.478776 0.2549057,31.124679 0.65273285,31.077779L9.7828636,30.023086C9.8324966,30.01786,9.8823395,30.017692,9.9315472,30.022331z M50.486482,14.078776C50.651744,14.08645,50.810987,14.150894,50.939912,14.262197L56.238731,18.941983 63.750458,25.574907C63.975758,25.775511 64.05846,26.088017 63.957458,26.369222 63.85976,26.655726 63.601957,26.848432 63.299257,26.864032L58.181438,27.132336C58.661839,33.153247 57.300537,39.379865 53.878623,44.908666 51.731415,48.382733 48.970407,51.255086 45.827196,53.468728 45.500993,53.69793 45.050495,53.627526 44.810191,53.304723L39.329771,45.929585C39.211272,45.768083 39.163874,45.564878 39.193675,45.369573 39.229472,45.171769 39.342273,44.994567 39.504875,44.882668 41.583682,43.452939 43.407289,41.585704 44.819392,39.304461 46.832399,36.049104 47.725003,32.426633 47.612302,28.869268L42.799785,30.205295C42.514784,30.285995 42.212583,30.189591 42.028382,29.957788 41.841583,29.726085 41.812183,29.410979 41.951584,29.147973L46.105896,21.371729 49.798009,14.468001C49.931409,14.251797 50.11231,14.126794 50.320113,14.090393 50.375638,14.079968 50.431395,14.076218 50.486482,14.078776z M29.956733,6.6757202E-06C34.042579,-0.0026788712 37.936724,0.8332386 41.471065,2.3410139 41.841669,2.4999504 42.016671,2.9191303 41.868269,3.2941208L38.478931,11.835634C38.404629,12.020429 38.256928,12.168926 38.072726,12.244424 37.889124,12.320022 37.678121,12.317322 37.497818,12.236624 35.187192,11.221049 32.640363,10.653362 29.956733,10.653363 26.131188,10.653362 22.581547,11.799134 19.616014,13.767887L23.281356,17.155804C23.500858,17.3563 23.577759,17.666192 23.476758,17.944885 23.379157,18.223479 23.123955,18.416174 22.830351,18.434373L14.032049,18.99176 6.2181396,19.483948C5.9629478,19.486448 5.761776,19.39795 5.6224327,19.241754 5.468132,19.072458 5.405632,18.848464 5.4440193,18.624568L6.6334953,11.655937 8.3202744,1.7785282C8.373745,1.4816647 8.5964661,1.2472906 8.8900509,1.1822319 9.1836929,1.1171637 9.4831371,1.2343512 9.6550083,1.4816647L12.576233,5.6951828C17.442289,2.1171398,23.453458,-0.0026788712,29.956733,6.6757202E-06z" Stretch="Uniform" Fill="#FF000000" Width="26" Height="26" Margin="0,0,0,0" />
+                                        </Grid>
+                                    </Viewbox>
+                                    <TextBlock Text="Обновить" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+
                             <Button Click="СохранитьСтатистику" ToolTip="Сохранить Статистику Подразделений в Word-файл"
-								Height="24" BorderThickness="0" Background="#00DDDDDD">
+								Height="32" Margin="5" BorderThickness="1" Background="White">
                                 <StackPanel Orientation="Horizontal">
                                     <Viewbox>
                                         <Grid>
@@ -270,7 +284,7 @@
 												AllowEdit="False" ShowAddNewRow="False"
 												LayoutUpdated="DistrictsGridLayoutUpdated" Grid.Row="1" ColumnSizer="Auto" AutoGenerateColumnsInfo="False"
 												AutoPopulateColumns="False" AllowSort="True"
-												AutoPopulateRelations="False">
+												AutoPopulateRelations="False" BorderThickness="0,0,1,0">
                             <syncfusion:GridDataControl.VisibleColumns>
                                 <syncfusion:GridDataVisibleColumn MappingName="Название" HeaderText="Подразделение" />
                                 <syncfusion:GridDataVisibleColumn MappingName="Люди" HeaderText="Людей, чел" />
@@ -282,8 +296,80 @@
                                 <syncfusion:GridDataVisibleColumn MappingName="Загруженность" HeaderText="Нагр., ч/чел" />
                                 <syncfusion:GridDataVisibleColumn MappingName="ЗагруженностьВыходных"
 															  HeaderText="Нагр.Вых., ч/чел" />
+                                <syncfusion:GridDataPercentEditVisibleColumn MappingName="ОтклонениеЗагруженности" HeaderText="Откл.Нагр., %" />
+                                <syncfusion:GridDataPercentEditVisibleColumn MappingName="ОтклонениеЗагруженностиВыходных"
+															  HeaderText="Откл.Нагр.Вых., %" />
                                 <syncfusion:GridDataVisibleColumn MappingName="СписокНарядов" HeaderText="Доступные Наряды" />
                             </syncfusion:GridDataControl.VisibleColumns>
+                            <syncfusion:GridDataControl.ConditionalFormats>
+                                <syncfusion:GridDataConditionalFormat Name="C1" ApplyStyleToColumn="ОтклонениеЗагруженности">
+                                    <syncfusion:GridDataConditionalFormat.Style>
+                                        <syncfusion:GridDataStyleInfo Background="#1900FC00" />
+                                    </syncfusion:GridDataConditionalFormat.Style>
+                                    <syncfusion:GridDataConditionalFormat.Conditions>
+                                        <syncfusion:GridDataCondition ColumnName="ОтклонениеЗагруженности"
+                                                          ConditionType="GreaterThan"
+                                                          Value="-0,15" />
+                                        <syncfusion:GridDataCondition ColumnName="ОтклонениеЗагруженности"
+                                                          ConditionType="LessThan"
+                                                          Value="0,15" />
+                                    </syncfusion:GridDataConditionalFormat.Conditions>
+                                </syncfusion:GridDataConditionalFormat>
+                                <syncfusion:GridDataConditionalFormat Name="C2" ApplyStyleToColumn="ОтклонениеЗагруженности">
+                                    <syncfusion:GridDataConditionalFormat.Style>
+                                        <syncfusion:GridDataStyleInfo Background="#19FF0000" />
+                                    </syncfusion:GridDataConditionalFormat.Style>
+                                    <syncfusion:GridDataConditionalFormat.Conditions>
+                                        <syncfusion:GridDataCondition ColumnName="ОтклонениеЗагруженности"
+                                                          ConditionType="GreaterThan"
+                                                          Value="0,15" />
+                                    </syncfusion:GridDataConditionalFormat.Conditions>
+                                </syncfusion:GridDataConditionalFormat>
+                                <syncfusion:GridDataConditionalFormat Name="C3" ApplyStyleToColumn="ОтклонениеЗагруженности">
+                                    <syncfusion:GridDataConditionalFormat.Style>
+                                        <syncfusion:GridDataStyleInfo Background="#190000FF" />
+                                    </syncfusion:GridDataConditionalFormat.Style>
+                                    <syncfusion:GridDataConditionalFormat.Conditions>
+                                        <syncfusion:GridDataCondition ColumnName="ОтклонениеЗагруженности"
+                                                          ConditionType="LessThan"
+                                                          Value="-0,15" />
+                                    </syncfusion:GridDataConditionalFormat.Conditions>
+                                </syncfusion:GridDataConditionalFormat>
+
+                                <syncfusion:GridDataConditionalFormat Name="D1" ApplyStyleToColumn="ОтклонениеЗагруженностиВыходных">
+                                    <syncfusion:GridDataConditionalFormat.Style>
+                                        <syncfusion:GridDataStyleInfo Background="#1900FC00" />
+                                    </syncfusion:GridDataConditionalFormat.Style>
+                                    <syncfusion:GridDataConditionalFormat.Conditions>
+                                        <syncfusion:GridDataCondition ColumnName="ОтклонениеЗагруженностиВыходных"
+                                                          ConditionType="GreaterThan"
+                                                          Value="-0,15" />
+                                        <syncfusion:GridDataCondition ColumnName="ОтклонениеЗагруженностиВыходных"
+                                                          ConditionType="LessThan"
+                                                          Value="0,15" />
+                                    </syncfusion:GridDataConditionalFormat.Conditions>
+                                </syncfusion:GridDataConditionalFormat>
+                                <syncfusion:GridDataConditionalFormat Name="D2" ApplyStyleToColumn="ОтклонениеЗагруженностиВыходных">
+                                    <syncfusion:GridDataConditionalFormat.Style>
+                                        <syncfusion:GridDataStyleInfo Background="#19FF0000" />
+                                    </syncfusion:GridDataConditionalFormat.Style>
+                                    <syncfusion:GridDataConditionalFormat.Conditions>
+                                        <syncfusion:GridDataCondition ColumnName="ОтклонениеЗагруженностиВыходных"
+                                                          ConditionType="GreaterThan"
+                                                          Value="0,15" />
+                                    </syncfusion:GridDataConditionalFormat.Conditions>
+                                </syncfusion:GridDataConditionalFormat>
+                                <syncfusion:GridDataConditionalFormat Name="D3" ApplyStyleToColumn="ОтклонениеЗагруженностиВыходных">
+                                    <syncfusion:GridDataConditionalFormat.Style>
+                                        <syncfusion:GridDataStyleInfo Background="#190000FF" />
+                                    </syncfusion:GridDataConditionalFormat.Style>
+                                    <syncfusion:GridDataConditionalFormat.Conditions>
+                                        <syncfusion:GridDataCondition ColumnName="ОтклонениеЗагруженностиВыходных"
+                                                          ConditionType="LessThan"
+                                                          Value="-0,15" />
+                                    </syncfusion:GridDataConditionalFormat.Conditions>
+                                </syncfusion:GridDataConditionalFormat>
+                            </syncfusion:GridDataControl.ConditionalFormats>
                         </syncfusion:GridDataControl>
                     </Grid>
                 </Expander>
@@ -294,23 +380,31 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
-                        <StackPanel Orientation="Horizontal" Margin="5,0,5,5">
-                            <Button Height="24"
-								Click="Button_Генерировать" ToolTip="Распредилить все НЕзаблокированные Наряды между всеми Подразделениями с балансировкой нагрузки" Background="#00DDDDDD" BorderThickness="0">
+                        <StackPanel Orientation="Horizontal" Margin="0">
+                            <Button Height="32" Margin="5"
+								Click="Button_Генерировать" ToolTip="Распредилить все НЕзаблокированные Наряды между всеми Подразделениями с балансировкой нагрузки" Background="#00DDDDDD" BorderThickness="1">
                                 <StackPanel Orientation="Horizontal">
                                     <Viewbox>
                                         <Grid>
                                             <Grid Width="40" Height="40" Visibility="Visible" />
-                                            <Path Data="M9.9315472,30.022331C10.079168,30.036248 10.221069,30.093434 10.334394,30.187184 10.488594,30.314683 10.586294,30.502183 10.601295,30.700082 10.799795,33.215764 11.502995,35.728747 12.771795,38.090732 14.583698,41.460509 17.2738,44.048993 20.411201,45.728681L21.659304,40.895314C21.733402,40.609015 21.970404,40.395316 22.261503,40.351117 22.555004,40.306817 22.842703,40.439616 22.999704,40.689614L27.652707,48.179265 31.78291,54.83022C31.904611,55.054219 31.922311,55.270219 31.851311,55.470815 31.77451,55.684316 31.60521,55.845815 31.39171,55.918714L24.687205,58.166101 15.185999,61.350976C14.901398,61.447377 14.589598,61.361379 14.394197,61.134877 14.195698,60.905679 14.156696,60.585382 14.295897,60.317086L16.627298,55.749516C11.170895,53.153131 6.4619408,48.85896 3.3864975,43.129699 1.4529076,39.533422 0.34676361,35.707849 0.0030136108,31.877173 -0.032814026,31.478776 0.2549057,31.124679 0.65273285,31.077779L9.7828636,30.023086C9.8324966,30.01786,9.8823395,30.017692,9.9315472,30.022331z M50.486482,14.078776C50.651744,14.08645,50.810987,14.150894,50.939912,14.262197L56.238731,18.941983 63.750458,25.574907C63.975758,25.775511 64.05846,26.088017 63.957458,26.369222 63.85976,26.655726 63.601957,26.848432 63.299257,26.864032L58.181438,27.132336C58.661839,33.153247 57.300537,39.379865 53.878623,44.908666 51.731415,48.382733 48.970407,51.255086 45.827196,53.468728 45.500993,53.69793 45.050495,53.627526 44.810191,53.304723L39.329771,45.929585C39.211272,45.768083 39.163874,45.564878 39.193675,45.369573 39.229472,45.171769 39.342273,44.994567 39.504875,44.882668 41.583682,43.452939 43.407289,41.585704 44.819392,39.304461 46.832399,36.049104 47.725003,32.426633 47.612302,28.869268L42.799785,30.205295C42.514784,30.285995 42.212583,30.189591 42.028382,29.957788 41.841583,29.726085 41.812183,29.410979 41.951584,29.147973L46.105896,21.371729 49.798009,14.468001C49.931409,14.251797 50.11231,14.126794 50.320113,14.090393 50.375638,14.079968 50.431395,14.076218 50.486482,14.078776z M29.956733,6.6757202E-06C34.042579,-0.0026788712 37.936724,0.8332386 41.471065,2.3410139 41.841669,2.4999504 42.016671,2.9191303 41.868269,3.2941208L38.478931,11.835634C38.404629,12.020429 38.256928,12.168926 38.072726,12.244424 37.889124,12.320022 37.678121,12.317322 37.497818,12.236624 35.187192,11.221049 32.640363,10.653362 29.956733,10.653363 26.131188,10.653362 22.581547,11.799134 19.616014,13.767887L23.281356,17.155804C23.500858,17.3563 23.577759,17.666192 23.476758,17.944885 23.379157,18.223479 23.123955,18.416174 22.830351,18.434373L14.032049,18.99176 6.2181396,19.483948C5.9629478,19.486448 5.761776,19.39795 5.6224327,19.241754 5.468132,19.072458 5.405632,18.848464 5.4440193,18.624568L6.6334953,11.655937 8.3202744,1.7785282C8.373745,1.4816647 8.5964661,1.2472906 8.8900509,1.1822319 9.1836929,1.1171637 9.4831371,1.2343512 9.6550083,1.4816647L12.576233,5.6951828C17.442289,2.1171398,23.453458,-0.0026788712,29.956733,6.6757202E-06z" Stretch="Uniform" Fill="#FF000000" Width="26" Height="26" Margin="0,0,0,0" />
+                                            <Path Data="M9.9315472,30.022331C10.079168,30.036248 10.221069,30.093434 10.334394,30.187184 10.488594,30.314683 10.586294,30.502183 10.601295,30.700082 10.799795,33.215764 11.502995,35.728747 12.771795,38.090732 14.583698,41.460509 17.2738,44.048993 20.411201,45.728681L21.659304,40.895314C21.733402,40.609015 21.970404,40.395316 22.261503,40.351117 22.555004,40.306817 22.842703,40.439616 22.999704,40.689614L27.652707,48.179265 31.78291,54.83022C31.904611,55.054219 31.922311,55.270219 31.851311,55.470815 31.77451,55.684316 31.60521,55.845815 31.39171,55.918714L24.687205,58.166101 15.185999,61.350976C14.901398,61.447377 14.589598,61.361379 14.394197,61.134877 14.195698,60.905679 14.156696,60.585382 14.295897,60.317086L16.627298,55.749516C11.170895,53.153131 6.4619408,48.85896 3.3864975,43.129699 1.4529076,39.533422 0.34676361,35.707849 0.0030136108,31.877173 -0.032814026,31.478776 0.2549057,31.124679 0.65273285,31.077779L9.7828636,30.023086C9.8324966,30.01786,9.8823395,30.017692,9.9315472,30.022331z M50.486482,14.078776C50.651744,14.08645,50.810987,14.150894,50.939912,14.262197L56.238731,18.941983 63.750458,25.574907C63.975758,25.775511 64.05846,26.088017 63.957458,26.369222 63.85976,26.655726 63.601957,26.848432 63.299257,26.864032L58.181438,27.132336C58.661839,33.153247 57.300537,39.379865 53.878623,44.908666 51.731415,48.382733 48.970407,51.255086 45.827196,53.468728 45.500993,53.69793 45.050495,53.627526 44.810191,53.304723L39.329771,45.929585C39.211272,45.768083 39.163874,45.564878 39.193675,45.369573 39.229472,45.171769 39.342273,44.994567 39.504875,44.882668 41.583682,43.452939 43.407289,41.585704 44.819392,39.304461 46.832399,36.049104 47.725003,32.426633 47.612302,28.869268L42.799785,30.205295C42.514784,30.285995 42.212583,30.189591 42.028382,29.957788 41.841583,29.726085 41.812183,29.410979 41.951584,29.147973L46.105896,21.371729 49.798009,14.468001C49.931409,14.251797 50.11231,14.126794 50.320113,14.090393 50.375638,14.079968 50.431395,14.076218 50.486482,14.078776z M29.956733,6.6757202E-06C34.042579,-0.0026788712 37.936724,0.8332386 41.471065,2.3410139 41.841669,2.4999504 42.016671,2.9191303 41.868269,3.2941208L38.478931,11.835634C38.404629,12.020429 38.256928,12.168926 38.072726,12.244424 37.889124,12.320022 37.678121,12.317322 37.497818,12.236624 35.187192,11.221049 32.640363,10.653362 29.956733,10.653363 26.131188,10.653362 22.581547,11.799134 19.616014,13.767887L23.281356,17.155804C23.500858,17.3563 23.577759,17.666192 23.476758,17.944885 23.379157,18.223479 23.123955,18.416174 22.830351,18.434373L14.032049,18.99176 6.2181396,19.483948C5.9629478,19.486448 5.761776,19.39795 5.6224327,19.241754 5.468132,19.072458 5.405632,18.848464 5.4440193,18.624568L6.6334953,11.655937 8.3202744,1.7785282C8.373745,1.4816647 8.5964661,1.2472906 8.8900509,1.1822319 9.1836929,1.1171637 9.4831371,1.2343512 9.6550083,1.4816647L12.576233,5.6951828C17.442289,2.1171398,23.453458,-0.0026788712,29.956733,6.6757202E-06z" Stretch="Uniform" Fill="#FF000000" Width="26" Height="26" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5" >
+                                                <Path.RenderTransform>
+                                                    <TransformGroup>
+                                                        <ScaleTransform ScaleY="1" ScaleX="-1"/>
+                                                        <SkewTransform AngleY="0" AngleX="0"/>
+                                                        <RotateTransform Angle="0"/>
+                                                        <TranslateTransform/>
+                                                    </TransformGroup>
+                                                </Path.RenderTransform>
+                                            </Path>
                                         </Grid>
                                     </Viewbox>
                                     <TextBlock Text="Распределить Наряды" Margin="0,0,5,0" VerticalAlignment="Center"/>
                                 </StackPanel>
-                                
-                                 </Button>
+                            </Button>
                             <Button
                             ToolTip="Открывает диалоговое окно для выбора пути и имени файла графика в формате Word"
-								Height="24" Background="#00DDDDDD" BorderThickness="0"
+								Height="32" Margin="5" Background="#00DDDDDD" BorderThickness="1"
 								Click="СохранитьГрафикНарядов">
                                 <StackPanel Orientation="Horizontal">
                                     <Viewbox>
@@ -324,7 +418,7 @@
                                     <TextBlock Text="Сохранить График..." Margin="0,0,5,0" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Button>
-                            <ToggleButton Height="24" Background="#00DDDDDD" BorderThickness="0" ToolTip="Заблокировать/Разблокировать все Наряды в Графике"
+                            <ToggleButton Height="32" Margin="5" Background="#00DDDDDD" BorderThickness="1" ToolTip="Заблокировать/Разблокировать все Наряды в Графике"
 									  Checked="ToggleButton_Заблокировать" Unchecked="ToggleButton_Разблокировать">
                                 <StackPanel Orientation="Horizontal">
                                     <Viewbox>
@@ -337,9 +431,9 @@
                                 </StackPanel>
                             </ToggleButton>
                         </StackPanel>
-                        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="5,0,0,0">
+                       <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="5,0,5,0">
                             <Label Content="Дата" Width="100" />
-                            <ListView ItemsSource="{Binding Наряды}" BorderThickness="0">
+                            <ListView ItemsSource="{Binding Наряды}" BorderThickness="0" Background="{x:Null}">
                                 <ListView.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <VirtualizingStackPanel IsItemsHost="True" Orientation="Horizontal" />
@@ -347,18 +441,18 @@
                                 </ListView.ItemsPanel>
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
-                                        <Label Width="101" Content="{Binding Название}" Margin="-5,-2,-5,-2" />
+                                        <Label Width="100" Content="{Binding Название}" Margin="0" />
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>
                         </StackPanel>
                         <ListView Grid.Row="2" x:Name="GraphList" ItemsSource="{Binding ДатыГрафика}" BorderThickness="0"
-							  Margin="5,0,5,5" Background="Transparent">
+							  Margin="5,0,5,5" Background="{x:Null}">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
-                                    <StackPanel Orientation="Horizontal" Background="{Binding BackColor}" Margin="-5,-2">
-                                        <TextBlock Text="{Binding Display}" Width="100" VerticalAlignment="Center"
-											   HorizontalAlignment="Stretch" TextAlignment="Center" />
+                                    <StackPanel Orientation="Horizontal" Background="{Binding BackColor}" Margin="0">
+                                        <Label Content="{Binding Display}" Width="100" />
+                                        <!--<TextBlock Text="{Binding Display}" Width="100" VerticalAlignment="Center" TextAlignment="Center" />-->
                                         <ListView ItemsSource="{Binding Подразделения}" BorderThickness="0"
 											  Background="Transparent">
                                             <ListView.ItemsPanel>
@@ -368,8 +462,8 @@
                                             </ListView.ItemsPanel>
                                             <ListView.ItemTemplate>
                                                 <DataTemplate>
-                                                    <Border BorderThickness="0,0,1,0" BorderBrush="#FFAAAAAA"
-														Margin="-5,-2">
+                                                    <Border BorderThickness="0,0,1,0" Width="100" BorderBrush="#FFAAAAAA"
+														Margin="0">
                                                         <StackPanel Orientation="Horizontal" Margin="0">
                                                             <syncfusion:ComboBoxAdv Visibility="{Binding Visibility}"
 																				SelectedValue="{Binding Pod}"
@@ -408,9 +502,7 @@
                                                                     </ControlTemplate>
                                                                 </ToggleButton.Template>
                                                                 <Viewbox>
-                                                                    <Grid>
-                                                                        <Path Data="M216.703,392.021C193.561,392.021 174.807,411.285 174.807,435.042 174.807,452.242 184.785,466.809 198.999,473.715L198.999,532.389 234.509,532.389 234.509,473.679C248.741,466.809 258.736,452.188 258.736,435.042 258.736,411.285 239.948,392.021 216.703,392.021z M210.842,49.7245C152.579,49.7245,105.378,101.086,105.378,164.42L105.378,224.989C105.378,232.632,106.107,240.089,107.412,247.346L314.373,247.346C315.695,240.089,316.406,232.632,316.406,224.989L316.406,164.42C316.406,101.086,269.104,49.7245,210.842,49.7245z M210.842,0C289.096,0,352.577,68.9881,352.577,154.05L352.577,235.357C352.577,240.478 352.324,245.541 351.883,250.552 392.001,261.601 421.768,301.065 421.768,348.137L421.768,553.033C421.768,608.65,380.243,653.768,329.096,653.768L92.6889,653.768C41.4571,653.768,2E-06,608.65,0,553.033L0,348.137C2E-06,301.047 29.7501,261.601 69.9193,250.531 69.4788,245.541 69.2245,240.478 69.2245,235.357L69.2245,154.05C69.2245,68.9881,132.604,0,210.842,0z" Stretch="Uniform" Fill="#FF000000" Width="26" Height="26" Margin="0,0,0,0"/>
-                                                                    </Grid>
+                                                                    <Path Data="M216.703,392.021C193.561,392.021 174.807,411.285 174.807,435.042 174.807,452.242 184.785,466.809 198.999,473.715L198.999,532.389 234.509,532.389 234.509,473.679C248.741,466.809 258.736,452.188 258.736,435.042 258.736,411.285 239.948,392.021 216.703,392.021z M210.842,49.7245C152.579,49.7245,105.378,101.086,105.378,164.42L105.378,224.989C105.378,232.632,106.107,240.089,107.412,247.346L314.373,247.346C315.695,240.089,316.406,232.632,316.406,224.989L316.406,164.42C316.406,101.086,269.104,49.7245,210.842,49.7245z M210.842,0C289.096,0,352.577,68.9881,352.577,154.05L352.577,235.357C352.577,240.478 352.324,245.541 351.883,250.552 392.001,261.601 421.768,301.065 421.768,348.137L421.768,553.033C421.768,608.65,380.243,653.768,329.096,653.768L92.6889,653.768C41.4571,653.768,2E-06,608.65,0,553.033L0,348.137C2E-06,301.047 29.7501,261.601 69.9193,250.531 69.4788,245.541 69.2245,240.478 69.2245,235.357L69.2245,154.05C69.2245,68.9881,132.604,0,210.842,0z" Stretch="Uniform" Fill="#FF000000" Width="26" Height="26" Margin="0,0,0,0"/>
                                                                 </Viewbox>
                                                             </ToggleButton>
                                                         </StackPanel>
@@ -421,19 +513,13 @@
                                     </StackPanel>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
-                            <ListView.Template>
-                                <ControlTemplate TargetType="{x:Type ListBox}">
-                                    <ScrollViewer Focusable="False" Padding="0">
-                                        <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                                    </ScrollViewer>
-                                </ControlTemplate>
-                            </ListView.Template>
                         </ListView>
                     </Grid>
                 </Expander>
             </StackPanel>
         </ScrollViewer>
-
+        </syncfusion:BusyIndicator>
+        
         <Label HorizontalAlignment="Right" VerticalAlignment="Top" Content="© Платонов Павел Игоревич (Kibnet), 2015"
 			   Foreground="#7F000000" Margin="0,0,17.333,0" FontSize="10" />
     </Grid>

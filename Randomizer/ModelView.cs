@@ -16,11 +16,13 @@ namespace Randomizer
 
 		//DispatcherTimer timer;
 		private readonly НастройкиГенератора настройки;
+		private bool _isBusy;
+		private string _status;
 
 		public ModelView()
 		{
 			настройки = НастройкиГенератора.Deserialize("Настройки.bin");
-
+			IsBusy = false;
 			//this.timer = new DispatcherTimer();
 			//timer.Interval = TimeSpan.FromMilliseconds(100);
 			//timer.Tick += new EventHandler(timer_Tick);
@@ -28,12 +30,21 @@ namespace Randomizer
 		}
 
 		//void timer_Tick(object sender, EventArgs e)
-		//{
-		//	foreach (var наряд in Наряды)
-		//	{
-		//		наряд.Refresh();
-		//	}
-		//}
+		public void ОбновитьНаряды()
+		{
+			foreach (var наряд in Наряды)
+			{
+				наряд.Refresh();
+			}
+		}
+
+		public void ОбновитьПодразделения()
+		{
+			foreach (var подразделение in Подразделения)
+			{
+				подразделение.Refresh();
+			}
+		}
 
 		//public void StartTimer()
 		//{
@@ -182,17 +193,30 @@ namespace Randomizer
 			}
 		}
 
+		public double ОбщаяНагрузка
+		{
+			get
+			{
+				return App.Модель.ДлительностьНарядов /
+							  (double)App.Модель.Подразделения.Sum(подразделение => подразделение.Люди);
+			}
+		}
+
+		public double ОбщаяНагрузкаВыходных
+		{
+			get
+			{
+				return App.Модель.ДлительностьВыходныхНарядов /
+							   (double)App.Модель.Подразделения.Sum(подразделение => подразделение.Люди);
+			}
+		}
+
 		public string Распределено
 		{
 			get
 			{
-				var midload = App.Модель.ДлительностьНарядов/
-				              (double) App.Модель.Подразделения.Sum(подразделение => подразделение.Люди);
-				var holyload = App.Модель.ДлительностьВыходныхНарядов/
-				               (double) App.Модель.Подразделения.Sum(подразделение => подразделение.Люди);
-
 				return string.Format("Распределено {0} часов из {1}. Общая нагрузка {2} ч/чел., на выходных {3} ч/чел.",
-					ДлительностьРаспределеныхНарядов, ДлительностьНарядов, midload.ToString("F2"), holyload.ToString("F2"));
+					ДлительностьРаспределеныхНарядов, ДлительностьНарядов, ОбщаяНагрузка.ToString("F2"), ОбщаяНагрузкаВыходных.ToString("F2"));
 			}
 		}
 
@@ -215,7 +239,7 @@ namespace Randomizer
 				return string.Format("Всего {3} шт. ({0} часов) из них {4} шт. ({1} часов) выходных ({2}%)",
 					ДлительностьНарядов,
 					ДлительностьВыходныхНарядов,
-					(КоэффициэнтВыходных*100).ToString("F1"),
+					(КоэффициэнтВыходных * 100).ToString("F1"),
 					КоличествоНарядов,
 					КоличествоВыходныхНарядов);
 			}
@@ -228,7 +252,7 @@ namespace Randomizer
 				var hproc = 0d;
 				if (ДлительностьНарядов != 0)
 				{
-					hproc = ДлительностьВыходныхНарядов/(double) ДлительностьНарядов;
+					hproc = ДлительностьВыходныхНарядов / (double)ДлительностьНарядов;
 				}
 				return hproc;
 			}
@@ -261,7 +285,7 @@ namespace Randomizer
 				var table = new DataTable();
 				try
 				{
-					table.Columns.Add("Дата", typeof (string));
+					table.Columns.Add("Дата", typeof(string));
 					foreach (var naryad in Наряды)
 					{
 						table.Columns.Add(naryad.Название);
@@ -305,12 +329,32 @@ namespace Randomizer
 			}
 		}
 
-		public object ИтогоДаты
+		public string ИтогоДаты
 		{
 			get
 			{
 				return string.Format("Всего {0} {3}, из них {1} выходных {4} и {2} {5} c усилениями",
 					ПериодГрафика.Count, Праздники.Count, Усиления.Count, Day(ПериодГрафика.Count), Day(Праздники.Count), Day(Усиления.Count));
+			}
+		}
+
+		public bool IsBusy
+		{
+			get { return _isBusy; }
+			set
+			{
+				_isBusy = value;
+				RaisePropertyChanged("IsBusy");
+			}
+		}
+
+		public string Status
+		{
+			get { return _status; }
+			set
+			{
+				_status = value;
+				RaisePropertyChanged("Status");
 			}
 		}
 
@@ -324,24 +368,27 @@ namespace Randomizer
 				case 14:
 					return "дней";
 				default:
-				{
-					var ost = day%10;
-					switch (ost)
 					{
-						case 1:
-							return "день";
-						case 2:
-						case 3:
-						case 4:
-							return "дня";
-						default:
-							return "дней";
+						var ost = day % 10;
+						switch (ost)
+						{
+							case 1:
+								return "день";
+							case 2:
+							case 3:
+							case 4:
+								return "дня";
+							default:
+								return "дней";
+						}
 					}
-				}
 			}
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;
+
+
+
 
 		public void GenerateEvents()
 		{
@@ -352,8 +399,8 @@ namespace Randomizer
 				Смены =
 					Наряды.Where(nar => !nar.Усиление || Усиления.Contains(date))
 						.Where(nar => nar.Дни == WeekDays.Все
-						              || (nar.Дни == WeekDays.Выходные && Праздники.Contains(date))
-						              || (nar.Дни == WeekDays.Будние && !Праздники.Contains(date)))
+									  || (nar.Дни == WeekDays.Выходные && Праздники.Contains(date))
+									  || (nar.Дни == WeekDays.Будние && !Праздники.Contains(date)))
 						.ToDictionary<Наряд, Наряд, Подразделение>(nar => nar, nar => null)
 			}).ToList();
 
@@ -480,11 +527,11 @@ namespace Randomizer
 								//Ищем наряд в который уже идёт какое-нибудь подразделение
 								var podob = vday.Смены.Where(vp => vp.Value != null
 									//Такой же длительности
-								                                   && vp.Key.Длительность == nar.Длительность
+																   && vp.Key.Длительность == nar.Длительность
 									//И подразделение которое в него идёт не идёт в выбранный день
-								                                   && !collision.Key.Смены.ContainsValue(vp.Value)
+																   && !collision.Key.Смены.ContainsValue(vp.Value)
 									//И подразделение которое в него идёт может пойти в выбранный наряд
-								                                   && vp.Value.Наряды.Contains(nar)).ToList();
+																   && vp.Value.Наряды.Contains(nar)).ToList();
 
 								if (podob.Count <= 0) continue;
 								finded = true;
@@ -513,9 +560,9 @@ namespace Randomizer
 				foreach (var d in Подразделения.Where(nar => nar.Наряды.Contains(datpair1.Value)))
 				{
 					//Для каждого подразделения которое может пойти в этот наряд
-					var krat = (double) datpair1.Value.Длительность;
+					var krat = (double)datpair1.Value.Длительность;
 					//Вычисляется нагрузка которая будет если оно пойдёт
-					var load = (d.Часы + krat)/d.Люди;
+					var load = (d.Часы + krat) / d.Люди;
 					dict[d] = load;
 				}
 				//Выбирается подразделение с самой низкой вычисленной нагрузкой

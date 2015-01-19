@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
@@ -63,7 +64,14 @@ namespace Randomizer
 			try
 			{
 				СохранитьНастройки();
-				App.Модель.GenerateEvents();
+				App.Модель.IsBusy = true;
+				var wor = new BackgroundWorker();
+				wor.DoWork+= (o, args) => App.Модель.GenerateEvents();
+				wor.RunWorkerCompleted += (o, args) =>
+				{
+					App.Модель.IsBusy = false;
+				};
+				wor.RunWorkerAsync();
 			}
 			catch (Exception ex)
 			{
@@ -80,7 +88,7 @@ namespace Randomizer
 		{
 			try
 			{
-				if (App.Модель == null)
+				if (App.Модель == null || App.Модель.IsBusy)
 				{
 					return;
 				}
@@ -516,17 +524,7 @@ namespace Randomizer
 		{
 			СохранитьНастройки();
 		}
-
-		private void ПрименитьИзменения(object sender, RoutedEventArgs e)
-		{
-			App.Модель.RefreshTable();
-		}
-
-		private void ВкладкаВывод_OnGotFocus(object sender, RoutedEventArgs e)
-		{
-			App.Модель.RefreshTable();
-		}
-
+		
 		private void ToggleButton_Заблокировать(object sender, RoutedEventArgs e)
 		{
 			foreach (var data in App.Модель.ДатыГрафика)
@@ -552,11 +550,6 @@ namespace Randomizer
 		private void КнопкаКалькулятора(object sender, RoutedEventArgs e)
 		{
 			Process.Start("calc");
-		}
-
-		private void КнопкаРаскидать(object sender, RoutedEventArgs e)
-		{
-			App.Модель.Раскидать();
 		}
 
 		private void ВверхНаряд(object sender, RoutedEventArgs e)
@@ -609,6 +602,16 @@ namespace Randomizer
 			{
 				MessageBox.Show(string.Format("{0}\n{1}", ex.Message, ex.StackTrace), "Исключение");
 			}
+		}
+
+		private void Button_ОбновитьНаряды(object sender, RoutedEventArgs e)
+		{
+			App.Модель.ОбновитьНаряды();
+		}
+
+		private void Button_ОбновитьПодразделения(object sender, RoutedEventArgs e)
+		{
+			App.Модель.ОбновитьПодразделения();
 		}
 	}
 }
