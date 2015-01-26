@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
 using Randomizer.Annotations;
+using Syncfusion.Linq;
 using Syncfusion.Windows.Shared;
 
 namespace Randomizer
@@ -392,78 +393,101 @@ namespace Randomizer
 
 		public void GenerateEvents()
 		{
-			//Формирование всех дат и доступных нарядов в них
-			var dates = ПериодГрафика.Select(date => new ДатаГрафика
+			ObservableCollection<ДатаГрафика> best = null;
+			double bestres = 0;
+			for (int i = 0; i < 100; i++)
 			{
-				Date = date,
-				Смены =
-					Наряды.Where(nar => !nar.Усиление || Усиления.Contains(date))
-						.Where(nar => nar.Дни == WeekDays.Все
-									  || (nar.Дни == WeekDays.Выходные && Праздники.Contains(date))
-									  || (nar.Дни == WeekDays.Будние && !Праздники.Contains(date)))
-						.ToDictionary<Наряд, Наряд, Подразделение>(nar => nar, nar => null)
-			}).ToList();
 
-			//Заполнение заблокированных нарядов
-			foreach (var date in dates)
-			{
-				var find = ДатыГрафика.FirstOrDefault(gr => gr.Date == date.Date);
-				if (find == null) continue;
-				foreach (var nar in find.Блокировки)
+				//Формирование всех дат и доступных нарядов в них
+				var dates = ПериодГрафика.Select(date => new ДатаГрафика
 				{
-					date.Блокировки.Add(nar);
-					if (!find.Смены.ContainsKey(nar)) continue;
-					if (nar.Усиление && !Усиления.Contains(date.Date)) continue;
-					if (Подразделения.Contains(find.Смены[nar]))
+					Date = date,
+					Смены =
+						Наряды.Where(nar => !nar.Усиление || Усиления.Contains(date))
+							.Where(nar => nar.Дни == WeekDays.Все
+										  || (nar.Дни == WeekDays.Выходные && Праздники.Contains(date))
+										  || (nar.Дни == WeekDays.Будние && !Праздники.Contains(date)))
+							.ToDictionary<Наряд, Наряд, Подразделение>(nar => nar, nar => null)
+				}).ToList();
+
+				//Заполнение заблокированных нарядов
+				foreach (var date in dates)
+				{
+					var find = ДатыГрафика.FirstOrDefault(gr => gr.Date == date.Date);
+					if (find == null) continue;
+					foreach (var nar in find.Блокировки)
 					{
-						date.Смены[nar] = find.Смены[nar];
+						date.Блокировки.Add(nar);
+						if (!find.Смены.ContainsKey(nar)) continue;
+						if (nar.Усиление && !Усиления.Contains(date.Date)) continue;
+						if (Подразделения.Contains(find.Смены[nar]))
+						{
+							date.Смены[nar] = find.Смены[nar];
+						}
+					}
+				}
+
+				//Перезапись старого графика новым
+				ДатыГрафика = new ObservableCollection<ДатаГрафика>(dates);
+				var rand = new Random();
+
+				//Формирование конкретных нарядов на выходные
+				var holypairs = new List<KeyValuePair<ДатаГрафика, Наряд>>();
+				foreach (var day in ДатыГрафика)
+				{
+					var day1 = day;
+					foreach (var smen in day.Смены
+						.Where(pair => !day1.Блокировки.Contains(pair.Key) && pair.Value == null && day1.Holyday)
+						.Select(pair => pair.Key))
+					{
+						holypairs.Insert(rand.Next(holypairs.Count), (new KeyValuePair<ДатаГрафика, Наряд>(day, smen)));
+					}
+				}
+
+				//Сортировка нарядов по длительности в порядке убывания
+				holypairs.Sort((pair, valuePair) => valuePair.Value.Длительность.CompareTo(pair.Value.Длительность));
+
+				РаспределитьНаряды(holypairs);
+
+				//Формирование конкретных нарядов
+				var pairs = new List<KeyValuePair<ДатаГрафика, Наряд>>();
+				foreach (var day in ДатыГрафика)
+				{
+					var day1 = day;
+					foreach (var smen in day.Смены
+						.Where(pair => !day1.Блокировки.Contains(pair.Key) && pair.Value == null)
+						.Select(pair => pair.Key))
+					{
+						pairs.Insert(rand.Next(pairs.Count), (new KeyValuePair<ДатаГрафика, Наряд>(day, smen)));
+					}
+				}
+
+				//Сортировка нарядов по длительности в порядке убывания
+				pairs.Sort((pair, valuePair) => valuePair.Value.Длительность.CompareTo(pair.Value.Длительность));
+
+				РаспределитьНаряды(pairs);
+
+				//Выборка лучшего случая
+				if (best == null)
+				{
+					best = ДатыГрафика;
+					bestres = Math.Abs(Подразделения.Max(dist => dist.ОтклонениеЗагруженности)) +
+							  Math.Abs(Подразделения.Min(dist => dist.ОтклонениеЗагруженности));
+				}
+				else
+				{
+					var res = Math.Abs(Подразделения.Max(dist => dist.ОтклонениеЗагруженности)) +
+							  Math.Abs(Подразделения.Min(dist => dist.ОтклонениеЗагруженности));
+					if (res < bestres)
+					{
+						best = ДатыГрафика;
+						bestres = res;
 					}
 				}
 			}
-
-			//Перезапись старого графика новым
-			ДатыГрафика = new ObservableCollection<ДатаГрафика>(dates);
-			var rand = new Random();
-
-			//Формирование конкретных нарядов на выходные
-			var holypairs = new List<KeyValuePair<ДатаГрафика, Наряд>>();
-			foreach (var day in ДатыГрафика)
-			{
-				var day1 = day;
-				foreach (var smen in day.Смены
-					.Where(pair => !day1.Блокировки.Contains(pair.Key) && pair.Value == null && day1.Holyday)
-					.Select(pair => pair.Key))
-				{
-					holypairs.Insert(rand.Next(holypairs.Count), (new KeyValuePair<ДатаГрафика, Наряд>(day, smen)));
-				}
-			}
-
-			//Сортировка нарядов по длительности в порядке убывания
-			holypairs.Sort((pair, valuePair) => valuePair.Value.Длительность.CompareTo(pair.Value.Длительность));
-
-			РаспределитьНаряды(holypairs);
-
-			//Формирование конкретных нарядов
-			var pairs = new List<KeyValuePair<ДатаГрафика, Наряд>>();
-			foreach (var day in ДатыГрафика)
-			{
-				var day1 = day;
-				foreach (var smen in day.Смены
-					.Where(pair => !day1.Блокировки.Contains(pair.Key) && pair.Value == null)
-					.Select(pair => pair.Key))
-				{
-					pairs.Insert(rand.Next(pairs.Count), (new KeyValuePair<ДатаГрафика, Наряд>(day, smen)));
-				}
-			}
-
-			//Сортировка нарядов по длительности в порядке убывания
-			pairs.Sort((pair, valuePair) => valuePair.Value.Длительность.CompareTo(pair.Value.Длительность));
-
-			РаспределитьНаряды(pairs);
+			ДатыГрафика = best;
 
 			Раскидать();
-
-			RefreshTable();
 		}
 
 		/// <summary>

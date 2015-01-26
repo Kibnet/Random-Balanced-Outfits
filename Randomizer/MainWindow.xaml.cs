@@ -24,34 +24,45 @@ namespace Randomizer
 			{
 				narydsGrid.MouseDoubleClick += (sender, args) => РедактироватьНаряд(null, null);
 				districtsGrid.MouseDoubleClick += (sender, args) => РедактироватьПодразделение(null, null);
-				var fd = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(1);
-				var sd = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(2).AddDays(-1);
-				graficDates.DisplayDate = fd;
-				graficDates.SelectedDates.AddRange(fd, sd);
-				App.Модель.ПериодГрафика = new ObservableCollection<DateTime>(graficDates.SelectedDates);
-				sealDates.DisplayDate = fd;
+				//var fd = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(1);
+				//var sd = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(2).AddDays(-1);
+				//graficDates.DisplayDate = fd;
+				//graficDates.SelectedDates.AddRange(fd, sd);
+				//App.Модель.ПериодГрафика = new ObservableCollection<DateTime>(graficDates.SelectedDates);
+				//sealDates.DisplayDate = fd;
+				foreach (var dateTime in App.Модель.ПериодГрафика)
+				{
+					graficDates.SelectedDates.Add(dateTime);
+				}
+				graficDates.DisplayDate = App.Модель.ПериодГрафика.LastOrDefault();
 				foreach (var dateTime in App.Модель.Усиления)
 				{
 					sealDates.SelectedDates.Add(dateTime);
 				}
-				holyDates.DisplayDate = fd;
-				if (!App.Модель.Праздники.Any(time => sealDates.SelectedDates.Contains(time)))
+				sealDates.DisplayDate = App.Модель.ПериодГрафика.LastOrDefault();
+				foreach (var date in App.Модель.Праздники)
 				{
-					foreach (
-						var date in
-							graficDates.SelectedDates.Where(
-								date => date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday))
-					{
-						holyDates.SelectedDates.Add(date);
-					}
+					holyDates.SelectedDates.Add(date);
 				}
-				else
-				{
-					foreach (var date in App.Модель.Праздники)
-					{
-						holyDates.SelectedDates.Add(date);
-					}
-				}
+				holyDates.DisplayDate = App.Модель.ПериодГрафика.LastOrDefault();
+				//holyDates.DisplayDate = fd;
+				//if (!App.Модель.Праздники.Any(time => sealDates.SelectedDates.Contains(time)))
+				//{
+				//	foreach (
+				//		var date in
+				//			graficDates.SelectedDates.Where(
+				//				date => date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday))
+				//	{
+				//		holyDates.SelectedDates.Add(date);
+				//	}
+				//}
+				//else
+				//{
+				//	foreach (var date in App.Модель.Праздники)
+				//	{
+				//		holyDates.SelectedDates.Add(date);
+				//	}
+				//}
 			}
 			catch (Exception ex)
 			{
@@ -65,11 +76,22 @@ namespace Randomizer
 			{
 				СохранитьНастройки();
 				App.Модель.IsBusy = true;
+				GraphList.BeginInit();
+				districtsGrid.BeginInit();
+				narydsGrid.BeginInit();
 				var wor = new BackgroundWorker();
 				wor.DoWork+= (o, args) => App.Модель.GenerateEvents();
 				wor.RunWorkerCompleted += (o, args) =>
 				{
 					App.Модель.IsBusy = false;
+
+					App.Модель.RefreshTable();
+
+					App.Модель.ОбновитьНаряды();
+					App.Модель.ОбновитьПодразделения();
+					GraphList.EndInit();
+					districtsGrid.EndInit();
+					narydsGrid.EndInit();
 				};
 				wor.RunWorkerAsync();
 			}
@@ -93,12 +115,12 @@ namespace Randomizer
 					return;
 				}
 
-				Распределено.Content = App.Модель.Распределено;
 				App.Модель.ПериодГрафика = new ObservableCollection<DateTime>(graficDates.SelectedDates);
 				App.Модель.Усиления = new ObservableCollection<DateTime>(sealDates.SelectedDates);
 				App.Модель.Праздники = new ObservableCollection<DateTime>(holyDates.SelectedDates);
 				ВсегоНарядов.Content = App.Модель.ВсегоНарядов;
 				ИтогоДаты.Content = App.Модель.ИтогоДаты;
+				Распределено.Content = App.Модель.Распределено;
 			}
 			catch (Exception ex)
 			{
@@ -536,6 +558,9 @@ namespace Randomizer
 				}
 			}
 			App.Модель.ДатыГрафика = new ObservableCollection<ДатаГрафика>(App.Модель.ДатыГрафика);
+			AllBlock.Text = "Разблокировать Все";
+			BlockPath.Visibility = Visibility.Hidden;
+			UnblockPath.Visibility = Visibility.Visible;
 		}
 
 		private void ToggleButton_Разблокировать(object sender, RoutedEventArgs e)
@@ -545,6 +570,9 @@ namespace Randomizer
 				data.Блокировки.Clear();
 			}
 			App.Модель.ДатыГрафика = new ObservableCollection<ДатаГрафика>(App.Модель.ДатыГрафика);
+			AllBlock.Text = "Заблокировать Все";
+			BlockPath.Visibility = Visibility.Visible;
+			UnblockPath.Visibility = Visibility.Hidden;
 		}
 
 		private void КнопкаКалькулятора(object sender, RoutedEventArgs e)
