@@ -15,11 +15,12 @@ namespace Randomizer
 
 		public void Refresh()
 		{
+			Пересчитать();
 			RaisePropertyChanged(() => Количество);
 			RaisePropertyChanged(() => Выходных);
 			RaisePropertyChanged(() => Длительность);
 			RaisePropertyChanged(() => Дни);
-			RaisePropertyChanged(() => ДниНаряда);
+			//RaisePropertyChanged(() => ДниНаряда);
 			RaisePropertyChanged(() => КоличествоВыходных);
 			RaisePropertyChanged(() => Название);
 			RaisePropertyChanged(() => РаспределеноКоличество);
@@ -28,79 +29,54 @@ namespace Randomizer
 			RaisePropertyChanged(() => Всего);
 		}
 
-		public IEnumerable<DateTime> ДниНаряда
+		public void Пересчитать()
 		{
-			get
+			//ДниНаряда= App.Модель.ПериодГрафика
+			//		.Where(date => Дни == WeekDays.Все
+			//					   || (Дни == WeekDays.Выходные && App.Модель.Праздники.Contains(date))
+			//					   || (Дни == WeekDays.Будние && !App.Модель.Праздники.Contains(date)));
+
+			//Количество = ДниНаряда.Count(time => !Усиление || App.Модель.Усиления.Contains(time));
+
+			var dates = App.Модель.ДатыГрафика.ToArray();
+			Количество = dates
+				.Count(data => (!App.Модель.ИсключитьБлокированные || !data.Блокировки.Contains(this)) && data.Смены.ContainsKey(this));
+
+
+			if (App.Модель.ИсключитьБлокированные)
 			{
-				return App.Модель.ПериодГрафика
-					.Where(date => Дни == WeekDays.Все
-					               || (Дни == WeekDays.Выходные && App.Модель.Праздники.Contains(date))
-					               || (Дни == WeekDays.Будние && !App.Модель.Праздники.Contains(date)));
-			}
-		}
-
-		public int Количество
-		{
-			get
-			{
-				var count = ДниНаряда.Count(time => !Усиление || App.Модель.Усиления.Contains(time));
-
-
-				if (!App.Модель.ИсключитьБлокированные) return count;
-				var blocked = App.Модель.ДатыГрафика
+				var blocked = dates
 					.Where(date => Дни == WeekDays.Все
 					               || (Дни == WeekDays.Выходные && App.Модель.Праздники.Contains(date.Date))
 					               || (Дни == WeekDays.Будние && !App.Модель.Праздники.Contains(date.Date)))
 					.SelectMany(gr => gr.Блокировки)
 					.Count(наряд => наряд == this);
-				count -= blocked;
-				return count;
+				Количество -= blocked;
 			}
-		}
 
-		public int РаспределеноКоличество
-		{
-			get
-			{
-				var cnt = App.Модель.ДатыГрафика
-					.SelectMany(gr => gr.Смены)
+			РаспределеноКоличество = dates
+					.SelectMany(time => time.Смены)
 					.Count(nar => nar.Key == this && App.Модель.Подразделения.Contains(nar.Value));
-				return cnt;
-			}
-		}
 
-		public int КоличествоВыходных
-		{
-			get
-			{
-				var i = 0;
-				foreach (var data in App.Модель.ДатыГрафика.Where(time => App.Модель.Праздники.Contains(time.Date)))
-				{
-					if (App.Модель.ИсключитьБлокированные)
-					{
-						if (data.Блокировки.Contains(this))
-							continue;
-					}
-					if (data.Смены.ContainsKey(this))
-					{
-						i++;
-					}
-				}
-				return i;
-			}
-		}
-
-		public int РаспределеноКоличествоВыходных
-		{
-			get
-			{
-				var cnt = App.Модель.ДатыГрафика
+			КоличествоВыходных = dates
+				.Where(time => App.Модель.Праздники.Contains(time.Date))
+				.Count(data => (!App.Модель.ИсключитьБлокированные || !data.Блокировки.Contains(this)) && data.Смены.ContainsKey(this));
+			
+			РаспределеноКоличествоВыходных = dates
 					.Where(time => App.Модель.Праздники.Contains(time.Date))
-					.SelectMany(gr => gr.Смены)
+					.SelectMany(time => time.Смены)
 					.Count(nar => nar.Key == this && App.Модель.Подразделения.Contains(nar.Value));
-				return cnt;
-			}
 		}
+
+		//public IEnumerable<DateTime> ДниНаряда { get; set; }
+
+		public int Количество { get; set; }
+
+		public int РаспределеноКоличество { get; set; }
+
+		public int КоличествоВыходных { get; set; }
+
+		public int РаспределеноКоличествоВыходных { get; set; }
 
 		public int Всего
 		{

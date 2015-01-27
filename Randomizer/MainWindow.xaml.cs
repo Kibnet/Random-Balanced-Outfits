@@ -5,6 +5,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using Microsoft.Win32;
 using Syncfusion.DocIO;
@@ -20,20 +21,47 @@ namespace Randomizer
 		public MainWindow()
 		{
 			InitializeComponent();
+			var ass = Assembly.GetExecutingAssembly().FullName;
+			Title += " " +ass.Split(',')[1].Split('=')[1];
 			try
 			{
 				narydsGrid.MouseDoubleClick += (sender, args) => РедактироватьНаряд(null, null);
 				districtsGrid.MouseDoubleClick += (sender, args) => РедактироватьПодразделение(null, null);
-				//var fd = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(1);
-				//var sd = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(2).AddDays(-1);
-				//graficDates.DisplayDate = fd;
-				//graficDates.SelectedDates.AddRange(fd, sd);
-				//App.Модель.ПериодГрафика = new ObservableCollection<DateTime>(graficDates.SelectedDates);
-				//sealDates.DisplayDate = fd;
+				
 				foreach (var dateTime in App.Модель.ПериодГрафика)
 				{
 					graficDates.SelectedDates.Add(dateTime);
 				}
+
+				if (graficDates.SelectedDates.Count == 0)
+				{
+					var fd = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(1);
+					var sd = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(2).AddDays(-1);
+					graficDates.DisplayDate = fd;
+					graficDates.SelectedDates.AddRange(fd, sd);
+					App.Модель.ПериодГрафика = new ObservableCollection<DateTime>(graficDates.SelectedDates);
+					sealDates.DisplayDate = fd;
+					sealDates.DisplayDate = fd;
+					holyDates.DisplayDate = fd;
+					if (!App.Модель.Праздники.Any(time => sealDates.SelectedDates.Contains(time)))
+					{
+						foreach (
+							var date in
+								graficDates.SelectedDates.Where(
+									date => date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday))
+						{
+							holyDates.SelectedDates.Add(date);
+						}
+					}
+					else
+					{
+						foreach (var date in App.Модель.Праздники)
+						{
+							holyDates.SelectedDates.Add(date);
+						}
+					}
+				}
+
 				graficDates.DisplayDate = App.Модель.ПериодГрафика.LastOrDefault();
 				foreach (var dateTime in App.Модель.Усиления)
 				{
@@ -45,24 +73,7 @@ namespace Randomizer
 					holyDates.SelectedDates.Add(date);
 				}
 				holyDates.DisplayDate = App.Модель.ПериодГрафика.LastOrDefault();
-				//holyDates.DisplayDate = fd;
-				//if (!App.Модель.Праздники.Any(time => sealDates.SelectedDates.Contains(time)))
-				//{
-				//	foreach (
-				//		var date in
-				//			graficDates.SelectedDates.Where(
-				//				date => date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday))
-				//	{
-				//		holyDates.SelectedDates.Add(date);
-				//	}
-				//}
-				//else
-				//{
-				//	foreach (var date in App.Модель.Праздники)
-				//	{
-				//		holyDates.SelectedDates.Add(date);
-				//	}
-				//}
+				
 			}
 			catch (Exception ex)
 			{
@@ -74,7 +85,11 @@ namespace Randomizer
 		{
 			try
 			{
-				СохранитьНастройки();
+				//СохранитьНастройки();
+				if (App.Модель.IsBusy)
+				{
+					return;
+				}
 				App.Модель.IsBusy = true;
 				GraphList.BeginInit();
 				districtsGrid.BeginInit();
@@ -83,15 +98,11 @@ namespace Randomizer
 				wor.DoWork+= (o, args) => App.Модель.GenerateEvents();
 				wor.RunWorkerCompleted += (o, args) =>
 				{
-					App.Модель.IsBusy = false;
-
-					App.Модель.RefreshTable();
-
-					App.Модель.ОбновитьНаряды();
-					App.Модель.ОбновитьПодразделения();
+					ОбновитьВсё(null, null);
 					GraphList.EndInit();
 					districtsGrid.EndInit();
 					narydsGrid.EndInit();
+					App.Модель.IsBusy = false;
 				};
 				wor.RunWorkerAsync();
 			}
@@ -103,7 +114,7 @@ namespace Randomizer
 
 		private void СохранитьНастройки()
 		{
-			App.Модель.Serialize("Настройки.bin");
+			App.Модель.Serialize(App.Модель.SettingsName);
 		}
 
 		private void DistrictsGridLayoutUpdated(object sender, EventArgs e)
@@ -227,7 +238,10 @@ namespace Randomizer
 					{
 						add = eventDate.Смены[naryad] == null ? "" : eventDate.Смены[naryad].Название;
 					}
-					AddRow(row.Cells[i + 1], add);
+					if (add != null)
+					{
+						AddRow(row.Cells[i + 1], add);
+					}
 
 					if ((i + 1 & 1) == 0)
 					{
@@ -321,8 +335,9 @@ namespace Randomizer
 				table.Columns.Add("Людей, чел");
 				table.Columns.Add("Всего, ч");
 				table.Columns.Add("Выходных, ч");
-				table.Columns.Add("Распред 12ч, шт");
 				table.Columns.Add("Распред 24ч, шт");
+				table.Columns.Add("Распред 12ч, шт");
+				table.Columns.Add("Распред 4ч, шт");
 				//table.Columns.Add("Доступные Наряды");
 				foreach (var distr in nar)
 				{
@@ -333,8 +348,9 @@ namespace Randomizer
 						distr.Люди,
 						distr.Часы,
 						distr.ВыходныеЧасы,
+						distr.Распред24Ч,
 						distr.Распред12Ч,
-						distr.Распред24Ч
+						distr.Распред4Ч,
 						//distr.СписокНарядов
 					};
 					table.Rows.Add(row);
@@ -640,6 +656,67 @@ namespace Randomizer
 		private void Button_ОбновитьПодразделения(object sender, RoutedEventArgs e)
 		{
 			App.Модель.ОбновитьПодразделения();
+		}
+
+		private void СохранитьКак(object sender, RoutedEventArgs e)
+		{
+			var dlg = new SaveFileDialog
+			{
+				AddExtension = true,
+				DefaultExt = ".bin",
+				FileName = App.Модель.SettingsName,
+				OverwritePrompt = true,
+				Filter = "Файл настроек|*.bin"
+			};
+			if (dlg.ShowDialog() == true)
+			{
+				App.Модель.Serialize(dlg.FileName);
+				App.Модель.SettingsName = dlg.FileName;
+			}
+		}
+
+		private void ОткрытьКак(object sender, RoutedEventArgs e)
+		{
+			var dlg = new OpenFileDialog
+			{
+				AddExtension = true,
+				DefaultExt = ".bin",
+				FileName = App.Модель.SettingsName,
+				Filter = "Файл настроек|*.bin"
+			};
+			if (dlg.ShowDialog() == true)
+			{
+				App.Модель.Deserialize(dlg.FileName);
+				App.Модель.SettingsName = dlg.FileName;
+				ОбновитьВсё(null, null);
+			}
+		}
+
+		private void ОбновитьВсё(object sender, RoutedEventArgs e)
+		{
+			graficDates.SelectedDates.Clear();
+			sealDates.SelectedDates.Clear();
+			holyDates.SelectedDates.Clear();
+			foreach (var dateTime in App.Модель.ПериодГрафика)
+			{
+				graficDates.SelectedDates.Add(dateTime);
+			} 
+			graficDates.DisplayDate = App.Модель.ПериодГрафика.LastOrDefault();
+			foreach (var dateTime in App.Модель.Усиления)
+			{
+				sealDates.SelectedDates.Add(dateTime);
+			}
+			sealDates.DisplayDate = App.Модель.ПериодГрафика.LastOrDefault();
+			foreach (var date in App.Модель.Праздники)
+			{
+				holyDates.SelectedDates.Add(date);
+			}
+			holyDates.DisplayDate = App.Модель.ПериодГрафика.LastOrDefault();
+
+			App.Модель.ОбновитьНаряды();
+			App.Модель.ОбновитьПодразделения();
+			App.Модель.ОбновитьДаты();
+			App.Модель.RefreshTable();
 		}
 	}
 }

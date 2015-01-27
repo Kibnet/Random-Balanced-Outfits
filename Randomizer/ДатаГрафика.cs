@@ -1,18 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Windows;
 using System.Windows.Media;
-using Randomizer.Annotations;
+using Syncfusion.Windows.Shared;
 
 namespace Randomizer
 {
 	[Serializable]
-	public class ДатаГрафика
+	public class ДатаГрафика : NotificationObject
 	{
 		public HashSet<Наряд> Блокировки = new HashSet<Наряд>();
 		public DateTime Date { get; set; }
+
+		public void Refresh()
+		{
+			RaisePropertyChanged(() => BackColor);
+			RaisePropertyChanged(() => Date);
+			RaisePropertyChanged(() => Display);
+			RaisePropertyChanged(() => Holyday);
+			RaisePropertyChanged(() => Подразделения);
+			RaisePropertyChanged(() => Смены);
+		}
 
 		public bool Holyday
 		{
@@ -26,6 +35,7 @@ namespace Randomizer
 
 		public Dictionary<Наряд, Подразделение> Смены { get; set; }
 
+		
 		public ObservableCollection<HostPod> Подразделения
 		{
 			get
@@ -53,11 +63,7 @@ namespace Randomizer
 		{
 			get
 			{
-				if (Holyday)
-				{
-					return Brushes.LightGray;
-				}
-				return Brushes.Transparent;
+				return Holyday ? Brushes.LightGray : Brushes.Transparent;
 			}
 		}
 
@@ -70,7 +76,7 @@ namespace Randomizer
 			return string.Format("{0} {1}({2})", Date.ToString("yyyy.MM.dd dddd"), Holyday ? "H" : "", Смены.Count);
 		}
 
-		public class HostPod : INotifyPropertyChanged
+		public class HostPod : NotificationObject
 		{
 			private Brush _color;
 			private bool _isEnabled;
@@ -109,12 +115,21 @@ namespace Randomizer
 				{
 					if (value.Equals(_isEnabled)) return;
 					_isEnabled = value;
-					OnPropertyChanged("IsEnabled");
-					OnPropertyChanged("Visibility");
+					RaisePropertyChanged(() => IsEnabled);
+					RaisePropertyChanged(() => Visibility);
 				}
 			}
 
 			public Наряд Nar { get; set; }
+
+			public void Обновить()
+			{
+				RaisePropertyChanged(() => IsEnabled);
+				RaisePropertyChanged(() => Visibility);
+				RaisePropertyChanged(() => Parent);
+				RaisePropertyChanged(() => Locked);
+				RaisePropertyChanged(() => Color);
+			}
 
 			public ObservableCollection<Подразделение> All
 			{
@@ -157,18 +172,10 @@ namespace Randomizer
 				{
 					if (Equals(value, _color)) return;
 					_color = value;
-					OnPropertyChanged("Color");
+					RaisePropertyChanged(() => Color);
 				}
 			}
 
-			public event PropertyChangedEventHandler PropertyChanged;
-
-			[NotifyPropertyChangedInvocator]
-			protected virtual void OnPropertyChanged(string propertyName)
-			{
-				var handler = PropertyChanged;
-				if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
-			}
 		}
 	}
 }

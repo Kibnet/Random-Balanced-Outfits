@@ -21,6 +21,7 @@ namespace Randomizer
 			//ЗакрываемыеЧасы = 0;
 			//ПроцентВыходных = 29;
 			ИсключитьБлокированные = true;
+			Zoom = 1;
 			ПутьСохранения = "C:\\";
 		}
 
@@ -34,6 +35,7 @@ namespace Randomizer
 		public int ПроцентВыходных { get; set; }
 		public string ПутьСохранения { get; set; }
 		public bool ИсключитьБлокированные { get; set; }
+		public double Zoom { get; set; }
 
 		public static НастройкиГенератора Deserialize(string filename)
 		{

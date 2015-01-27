@@ -5,58 +5,30 @@ using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Windows;
-using System.Windows.Threading;
-using Randomizer.Annotations;
-using Syncfusion.Linq;
 using Syncfusion.Windows.Shared;
 
 namespace Randomizer
 {
 	public class ModelView : NotificationObject
 	{
-
-		//DispatcherTimer timer;
-		private readonly НастройкиГенератора настройки;
+		private НастройкиГенератора настройки;
 		private bool _isBusy;
 		private string _status;
 
+		public string SettingsName = "Настройки.bin";
+
 		public ModelView()
 		{
-			настройки = НастройкиГенератора.Deserialize("Настройки.bin");
+			Deserialize(SettingsName);
 			IsBusy = false;
-			//this.timer = new DispatcherTimer();
-			//timer.Interval = TimeSpan.FromMilliseconds(100);
-			//timer.Tick += new EventHandler(timer_Tick);
-			//this.StartTimer();
 		}
-
-		//void timer_Tick(object sender, EventArgs e)
-		public void ОбновитьНаряды()
-		{
-			foreach (var наряд in Наряды)
-			{
-				наряд.Refresh();
-			}
-		}
-
-		public void ОбновитьПодразделения()
-		{
-			foreach (var подразделение in Подразделения)
-			{
-				подразделение.Refresh();
-			}
-		}
-
-		//public void StartTimer()
-		//{
-		//	if (!this.timer.IsEnabled)
-		//	{
-		//		this.timer.Start();
-		//	}
-		//}
-
 
 		public ModelView(string filename)
+		{
+			Deserialize(filename);
+		}
+
+		public void Deserialize(string filename)
 		{
 			настройки = НастройкиГенератора.Deserialize(filename);
 		}
@@ -74,7 +46,6 @@ namespace Randomizer
 					return;
 				}
 				настройки.Наряды = value;
-				RaisePropertyChanged(() => Подразделения);
 				RaisePropertyChanged(() => Наряды);
 			}
 		}
@@ -90,9 +61,6 @@ namespace Randomizer
 				}
 				настройки.Подразделения = value;
 				RaisePropertyChanged(() => Подразделения);
-				RaisePropertyChanged(() => Наряды);
-				RaisePropertyChanged(() => ДлительностьРаспределеныхНарядов);
-				RaisePropertyChanged(() => Распределено);
 			}
 		}
 
@@ -106,7 +74,7 @@ namespace Randomizer
 					return;
 				}
 				настройки.Усиления = value;
-				RaisePropertyChanged("Усиления");
+				RaisePropertyChanged(() => Усиления);
 			}
 		}
 
@@ -120,7 +88,7 @@ namespace Randomizer
 					return;
 				}
 				настройки.ПериодГрафика = value;
-				RaisePropertyChanged("ПериодГрафика");
+				RaisePropertyChanged(() => ПериодГрафика);
 			}
 		}
 
@@ -134,7 +102,7 @@ namespace Randomizer
 					return;
 				}
 				настройки.Праздники = value;
-				RaisePropertyChanged("Праздники");
+				RaisePropertyChanged(() => Праздники);
 			}
 		}
 
@@ -148,37 +116,9 @@ namespace Randomizer
 					return;
 				}
 				настройки.ДатыГрафика = value;
-				RaisePropertyChanged("ДатыГрафика");
+				RaisePropertyChanged(() => ДатыГрафика);
 			}
 		}
-
-		//public int ЗакрываемыеЧасы
-		//{
-		//	get { return настройки.ЗакрываемыеЧасы; }
-		//	set
-		//	{
-		//		if (value == настройки.ЗакрываемыеЧасы)
-		//		{
-		//			return;
-		//		}
-		//		настройки.ЗакрываемыеЧасы = value;
-		//		OnPropertyChanged("ЗакрываемыеЧасы");
-		//	}
-		//}
-
-		//public int ПроцентВыходных
-		//{
-		//	get { return настройки.ПроцентВыходных; }
-		//	set
-		//	{
-		//		if (value == настройки.ПроцентВыходных)
-		//		{
-		//			return;
-		//		}
-		//		настройки.ПроцентВыходных = value;
-		//		OnPropertyChanged("ПроцентВыходных");
-		//	}
-		//}
 
 		public string ПутьСохранения
 		{
@@ -190,7 +130,7 @@ namespace Randomizer
 					return;
 				}
 				настройки.ПутьСохранения = value;
-				RaisePropertyChanged("ПутьСохранения");
+				RaisePropertyChanged(() => ПутьСохранения);
 			}
 		}
 
@@ -232,11 +172,11 @@ namespace Randomizer
 			{
 				RaisePropertyChanged(() => Подразделения);
 				RaisePropertyChanged(() => Наряды);
-				RaisePropertyChanged("ДлительностьНарядов");
-				RaisePropertyChanged("ДлительностьВыходныхНарядов");
-				RaisePropertyChanged("КоэффициэнтВыходных");
-				RaisePropertyChanged("КоличествоНарядов");
-				RaisePropertyChanged("КоличествоВыходныхНарядов");
+				RaisePropertyChanged(() => ДлительностьНарядов);
+				RaisePropertyChanged(() => ДлительностьВыходныхНарядов);
+				RaisePropertyChanged(() => КоэффициэнтВыходных);
+				RaisePropertyChanged(() => КоличествоНарядов);
+				RaisePropertyChanged(() => КоличествоВыходныхНарядов);
 				return string.Format("Всего {3} шт. ({0} часов) из них {4} шт. ({1} часов) выходных ({2}%)",
 					ДлительностьНарядов,
 					ДлительностьВыходныхНарядов,
@@ -326,7 +266,21 @@ namespace Randomizer
 			{
 				if (value.Equals(настройки.ИсключитьБлокированные)) return;
 				настройки.ИсключитьБлокированные = value;
-				RaisePropertyChanged("ИсключитьБлокированные");
+				RaisePropertyChanged(() => ИсключитьБлокированные);
+			}
+		}
+
+		public double Zoom
+		{
+			get { return настройки.Zoom; }
+			set
+			{
+				if (value.Equals(настройки.Zoom))
+				{
+					return;
+				}
+				настройки.Zoom = value;
+				RaisePropertyChanged(() => Zoom);
 			}
 		}
 
@@ -345,7 +299,7 @@ namespace Randomizer
 			set
 			{
 				_isBusy = value;
-				RaisePropertyChanged("IsBusy");
+				RaisePropertyChanged(() => IsBusy);
 			}
 		}
 
@@ -355,7 +309,7 @@ namespace Randomizer
 			set
 			{
 				_status = value;
-				RaisePropertyChanged("Status");
+				RaisePropertyChanged(() => Status);
 			}
 		}
 
@@ -387,10 +341,7 @@ namespace Randomizer
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;
-
-
-
-
+		
 		public void GenerateEvents()
 		{
 			ObservableCollection<ДатаГрафика> best = null;
@@ -429,6 +380,7 @@ namespace Randomizer
 
 				//Перезапись старого графика новым
 				ДатыГрафика = new ObservableCollection<ДатаГрафика>(dates);
+				ПересчитатьПодразделения();
 				var rand = new Random();
 
 				//Формирование конкретных нарядов на выходные
@@ -471,6 +423,10 @@ namespace Randomizer
 				if (best == null)
 				{
 					best = ДатыГрафика;
+					if (Подразделения.Count == 0)
+					{
+						break;
+					}
 					bestres = Math.Abs(Подразделения.Max(dist => dist.ОтклонениеЗагруженности)) +
 							  Math.Abs(Подразделения.Min(dist => dist.ОтклонениеЗагруженности));
 				}
@@ -481,12 +437,12 @@ namespace Randomizer
 					if (res < bestres)
 					{
 						best = ДатыГрафика;
+						ПересчитатьПодразделения();
 						bestres = res;
 					}
 				}
 			}
 			ДатыГрафика = best;
-
 			Раскидать();
 		}
 
@@ -590,24 +546,64 @@ namespace Randomizer
 					dict[d] = load;
 				}
 				//Выбирается подразделение с самой низкой вычисленной нагрузкой
+				if (dict.Count == 0)
+				{
+					return;
+				}
 				var min = dict.Min(pair => pair.Value);
 				var first = dict.First(pair => pair.Value <= min).Key;
 				//Это подразделение берёт наряд
 				datpair1.Key.Смены[datpair1.Value] = first;
+				first.Пересчитать();
 			}
 		}
 
 		public void RefreshTable()
 		{
-			//OnPropertyChanged("Наряды");
-			RaisePropertyChanged("Подразделения");
-			RaisePropertyChanged("GenerateTable");
+			RaisePropertyChanged(() => ПериодГрафика);
+			RaisePropertyChanged(() => Усиления);
+			RaisePropertyChanged(() => Праздники);
+			RaisePropertyChanged(() => Наряды);
+			RaisePropertyChanged(() => Подразделения);
+			RaisePropertyChanged(() => ДатыГрафика);
+			//RaisePropertyChanged(() => GenerateTable);
+		}
+
+		public void ОбновитьНаряды()
+		{
+			foreach (var наряд in Наряды)
+			{
+				наряд.Refresh();
+			}
+		}
+
+		public void ОбновитьПодразделения()
+		{
+			foreach (var подразделение in Подразделения)
+			{
+				подразделение.Refresh();
+			}
+		}
+
+		public void ОбновитьДаты()
+		{
+			foreach (var датаГрафика in ДатыГрафика)
+			{
+				датаГрафика.Refresh();
+			}
+		}
+
+		public void ПересчитатьПодразделения()
+		{
+			foreach (var подразделение in Подразделения)
+			{
+				подразделение.Пересчитать();
+			}
 		}
 
 		public void Serialize(string filename)
 		{
 			настройки.Serialize(filename);
-			//настройки.SerializeXML(filename);
 		}
 
 	}
