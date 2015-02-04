@@ -1,0 +1,15 @@
+﻿<Window x:Class="Randomizer.FieldChecker"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:randomizer="clr-namespace:Randomizer"
+        Title="Выбор полей статистики"  SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen">
+    <Grid Margin="20">
+        <StackPanel MinWidth="200">
+            <Label Height="24" Padding="0" VerticalContentAlignment="Center">
+                <CheckBox Name="AllCheck" Checked="ToggleButton_OnChecked" Unchecked="ToggleButton_OnUnchecked">Доступные Поля:</CheckBox>
+            </Label>
+            <StackPanel Name="NarydsPanel" />
+            <Button Margin="0,10,0,0" Height="24" Content="Сохранить" Click="Save" />
+        </StackPanel>
+    </Grid>
+</Window>

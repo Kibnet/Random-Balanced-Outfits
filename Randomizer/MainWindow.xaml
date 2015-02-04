@@ -311,9 +311,7 @@
                                     <syncfusion:GridDataPercentEditVisibleColumn MappingName="Процент"/>
                                     <syncfusion:GridDataVisibleColumn MappingName="Часы" HeaderText="Всего, ч" />
                                     <syncfusion:GridDataVisibleColumn MappingName="ВыходныеЧасы" HeaderText="Выходных, ч" />
-                                    <syncfusion:GridDataVisibleColumn MappingName="Распред24Ч" HeaderText="24ч, шт" />
-                                    <syncfusion:GridDataVisibleColumn MappingName="Распред12Ч" HeaderText="12ч, шт" />
-                                    <syncfusion:GridDataVisibleColumn MappingName="Распред4Ч" HeaderText="4ч, шт" />
+                                    <syncfusion:GridDataVisibleColumn MappingName="РаспредЧ" HeaderText="ч=шт;" />
                                     <syncfusion:GridDataVisibleColumn MappingName="Загруженность" HeaderText="Нагр., ч/чел" />
                                     <syncfusion:GridDataVisibleColumn MappingName="ЗагруженностьВыходных" HeaderText="Нагр.Вых., ч/чел" />
                                     <syncfusion:GridDataPercentEditVisibleColumn MappingName="ОтклонениеЗагруженности" HeaderText="Откл.Нагр., %" />

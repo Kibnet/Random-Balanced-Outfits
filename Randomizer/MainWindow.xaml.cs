@@ -314,6 +314,8 @@ namespace Randomizer
 					return;
 				}
 
+
+
 				var document = new WordDocument();
 
 				var section = document.AddSection();
@@ -330,29 +332,45 @@ namespace Randomizer
 				paragraph.ParagraphFormat.BeforeSpacing = 2f;
 
 				var nar = App.Модель.Подразделения;
+				var first = nar.FirstOrDefault().Fields;
+				var checker = new FieldChecker(first.Keys.ToArray());
+				checker.ShowDialog();
+				if (checker.Selected().Length == 0)
+				{
+					MessageBox.Show("Вы должны выбрать по крайней мере один столбец.", "Не сохранено");
+					return;
+				}
+
+				string[] selected = checker.Selected();
+				checker.Close();
 				var table = new DataTable();
-				table.Columns.Add("Подразделение");
-				table.Columns.Add("Людей, чел");
-				table.Columns.Add("Всего, ч");
-				table.Columns.Add("Выходных, ч");
-				table.Columns.Add("Распред 24ч, шт");
-				table.Columns.Add("Распред 12ч, шт");
-				table.Columns.Add("Распред 4ч, шт");
+				foreach (var o in selected)
+				{
+					table.Columns.Add(o);
+				}
+				//table.Columns.Add("Подразделение");
+				//table.Columns.Add("Людей, чел");
+				//table.Columns.Add("Всего, ч");
+				//table.Columns.Add("Выходных, ч");
+				//table.Columns.Add("Распред 24ч, шт");
+				//table.Columns.Add("Распред 12ч, шт");
+				//table.Columns.Add("Распред 4ч, шт");
 				//table.Columns.Add("Доступные Наряды");
 				foreach (var distr in nar)
 				{
 					var row = table.NewRow();
-					row.ItemArray = new object[]
-					{
-						distr.Название,
-						distr.Люди,
-						distr.Часы,
-						distr.ВыходныеЧасы,
-						distr.Распред24Ч,
-						distr.Распред12Ч,
-						distr.Распред4Ч,
-						//distr.СписокНарядов
-					};
+					row.ItemArray = distr.Fields.Where(pair => selected.Contains(pair.Key)).Select(pair => pair.Value).ToArray();
+					//	new object[]
+					//{
+					//	distr.Название,
+					//	distr.Люди,
+					//	distr.Часы,
+					//	distr.ВыходныеЧасы,
+					//	distr.Распред24Ч,
+					//	distr.Распред12Ч,
+					//	distr.Распред4Ч,
+					//	//distr.СписокНарядов
+					//};
 					table.Rows.Add(row);
 				}
 				var textBody = section.Body;
