@@ -6,7 +6,7 @@
     <Grid Margin="20">
         <StackPanel MinWidth="200">
             <Label Height="24" Padding="0" VerticalContentAlignment="Center">
-                <CheckBox Name="AllCheck" Checked="ToggleButton_OnChecked" Unchecked="ToggleButton_OnUnchecked">Доступные Поля:</CheckBox>
+                <CheckBox Name="AllCheck" Checked="ToggleButton_OnChecked" Unchecked="ToggleButton_OnUnchecked">Все доступные поля:</CheckBox>
             </Label>
             <StackPanel Name="NarydsPanel" />
             <Button Margin="0,10,0,0" Height="24" Content="Сохранить" Click="Save" />

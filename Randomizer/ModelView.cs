@@ -288,7 +288,7 @@ namespace Randomizer
 		{
 			get
 			{
-				return string.Format("Всего {0} {3}, из них {1} выходных {4} и {2} {5} c усилениями",
+				return string.Format("Всего {0} {3}, из них {1} выходных {4} и {2} {5} усиления",
 					ПериодГрафика.Count, Праздники.Count, Усиления.Count, Day(ПериодГрафика.Count), Day(Праздники.Count), Day(Усиления.Count));
 			}
 		}

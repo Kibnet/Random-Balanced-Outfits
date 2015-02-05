@@ -449,7 +449,8 @@ namespace Randomizer
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show(string.Format("{0}\n{1}", ex.Message, ex.StackTrace), "Исключение");
+				MessageBox.Show(string.Format("{0}\n{1}", ex.Message), "Исключение");
+
 			}
 			СохранитьНастройки();
 		}

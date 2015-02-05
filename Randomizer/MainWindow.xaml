@@ -20,14 +20,15 @@
             <MenuItem Header="Сохранить" Click="СохранитьНастройки"/>
             <MenuItem Header="Сохранить как..." Click="СохранитьКак"/>
             <MenuItem Header="Обновить всё" Click="ОбновитьВсё"/>
-            <Slider Name="ZoomSlider" Width="100" Minimum="1" Maximum="4" AutoToolTipPlacement="TopLeft" SmallChange="0.01" Cursor="SizeAll" Value="{Binding Zoom}"/>
+            <syncfusion:PercentTextBox Name="ZoomSlider" PercentValue="{Binding Zoom}" EnableExtendedScrolling="True" EnableRangeAdorner="True" IsReadOnly="False" MinValue="1" MaxValue="4.01" Width="100" PercentEditMode="PercentMode" ScrollInterval="0.1" ToolTip="Масштаб" CornerRadius="10" WatermarkText="Масштаб" WatermarkTextIsVisible="True" />
+            <!--<Slider Name="ZoomSlider" Width="100" Minimum="1" Maximum="4" SmallChange="0.01" Cursor="SizeAll" Value="{Binding Zoom}"/>-->
         </Menu>
         <syncfusion:BusyIndicator IsBusy="{Binding IsBusy}" CancelButtonVisibility="Collapsed" IsIndeterminate="True" LoadingDescription="{Binding Status}" Header="Распределение Нарядов" Grid.Row="1">
             <ScrollViewer>
                 <StackPanel Margin="10">
                     <StackPanel.LayoutTransform>
                         <TransformGroup>
-                            <ScaleTransform ScaleX="{Binding ElementName=ZoomSlider, Path=Value}" ScaleY="{Binding ElementName=ZoomSlider, Path=Value}"/>
+                            <ScaleTransform ScaleX="{Binding ElementName=ZoomSlider, Path=PercentValue}" ScaleY="{Binding ElementName=ZoomSlider, Path=PercentValue}"/>
                             <SkewTransform/>
                             <RotateTransform/>
                             <TranslateTransform/>
@@ -188,20 +189,20 @@
 												AutoPopulateColumns="False" AllowNestedGridPadding="False" ShowRowHeaderArrow="False"
 												ShowRecordPlusMinus="False" NotifyComplexPropertyChanges="False" NotifyPropertyChanges="True" BorderThickness="0" >
                                 <syncfusion:GridDataControl.VisibleColumns>
-                                    <syncfusion:GridDataVisibleColumn MappingName="Название" HeaderText="Наряд" />
-                                    <syncfusion:GridDataVisibleColumn MappingName="Длительность" HeaderText="Длительность, ч" />
-                                    <syncfusion:GridDataVisibleColumn MappingName="Количество" HeaderText="Всего, шт" />
+                                    <syncfusion:GridDataVisibleColumn MappingName="Название" HeaderText="наряд" />
+                                    <syncfusion:GridDataVisibleColumn MappingName="Длительность" HeaderText="длительность, час" />
+                                    <syncfusion:GridDataVisibleColumn MappingName="Количество" HeaderText="всего" />
                                     <syncfusion:GridDataVisibleColumn MappingName="КоличествоВыходных"
-															  HeaderText="Выходных, шт" />
-                                    <syncfusion:GridDataVisibleColumn MappingName="Всего" HeaderText="Всего, ч" />
-                                    <syncfusion:GridDataVisibleColumn MappingName="Выходных" HeaderText="Выходных, ч" />
-                                    <syncfusion:GridDataVisibleColumn MappingName="Дни" HeaderText="В какие дни" />
+															  HeaderText="выходных" />
+                                    <syncfusion:GridDataVisibleColumn MappingName="Всего" HeaderText="всего, час" />
+                                    <syncfusion:GridDataVisibleColumn MappingName="Выходных" HeaderText="выходных, час" />
+                                    <syncfusion:GridDataVisibleColumn MappingName="Дни" HeaderText="в какие дни" />
                                     <syncfusion:GridDataVisibleColumn MappingName="РаспределеноКоличество"
-															  HeaderText="Распред Всего, шт" />
+															  HeaderText="распред всего" />
                                     <syncfusion:GridDataVisibleColumn MappingName="РаспределеноКоличествоВыходных"
-															  HeaderText="Распред Выходных, шт" />
+															  HeaderText="распред выходных" />
                                     <syncfusion:GridDataCheckBoxVisibleColumn MappingName="Усиление"
-																	  HeaderText="Только в Усиление" />
+																	  HeaderText="только в усиление" />
                                 </syncfusion:GridDataControl.VisibleColumns>
                             </syncfusion:GridDataControl>
 
@@ -301,22 +302,22 @@
 												AllowEdit="False" ShowAddNewRow="False"
 												LayoutUpdated="DistrictsGridLayoutUpdated" Grid.Row="1" ColumnSizer="Auto" AutoGenerateColumnsInfo="False"
 												AutoPopulateColumns="False" AllowSort="True"
-												AutoPopulateRelations="False" BorderThickness="0,0,1,0">
+												AutoPopulateRelations="False" BorderThickness="0,0,1,0" UpdateMode="PropertyChanged" ShowTooltips="True">
                                 <syncfusion:GridDataControl.SortColumns>
                                     <syncfusion:GridDataSortColumn ColumnName="Название"/>
                                 </syncfusion:GridDataControl.SortColumns>
                                 <syncfusion:GridDataControl.VisibleColumns>
-                                    <syncfusion:GridDataVisibleColumn MappingName="Название" HeaderText="Подразделение" />
-                                    <syncfusion:GridDataVisibleColumn MappingName="Люди" HeaderText="Людей, чел" />
-                                    <syncfusion:GridDataPercentEditVisibleColumn MappingName="Процент"/>
-                                    <syncfusion:GridDataVisibleColumn MappingName="Часы" HeaderText="Всего, ч" />
-                                    <syncfusion:GridDataVisibleColumn MappingName="ВыходныеЧасы" HeaderText="Выходных, ч" />
-                                    <syncfusion:GridDataVisibleColumn MappingName="РаспредЧ" HeaderText="ч=шт;" />
-                                    <syncfusion:GridDataVisibleColumn MappingName="Загруженность" HeaderText="Нагр., ч/чел" />
-                                    <syncfusion:GridDataVisibleColumn MappingName="ЗагруженностьВыходных" HeaderText="Нагр.Вых., ч/чел" />
-                                    <syncfusion:GridDataPercentEditVisibleColumn MappingName="ОтклонениеЗагруженности" HeaderText="Откл.Нагр., %" />
-                                    <syncfusion:GridDataPercentEditVisibleColumn MappingName="ОтклонениеЗагруженностиВыходных" HeaderText="Откл.Нагр.Вых., %" />
-                                    <syncfusion:GridDataVisibleColumn MappingName="СписокНарядов" HeaderText="Доступные Наряды" />
+                                    <syncfusion:GridDataVisibleColumn MappingName="Название" HeaderText="подразделение"/>
+                                    <syncfusion:GridDataVisibleColumn MappingName="Люди" HeaderText="кол-во чел" />
+                                    <syncfusion:GridDataPercentEditVisibleColumn MappingName="Процент" HeaderText="% от общего"/>
+                                    <syncfusion:GridDataVisibleColumn MappingName="Часы" HeaderText="всего, час" />
+                                    <syncfusion:GridDataVisibleColumn MappingName="ВыходныеЧасы" HeaderText="выходных, час" />
+                                    <syncfusion:GridDataVisibleColumn MappingName="РаспредЧ" HeaderText="кол-во нарядов" />
+                                    <syncfusion:GridDataVisibleColumn MappingName="Загруженность" HeaderText="нагр., час/чел" />
+                                    <syncfusion:GridDataVisibleColumn MappingName="ЗагруженностьВыходных" HeaderText="нагр.вых., час/чел" />
+                                    <syncfusion:GridDataPercentEditVisibleColumn MappingName="ОтклонениеЗагруженности" HeaderText="откл.нагр." />
+                                    <syncfusion:GridDataPercentEditVisibleColumn MappingName="ОтклонениеЗагруженностиВыходных" HeaderText="откл.нагр.вых." />
+                                    <syncfusion:GridDataVisibleColumn MappingName="СписокНарядов" HeaderText="доступные наряды" />
                                 </syncfusion:GridDataControl.VisibleColumns>
                                 <syncfusion:GridDataControl.ConditionalFormats>
                                     <syncfusion:GridDataConditionalFormat Name="C1" ApplyStyleToColumn="ОтклонениеЗагруженности">
