@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
@@ -73,6 +74,7 @@ namespace Randomizer
 					holyDates.SelectedDates.Add(date);
 				}
 				holyDates.DisplayDate = App.Модель.ПериодГрафика.LastOrDefault();
+				App.Модель.RefreshTable();
 				
 			}
 			catch (Exception ex)
@@ -141,6 +143,8 @@ namespace Randomizer
 
 		private void СохранитьГрафикНарядов(object sender, RoutedEventArgs e)
 		{
+			var document = new WordDocument();
+			var filename = ""; 
 			try
 			{
 				var name = string.Format("График Нарядов на {0} года",
@@ -161,8 +165,10 @@ namespace Randomizer
 					return;
 				}
 
-				var document = СформироватьДокумент(name);
+				document = СформироватьДокумент(name);
 
+				filename = dlg.FileName;
+				
 				document.Save(dlg.FileName, FormatType.Doc);
 
 				if (
@@ -170,11 +176,38 @@ namespace Randomizer
 						MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
 				{
 					Process.Start(dlg.FileName);
+				} 
+			}
+			catch (UnauthorizedAccessException ex)
+			{
+				MessageBox.Show(ex.Message + "\nПопробуйте выбрать другой каталог для сохранения.", "Исключение");
+			}
+			catch (IOException ex)
+			{
+				var nfile = filename;
+				var i = 0;
+				while (File.Exists(nfile))
+				{
+					nfile = filename.Replace(".doc", "") + " (" + ++i + ").doc";
+				}
+				try
+				{
+					document.Save(nfile, FormatType.Doc);
+				}
+				catch (Exception exx)
+				{
+					MessageBox.Show(exx.Message, "Исключение");
+				}
+				if (
+					MessageBox.Show(ex.Message + "\nФайл был сохранён под именем " + nfile + "\nВы хотите открыть созданный файл?", "Документ успешно создан",
+						MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
+				{
+					Process.Start(nfile);
 				}
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show(string.Format("{0}\n{1}", ex.Message, ex.StackTrace), "Исключение");
+				MessageBox.Show(ex.Message, "Исключение");
 			}
 			СохранитьНастройки();
 		}
@@ -294,6 +327,8 @@ namespace Randomizer
 
 		private void СохранитьСтатистику(object sender, RoutedEventArgs e)
 		{
+			var document = new WordDocument();
+			var filename = ""; 
 			try
 			{
 				var name = string.Format("Статистика Нарядов на {0} года",
@@ -313,10 +348,6 @@ namespace Randomizer
 				{
 					return;
 				}
-
-
-
-				var document = new WordDocument();
 
 				var section = document.AddSection();
 				var paragraph = section.AddParagraph();
@@ -348,29 +379,10 @@ namespace Randomizer
 				{
 					table.Columns.Add(o);
 				}
-				//table.Columns.Add("Подразделение");
-				//table.Columns.Add("Людей, чел");
-				//table.Columns.Add("Всего, ч");
-				//table.Columns.Add("Выходных, ч");
-				//table.Columns.Add("Распред 24ч, шт");
-				//table.Columns.Add("Распред 12ч, шт");
-				//table.Columns.Add("Распред 4ч, шт");
-				//table.Columns.Add("Доступные Наряды");
 				foreach (var distr in nar)
 				{
 					var row = table.NewRow();
 					row.ItemArray = distr.Fields.Where(pair => selected.Contains(pair.Key)).Select(pair => pair.Value).ToArray();
-					//	new object[]
-					//{
-					//	distr.Название,
-					//	distr.Люди,
-					//	distr.Часы,
-					//	distr.ВыходныеЧасы,
-					//	distr.Распред24Ч,
-					//	distr.Распред12Ч,
-					//	distr.Распред4Ч,
-					//	//distr.СписокНарядов
-					//};
 					table.Rows.Add(row);
 				}
 				var textBody = section.Body;
@@ -437,7 +449,7 @@ namespace Randomizer
 				section.PageSetup.Margins.Left = 50;
 				section.PageSetup.Margins.Right = 50;
 				section.PageSetup.VerticalAlignment = PageAlignment.Top;
-
+				filename = dlg.FileName;
 				document.Save(dlg.FileName, FormatType.Doc);
 
 				if (
@@ -447,10 +459,36 @@ namespace Randomizer
 					Process.Start(dlg.FileName);
 				}
 			}
+			catch (UnauthorizedAccessException ex)
+			{
+				MessageBox.Show(ex.Message + "\nПопробуйте выбрать другой каталог для сохранения.", "Исключение");
+			}
+			catch (IOException ex)
+			{
+				var nfile = filename;
+				var i = 0;
+				while (File.Exists(nfile))
+				{
+					nfile = filename.Replace(".doc", "") + " (" + ++i + ").doc";
+				}
+				try
+				{
+					document.Save(nfile, FormatType.Doc);
+				}
+				catch (Exception exx)
+				{
+					MessageBox.Show(exx.Message, "Исключение");
+				}
+				if (
+					MessageBox.Show(ex.Message + "\nФайл был сохранён под именем " + nfile+ "\nВы хотите открыть созданный файл?", "Документ успешно создан",
+						MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
+				{
+					Process.Start(nfile);
+				}
+			}
 			catch (Exception ex)
 			{
-				MessageBox.Show(string.Format("{0}\n{1}", ex.Message), "Исключение");
-
+				MessageBox.Show(ex.Message, "Исключение");
 			}
 			СохранитьНастройки();
 		}
