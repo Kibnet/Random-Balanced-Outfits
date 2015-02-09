@@ -775,5 +775,10 @@ namespace Randomizer
 			App.Модель.ОбновитьДаты();
 			App.Модель.RefreshTable();
 		}
+
+		private void ОткрытьСправку(object sender, RoutedEventArgs e)
+		{
+			Process.Start("help.txt");
+		}
 	}
 }

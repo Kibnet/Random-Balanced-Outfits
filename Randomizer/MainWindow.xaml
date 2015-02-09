@@ -20,6 +20,7 @@
             <MenuItem Header="Сохранить" Click="СохранитьНастройки"/>
             <MenuItem Header="Сохранить как..." Click="СохранитьКак"/>
             <MenuItem Header="Обновить всё" Click="ОбновитьВсё"/>
+            <MenuItem Header="Справка" Click="ОткрытьСправку"/>
             <syncfusion:PercentTextBox Name="ZoomSlider" PercentValue="{Binding Zoom}" EnableExtendedScrolling="True" EnableRangeAdorner="True" IsReadOnly="False" MinValue="1" MaxValue="4.01" Width="100" PercentEditMode="PercentMode" ScrollInterval="0.1" ToolTip="Масштаб" CornerRadius="10" WatermarkText="Масштаб" WatermarkTextIsVisible="True" />
             <!--<Slider Name="ZoomSlider" Width="100" Minimum="1" Maximum="4" SmallChange="0.01" Cursor="SizeAll" Value="{Binding Zoom}"/>-->
         </Menu>
