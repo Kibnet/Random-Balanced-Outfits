@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Controls;
 using Microsoft.Win32;
 using Syncfusion.DocIO;
 using Syncfusion.DocIO.DLS;
@@ -23,12 +24,12 @@ namespace Randomizer
 		{
 			InitializeComponent();
 			var ass = Assembly.GetExecutingAssembly().FullName;
-			Title += " " +ass.Split(',')[1].Split('=')[1];
+			Title += " " + ass.Split(',')[1].Split('=')[1];
 			try
 			{
 				narydsGrid.MouseDoubleClick += (sender, args) => РедактироватьНаряд(null, null);
 				districtsGrid.MouseDoubleClick += (sender, args) => РедактироватьПодразделение(null, null);
-				
+
 				foreach (var dateTime in App.Модель.ПериодГрафика)
 				{
 					graficDates.SelectedDates.Add(dateTime);
@@ -75,7 +76,7 @@ namespace Randomizer
 				}
 				holyDates.DisplayDate = App.Модель.ПериодГрафика.LastOrDefault();
 				App.Модель.RefreshTable();
-				
+
 			}
 			catch (Exception ex)
 			{
@@ -97,7 +98,7 @@ namespace Randomizer
 				districtsGrid.BeginInit();
 				narydsGrid.BeginInit();
 				var wor = new BackgroundWorker();
-				wor.DoWork+= (o, args) => App.Модель.GenerateEvents();
+				wor.DoWork += (o, args) => App.Модель.GenerateEvents();
 				wor.RunWorkerCompleted += (o, args) =>
 				{
 					ОбновитьВсё(null, null);
@@ -144,11 +145,11 @@ namespace Randomizer
 		private void СохранитьГрафикНарядов(object sender, RoutedEventArgs e)
 		{
 			var document = new WordDocument();
-			var filename = ""; 
+			var filename = "";
 			try
 			{
 				var name = string.Format("График Нарядов на {0} года",
-					graficDates.SelectedDates.FirstOrDefault().ToString("MMMM yyyy"));
+					graficDates.SelectedDates.FirstOrDefault().ToString("MMMM yyyy")).ToUpper();
 				var dlg = new SaveFileDialog
 				{
 					InitialDirectory = App.Модель.ПутьСохранения,
@@ -168,7 +169,7 @@ namespace Randomizer
 				document = СформироватьДокумент(name);
 
 				filename = dlg.FileName;
-				
+
 				document.Save(dlg.FileName, FormatType.Doc);
 
 				if (
@@ -176,7 +177,7 @@ namespace Randomizer
 						MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
 				{
 					Process.Start(dlg.FileName);
-				} 
+				}
 			}
 			catch (UnauthorizedAccessException ex)
 			{
@@ -328,11 +329,11 @@ namespace Randomizer
 		private void СохранитьСтатистику(object sender, RoutedEventArgs e)
 		{
 			var document = new WordDocument();
-			var filename = ""; 
+			var filename = "";
 			try
 			{
 				var name = string.Format("Статистика Нарядов на {0} года",
-					graficDates.SelectedDates.FirstOrDefault().ToString("MMMM yyyy"));
+					graficDates.SelectedDates.FirstOrDefault().ToString("MMMM yyyy")).ToUpper();
 				var dlg = new SaveFileDialog
 				{
 					InitialDirectory = App.Модель.ПутьСохранения,
@@ -480,7 +481,7 @@ namespace Randomizer
 					MessageBox.Show(exx.Message, "Исключение");
 				}
 				if (
-					MessageBox.Show(ex.Message + "\nФайл был сохранён под именем " + nfile+ "\nВы хотите открыть созданный файл?", "Документ успешно создан",
+					MessageBox.Show(ex.Message + "\nФайл был сохранён под именем " + nfile + "\nВы хотите открыть созданный файл?", "Документ успешно создан",
 						MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
 				{
 					Process.Start(nfile);
@@ -619,7 +620,7 @@ namespace Randomizer
 		{
 			СохранитьНастройки();
 		}
-		
+
 		private void ToggleButton_Заблокировать(object sender, RoutedEventArgs e)
 		{
 			foreach (var data in App.Модель.ДатыГрафика)
@@ -757,7 +758,7 @@ namespace Randomizer
 			foreach (var dateTime in App.Модель.ПериодГрафика)
 			{
 				graficDates.SelectedDates.Add(dateTime);
-			} 
+			}
 			graficDates.DisplayDate = App.Модель.ПериодГрафика.LastOrDefault();
 			foreach (var dateTime in App.Модель.Усиления)
 			{
@@ -778,7 +779,32 @@ namespace Randomizer
 
 		private void ОткрытьСправку(object sender, RoutedEventArgs e)
 		{
-			Process.Start("help.txt");
+			try
+			{
+				var path = Assembly.GetExecutingAssembly().Location;
+				var helpfile = path.Replace("Randomizer.exe", "help.txt");
+				if (!File.Exists(helpfile))
+				{
+					MessageBox.Show("Файл справки help.txt не найден, возможно он был удалён или перемещён");
+					return;
+				}
+				var wnd = new Window{Title = "Справка"};
+				wnd.Content = new ScrollViewer()
+				{
+					Content =
+						new TextBlock()
+						{
+							TextWrapping = TextWrapping.Wrap,
+							Text = File.ReadAllText(helpfile),
+							Margin = new Thickness(10)
+						}
+				};
+				wnd.Show();
+			}
+			catch (Exception exception)
+			{
+
+			}
 		}
 	}
 }
