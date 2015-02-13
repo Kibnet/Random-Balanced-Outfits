@@ -22,6 +22,7 @@ namespace Randomizer
 		{
 			InitializeComponent();
 			AllCheck.Focus();
+			if (toArray != null)
 			{
 				foreach (var naryad in toArray)
 				{

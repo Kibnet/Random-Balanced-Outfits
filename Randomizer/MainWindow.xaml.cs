@@ -106,6 +106,7 @@ namespace Randomizer
 					districtsGrid.EndInit();
 					narydsGrid.EndInit();
 					App.Модель.IsBusy = false;
+					wor.Dispose();
 				};
 				wor.RunWorkerAsync();
 			}
@@ -631,7 +632,7 @@ namespace Randomizer
 					data.Блокировки.Add(key);
 				}
 			}
-			App.Модель.ДатыГрафика = new ObservableCollection<ДатаГрафика>(App.Модель.ДатыГрафика);
+			//App.Модель.ДатыГрафика = new ObservableCollection<ДатаГрафика>(App.Модель.ДатыГрафика);
 			AllBlock.Text = "Разблокировать Все";
 			BlockPath.Visibility = Visibility.Hidden;
 			UnblockPath.Visibility = Visibility.Visible;
@@ -643,7 +644,7 @@ namespace Randomizer
 			{
 				data.Блокировки.Clear();
 			}
-			App.Модель.ДатыГрафика = new ObservableCollection<ДатаГрафика>(App.Модель.ДатыГрафика);
+			//App.Модель.ДатыГрафика = new ObservableCollection<ДатаГрафика>(App.Модель.ДатыГрафика);
 			AllBlock.Text = "Заблокировать Все";
 			BlockPath.Visibility = Visibility.Visible;
 			UnblockPath.Visibility = Visibility.Hidden;
@@ -809,7 +810,10 @@ namespace Randomizer
 
 		private void Button_Очистить(object sender, RoutedEventArgs e)
 		{
+			GraphList.BeginInit();
 			App.Модель.ClearEvents();
+			ОбновитьВсё(null,null);
+			GraphList.EndInit();
 		}
 	}
 }

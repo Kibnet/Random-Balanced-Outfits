@@ -22,7 +22,7 @@ namespace Randomizer
 		public string Название { get; set; }
 		public int Люди { get; set; }
 		public double Процент { get; set; }
-		public SortedDictionary<int, int> Распред { get; set; } 
+		public SortedDictionary<int, int> Распред;
 		public string РаспредЧ { get; set; }
 		//public int Распред12Ч { get; set; }
 		//public int Распред24Ч { get; set; }
@@ -120,11 +120,11 @@ namespace Randomizer
 				{
 					if (Распред.ContainsKey(i))
 					{
-						dic["наряды по " + i + "часа"] = Распред[i];
+						dic["наряды по " + i + new[] { " час", " часа", " часов" }[Plural(i)]] = Распред[i];
 					}
 					else
 					{
-						dic["наряды по " + i + "часа"] = 0;
+						dic["наряды по " + i + new[] { " час", " часа", " часов" }[Plural(i)]] = 0;
 					}
 				}
 				//foreach (KeyValuePair<int, int> pair in Распред)
@@ -140,6 +140,11 @@ namespace Randomizer
 			}
 		}
 
+		public int Plural(int n)
+		{
+			return (n % 10 == 1 && n % 100 != 11 ? 0 : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2);
+		}
+
 		protected string GetName<T>(Expression<Func<T>> propertyExpression)
 		{
 			return (PropertySupport.ExtractPropertyName<T>(propertyExpression));
@@ -153,7 +158,6 @@ namespace Randomizer
 			RaisePropertyChanged(() => Люди);
 			RaisePropertyChanged(() => Наряды);
 			RaisePropertyChanged(() => Процент);
-			RaisePropertyChanged(() => Распред);
 			RaisePropertyChanged(() => РаспредЧ);
 			RaisePropertyChanged(() => СписокНарядов);
 			RaisePropertyChanged(() => Часы);

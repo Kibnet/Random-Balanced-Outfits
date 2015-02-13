@@ -29,18 +29,18 @@ namespace Randomizer
 			}
 		}
 
-		public ModelView(string filename)
+		public ModelView(string fileName)
 		{
-			Deserialize(filename);
+			Deserialize(fileName);
 			foreach (var pod in Подразделения)
 			{
 				pod.Marked = false;
 			}
 		}
 
-		public void Deserialize(string filename)
+		public void Deserialize(string fileName)
 		{
-			настройки = НастройкиГенератора.Deserialize(filename);
+			настройки = НастройкиГенератора.Deserialize(fileName);
 		}
 
 		public ObservableCollection<Наряд> Наряды
@@ -51,10 +51,6 @@ namespace Randomizer
 			}
 			set
 			{
-				if (Equals(value, настройки.Наряды))
-				{
-					return;
-				}
 				настройки.Наряды = value;
 				RaisePropertyChanged(() => Наряды);
 			}
@@ -65,10 +61,6 @@ namespace Randomizer
 			get { return настройки.Подразделения; }
 			set
 			{
-				if (Equals(value, настройки.Подразделения))
-				{
-					return;
-				}
 				настройки.Подразделения = value;
 				RaisePropertyChanged(() => Подразделения);
 			}
@@ -79,10 +71,6 @@ namespace Randomizer
 			get { return настройки.Усиления; }
 			set
 			{
-				if (Equals(value, настройки.Усиления))
-				{
-					return;
-				}
 				настройки.Усиления = value;
 				RaisePropertyChanged(() => Усиления);
 			}
@@ -93,10 +81,6 @@ namespace Randomizer
 			get { return настройки.ПериодГрафика; }
 			set
 			{
-				if (Equals(value, настройки.ПериодГрафика))
-				{
-					return;
-				}
 				настройки.ПериодГрафика = value;
 				RaisePropertyChanged(() => ПериодГрафика);
 			}
@@ -107,27 +91,19 @@ namespace Randomizer
 			get { return настройки.Праздники; }
 			set
 			{
-				if (Equals(value, настройки.Праздники))
-				{
-					return;
-				}
 				настройки.Праздники = value;
 				RaisePropertyChanged(() => Праздники);
 			}
 		}
 
-		public ObservableCollection<ДатаГрафика> ДатыГрафика
+		public List<ДатаГрафика> ДатыГрафика
 		{
 			get { return настройки.ДатыГрафика; }
-			set
-			{
-				if (Equals(value, настройки.ДатыГрафика))
-				{
-					return;
-				}
-				настройки.ДатыГрафика = value;
-				RaisePropertyChanged(() => ДатыГрафика);
-			}
+			//set
+			//{
+			//	настройки.ДатыГрафика = value;
+			//	RaisePropertyChanged(() => ДатыГрафика);
+			//}
 		}
 
 		public string ПутьСохранения
@@ -135,10 +111,6 @@ namespace Randomizer
 			get { return настройки.ПутьСохранения; }
 			set
 			{
-				if (value == настройки.ПутьСохранения)
-				{
-					return;
-				}
 				настройки.ПутьСохранения = value;
 				RaisePropertyChanged(() => ПутьСохранения);
 			}
@@ -383,15 +355,20 @@ namespace Randomizer
 			}
 
 			//Перезапись старого графика новым
-			ДатыГрафика = new ObservableCollection<ДатаГрафика>(dates);
+			//ДатыГрафика = new ObservableCollection<ДатаГрафика>(dates);
+			ДатыГрафика.Clear();
+			foreach (var date in dates)
+			{
+				ДатыГрафика.Add(date);
+			}
 			ПересчитатьПодразделения();
 		}
 
 		public void GenerateEvents()
 		{
-			ObservableCollection<ДатаГрафика> best = null;
+			List<ДатаГрафика> best = null;
 			double bestres = 0;
-			for (int i = 0; i < 100; i++)
+			for (int i = 0; i < 1000; i++)
 			{
 
 				ClearEvents();
@@ -436,7 +413,8 @@ namespace Randomizer
 				//Выборка лучшего случая
 				if (best == null)
 				{
-					best = ДатыГрафика;
+					best = ДатыГрафика.ToList();
+
 					if (Подразделения.Count == 0)
 					{
 						break;
@@ -450,13 +428,19 @@ namespace Randomizer
 							  Math.Abs(Подразделения.Min(dist => dist.ОтклонениеЗагруженности));
 					if (res < bestres)
 					{
-						best = ДатыГрафика;
+						best.Clear();
+						best.AddRange(ДатыГрафика);
 						ПересчитатьПодразделения();
 						bestres = res;
 					}
 				}
 			}
-			ДатыГрафика = best;
+			//ДатыГрафика = best;
+			ДатыГрафика.Clear();
+			foreach (var date in best)
+			{
+				ДатыГрафика.Add(date);
+			}
 			Раскидать();
 		}
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -17,7 +18,7 @@ namespace Randomizer
 			Усиления = new ObservableCollection<DateTime>();
 			ПериодГрафика = new ObservableCollection<DateTime>();
 			Праздники = new ObservableCollection<DateTime>();
-			ДатыГрафика = new ObservableCollection<ДатаГрафика>();
+			ДатыГрафика = new List<ДатаГрафика>();
 			//ЗакрываемыеЧасы = 0;
 			//ПроцентВыходных = 29;
 			ИсключитьБлокированные = true;
@@ -30,7 +31,7 @@ namespace Randomizer
 		public ObservableCollection<DateTime> Усиления { get; set; }
 		public ObservableCollection<DateTime> ПериодГрафика { get; set; }
 		public ObservableCollection<DateTime> Праздники { get; set; }
-		public ObservableCollection<ДатаГрафика> ДатыГрафика { get; set; }
+		public List<ДатаГрафика> ДатыГрафика { get; set; }
 		public int ЗакрываемыеЧасы { get; set; }
 		public int ПроцентВыходных { get; set; }
 		public string ПутьСохранения { get; set; }
