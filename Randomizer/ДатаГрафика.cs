@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Media;
 using Syncfusion.Windows.Shared;
 
@@ -28,9 +30,16 @@ namespace Randomizer
 			get { return App.Модель.Праздники.Contains(Date); }
 		}
 
-		public string Display
+		public TextBlock Display
 		{
-			get { return Date.ToString("yyyy.MM.dd ddd"); }
+			get
+			{
+				var tb = new TextBlock();
+				tb.Inlines.Add(new Run(Date.ToString("yyyy.MM.")));
+				tb.Inlines.Add(new Run(Date.ToString("dd")) { FontWeight = FontWeights.ExtraBlack });
+				tb.Inlines.Add(new Run(Date.ToString(" ddd")));
+				return tb;
+			}
 		}
 
 		public Dictionary<Наряд, Подразделение> Смены { get; set; }
@@ -80,6 +89,7 @@ namespace Randomizer
 		{
 			private Brush _color;
 			private bool _isEnabled;
+			private Brush _mark;
 			public ДатаГрафика Parent { get; set; }
 
 			public bool Locked
@@ -105,6 +115,17 @@ namespace Randomizer
 						if (Parent.Блокировки.Contains(Nar))
 							Parent.Блокировки.Remove(Nar);
 					}
+				}
+			}
+
+			public Brush Mark
+			{
+				get { return _mark; }
+				set
+				{
+					if (Equals(value, _mark)) return;
+					_mark = value;
+					RaisePropertyChanged(() => Mark);
 				}
 			}
 

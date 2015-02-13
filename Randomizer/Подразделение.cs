@@ -10,6 +10,8 @@ namespace Randomizer
 	[Serializable]
 	public class Подразделение : NotificationObject
 	{
+		private bool _marked;
+
 		public Подразделение()
 		{
 			Наряды = new ObservableCollection<Наряд>();
@@ -42,6 +44,12 @@ namespace Randomizer
 
 		public double ОтклонениеЗагруженности { get; set; }
 		public double ОтклонениеЗагруженностиВыходных { get; set; }
+
+		public bool Marked
+		{
+			get { return _marked; }
+			set { _marked = value; }
+		}
 
 		public string СписокНарядов
 		{

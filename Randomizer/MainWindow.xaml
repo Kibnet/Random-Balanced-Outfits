@@ -308,6 +308,7 @@
                                     <syncfusion:GridDataSortColumn ColumnName="Название"/>
                                 </syncfusion:GridDataControl.SortColumns>
                                 <syncfusion:GridDataControl.VisibleColumns>
+                                    <syncfusion:GridDataCheckBoxVisibleColumn MappingName="Marked" HeaderText="Выделить"/>
                                     <syncfusion:GridDataVisibleColumn MappingName="Название" HeaderText="подразделение"/>
                                     <syncfusion:GridDataVisibleColumn MappingName="Люди" HeaderText="кол-во чел" />
                                     <syncfusion:GridDataPercentEditVisibleColumn MappingName="Процент" HeaderText="% от общего"/>
@@ -437,6 +438,27 @@
                                         <TextBlock Text="Сохранить График..." Margin="0,0,5,0" VerticalAlignment="Center"/>
                                     </StackPanel>
                                 </Button>
+                                <Button Height="32" Margin="5"
+								Click="Button_Очистить" ToolTip="Очистить все ячейки графика, кроме заблокированных" Background="#00DDDDDD" BorderThickness="1">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Viewbox>
+                                            <Grid>
+                                                <Grid Width="40" Height="40" Visibility="Visible" />
+                                                <Path Data="M244.904052734375,0C380.053283691406,4.12562712881481E-08 490,109.683750480413 490,244.508236259222 490,379.31621965766 380.053283691406,488.99996599555 244.904052734375,488.99996599555 112.450904846191,488.99996599555 4.26841497421262,383.635036796331 0,252.530712455511L62.450626373291,239.599727958441C62.4029960632324,241.246731132269 62.1992416381836,242.853222221136 62.1992416381836,244.508236259222 62.1992416381836,344.997677177191 144.164993286133,426.77080950141 244.904052734375,426.77080950141 345.652954101563,426.77080950141 427.618957519531,344.997677177191 427.618957519531,244.508236259222 427.618957519531,143.994320243597 345.652954101563,62.237655967474 244.904052734375,62.2376521527767 198.139602661133,62.237655967474 155.632064819336,80.085140556097 123.291976928711,109.02804979682L182.790222167969,158.416759818792 10.8468389511108,198.455074638128 19.1043586730957,22.5514434278011 74.7991333007812,68.7766688764095C118.911849975586,26.2635787427425,178.864349365234,4.12562712881481E-08,244.904052734375,0z" Stretch="Uniform" Fill="#FF000000" Width="26" Height="26" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5" >
+                                                    <Path.RenderTransform>
+                                                        <TransformGroup>
+                                                            <ScaleTransform ScaleY="1" ScaleX="1"/>
+                                                            <SkewTransform AngleY="0" AngleX="0"/>
+                                                            <RotateTransform Angle="0"/>
+                                                            <TranslateTransform/>
+                                                        </TransformGroup>
+                                                    </Path.RenderTransform>
+                                                </Path>
+                                            </Grid>
+                                        </Viewbox>
+                                        <TextBlock Text="Очистить График" Margin="0,0,5,0" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
                                 <ToggleButton Height="32" Margin="5" Background="#00DDDDDD" BorderThickness="1" ToolTip="Заблокировать/Разблокировать все Наряды в Графике"
 									  Checked="ToggleButton_Заблокировать" Unchecked="ToggleButton_Разблокировать">
                                     <StackPanel Orientation="Horizontal">
@@ -486,7 +508,7 @@
                                                 <ListView.ItemTemplate>
                                                     <DataTemplate>
                                                         <Border BorderThickness="0,0,1,0" Width="100" BorderBrush="#FFAAAAAA"
-														Margin="0">
+														Margin="0" Background="{Binding Mark}">
                                                             <StackPanel Orientation="Horizontal" Margin="0">
                                                                 <syncfusion:ComboBoxAdv Visibility="{Binding Visibility}"
 																				SelectedValue="{Binding Pod}"

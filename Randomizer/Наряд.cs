@@ -43,16 +43,16 @@ namespace Randomizer
 				.Count(data => (!App.Модель.ИсключитьБлокированные || !data.Блокировки.Contains(this)) && data.Смены.ContainsKey(this));
 
 
-			if (App.Модель.ИсключитьБлокированные)
-			{
-				var blocked = dates
-					.Where(date => Дни == WeekDays.Все
-					               || (Дни == WeekDays.Выходные && App.Модель.Праздники.Contains(date.Date))
-					               || (Дни == WeekDays.Будние && !App.Модель.Праздники.Contains(date.Date)))
-					.SelectMany(gr => gr.Блокировки)
-					.Count(наряд => наряд == this);
-				Количество -= blocked;
-			}
+			//if (App.Модель.ИсключитьБлокированные)
+			//{
+			//	var blocked = dates
+			//		.Where(date => Дни == WeekDays.Все
+			//					   || (Дни == WeekDays.Выходные && App.Модель.Праздники.Contains(date.Date))
+			//					   || (Дни == WeekDays.Будние && !App.Модель.Праздники.Contains(date.Date)))
+			//		.SelectMany(gr => gr.Блокировки)
+			//		.Count(наряд => наряд == this);
+			//	Количество -= blocked;
+			//}
 
 			РаспределеноКоличество = dates
 					.SelectMany(time => time.Смены)

@@ -341,7 +341,42 @@ namespace Randomizer
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;
-		
+
+		public void ClearEvents()
+		{
+			//Формирование всех дат и доступных нарядов в них
+			var dates = ПериодГрафика.Select(date => new ДатаГрафика
+			{
+				Date = date,
+				Смены =
+					Наряды.Where(nar => !nar.Усиление || Усиления.Contains(date))
+						.Where(nar => nar.Дни == WeekDays.Все
+									  || (nar.Дни == WeekDays.Выходные && Праздники.Contains(date))
+									  || (nar.Дни == WeekDays.Будние && !Праздники.Contains(date)))
+						.ToDictionary<Наряд, Наряд, Подразделение>(nar => nar, nar => null)
+			}).ToList();
+			//Заполнение заблокированных нарядов
+			foreach (var date in dates)
+			{
+				var find = ДатыГрафика.FirstOrDefault(gr => gr.Date == date.Date);
+				if (find == null) continue;
+				foreach (var nar in find.Блокировки)
+				{
+					date.Блокировки.Add(nar);
+					if (!find.Смены.ContainsKey(nar)) continue;
+					if (nar.Усиление && !Усиления.Contains(date.Date)) continue;
+					if (Подразделения.Contains(find.Смены[nar]))
+					{
+						date.Смены[nar] = find.Смены[nar];
+					}
+				}
+			}
+
+			//Перезапись старого графика новым
+			ДатыГрафика = new ObservableCollection<ДатаГрафика>(dates);
+			ПересчитатьПодразделения();
+		}
+
 		public void GenerateEvents()
 		{
 			ObservableCollection<ДатаГрафика> best = null;
@@ -349,38 +384,7 @@ namespace Randomizer
 			for (int i = 0; i < 100; i++)
 			{
 
-				//Формирование всех дат и доступных нарядов в них
-				var dates = ПериодГрафика.Select(date => new ДатаГрафика
-				{
-					Date = date,
-					Смены =
-						Наряды.Where(nar => !nar.Усиление || Усиления.Contains(date))
-							.Where(nar => nar.Дни == WeekDays.Все
-										  || (nar.Дни == WeekDays.Выходные && Праздники.Contains(date))
-										  || (nar.Дни == WeekDays.Будние && !Праздники.Contains(date)))
-							.ToDictionary<Наряд, Наряд, Подразделение>(nar => nar, nar => null)
-				}).ToList();
-
-				//Заполнение заблокированных нарядов
-				foreach (var date in dates)
-				{
-					var find = ДатыГрафика.FirstOrDefault(gr => gr.Date == date.Date);
-					if (find == null) continue;
-					foreach (var nar in find.Блокировки)
-					{
-						date.Блокировки.Add(nar);
-						if (!find.Смены.ContainsKey(nar)) continue;
-						if (nar.Усиление && !Усиления.Contains(date.Date)) continue;
-						if (Подразделения.Contains(find.Смены[nar]))
-						{
-							date.Смены[nar] = find.Смены[nar];
-						}
-					}
-				}
-
-				//Перезапись старого графика новым
-				ДатыГрафика = new ObservableCollection<ДатаГрафика>(dates);
-				ПересчитатьПодразделения();
+				ClearEvents();
 				var rand = new Random();
 
 				//Формирование конкретных нарядов на выходные

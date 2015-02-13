@@ -806,5 +806,10 @@ namespace Randomizer
 
 			}
 		}
+
+		private void Button_Очистить(object sender, RoutedEventArgs e)
+		{
+			App.Модель.ClearEvents();
+		}
 	}
 }
