@@ -56,12 +56,30 @@ namespace Randomizer
 				}
 				foreach (var наряд in App.Модель.Наряды)
 				{
+					Brush mark = null;
+					if (Смены.ContainsKey(наряд))
+					{
+						var dis = Смены[наряд];
+						if (App.Модель.ColorizeList.Contains(dis))
+						{
+							if (App.Модель.ColorizeList[0] == dis)
+							{
+								mark = Brushes.Red;
+							}
+							else
+							{
+								mark = Brushes.Gold;
+							}
+						}
+					}
+					
 					ret.Add(new HostPod
 					{
 						Nar = наряд,
 						Parent = this,
 						IsEnabled = Смены.ContainsKey(наряд),
-						Locked = Блокировки.Contains(наряд)
+						Locked = Блокировки.Contains(наряд),
+						Mark = mark
 					});
 				}
 				return ret;
@@ -89,7 +107,6 @@ namespace Randomizer
 		{
 			private Brush _color;
 			private bool _isEnabled;
-			private Brush _mark;
 			public ДатаГрафика Parent { get; set; }
 
 			public bool Locked
@@ -118,16 +135,7 @@ namespace Randomizer
 				}
 			}
 
-			public Brush Mark
-			{
-				get { return _mark; }
-				set
-				{
-					if (Equals(value, _mark)) return;
-					_mark = value;
-					RaisePropertyChanged(() => Mark);
-				}
-			}
+			public Brush Mark { get; set; }
 
 			public bool IsEnabled
 			{
@@ -150,6 +158,7 @@ namespace Randomizer
 				RaisePropertyChanged(() => Parent);
 				RaisePropertyChanged(() => Locked);
 				RaisePropertyChanged(() => Color);
+				RaisePropertyChanged(() => Mark);
 			}
 
 			public ObservableCollection<Подразделение> All

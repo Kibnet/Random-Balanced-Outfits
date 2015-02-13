@@ -48,7 +48,30 @@ namespace Randomizer
 		public bool Marked
 		{
 			get { return _marked; }
-			set { _marked = value; }
+			set
+			{
+				_marked = value;
+				if (App.Модель == null || App.Модель.ColorizeList==null)
+				{
+					return;
+				}
+				if (value)
+				{
+					if (!App.Модель.ColorizeList.Contains(this))
+					{
+						App.Модель.ColorizeList.Add(this);
+						App.Модель.ColorizeGrafic();
+					}
+				}
+				else
+				{
+					if (App.Модель.ColorizeList.Contains(this))
+					{
+						App.Модель.ColorizeList.Remove(this);
+						App.Модель.ColorizeGrafic();
+					}
+				}
+			}
 		}
 
 		public string СписокНарядов

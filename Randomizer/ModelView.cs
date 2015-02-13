@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Windows;
 using Syncfusion.Windows.Shared;
+using Brushes = System.Windows.Media.Brushes;
 
 namespace Randomizer
 {
@@ -21,11 +23,19 @@ namespace Randomizer
 		{
 			Deserialize(SettingsName);
 			IsBusy = false;
+			foreach (var pod in Подразделения)
+			{
+				pod.Marked = false;
+			}
 		}
 
 		public ModelView(string filename)
 		{
 			Deserialize(filename);
+			foreach (var pod in Подразделения)
+			{
+				pod.Marked = false;
+			}
 		}
 
 		public void Deserialize(string filename)
@@ -571,6 +581,16 @@ namespace Randomizer
 			RaisePropertyChanged(() => Подразделения);
 			RaisePropertyChanged(() => ДатыГрафика);
 			//RaisePropertyChanged(() => GenerateTable);
+		}
+
+		public List<Подразделение> ColorizeList = new List<Подразделение>();
+
+		public void ColorizeGrafic()
+		{
+			foreach (var date in ДатыГрафика)
+			{
+				date.Refresh();
+			}
 		}
 
 		public void ОбновитьНаряды()

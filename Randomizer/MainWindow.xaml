@@ -300,7 +300,7 @@
                                 </Button>
                             </StackPanel>
                             <syncfusion:GridDataControl x:Name="districtsGrid" Margin="5" ItemsSource="{Binding Подразделения}"
-												AllowEdit="False" ShowAddNewRow="False"
+												ShowAddNewRow="False"
 												LayoutUpdated="DistrictsGridLayoutUpdated" Grid.Row="1" ColumnSizer="Auto" AutoGenerateColumnsInfo="False"
 												AutoPopulateColumns="False" AllowSort="True"
 												AutoPopulateRelations="False" BorderThickness="0,0,1,0" UpdateMode="PropertyChanged" ShowTooltips="True">
@@ -308,18 +308,18 @@
                                     <syncfusion:GridDataSortColumn ColumnName="Название"/>
                                 </syncfusion:GridDataControl.SortColumns>
                                 <syncfusion:GridDataControl.VisibleColumns>
-                                    <syncfusion:GridDataCheckBoxVisibleColumn MappingName="Marked" HeaderText="Выделить"/>
-                                    <syncfusion:GridDataVisibleColumn MappingName="Название" HeaderText="подразделение"/>
-                                    <syncfusion:GridDataVisibleColumn MappingName="Люди" HeaderText="кол-во чел" />
-                                    <syncfusion:GridDataPercentEditVisibleColumn MappingName="Процент" HeaderText="% от общего"/>
-                                    <syncfusion:GridDataVisibleColumn MappingName="Часы" HeaderText="всего, час" />
-                                    <syncfusion:GridDataVisibleColumn MappingName="ВыходныеЧасы" HeaderText="выходных, час" />
-                                    <syncfusion:GridDataVisibleColumn MappingName="РаспредЧ" HeaderText="кол-во нарядов" />
-                                    <syncfusion:GridDataVisibleColumn MappingName="Загруженность" HeaderText="нагр., час/чел" />
-                                    <syncfusion:GridDataVisibleColumn MappingName="ЗагруженностьВыходных" HeaderText="нагр.вых., час/чел" />
-                                    <syncfusion:GridDataPercentEditVisibleColumn MappingName="ОтклонениеЗагруженности" HeaderText="откл.нагр." />
-                                    <syncfusion:GridDataPercentEditVisibleColumn MappingName="ОтклонениеЗагруженностиВыходных" HeaderText="откл.нагр.вых." />
-                                    <syncfusion:GridDataVisibleColumn MappingName="СписокНарядов" HeaderText="доступные наряды" />
+                                    <syncfusion:GridDataCheckBoxVisibleColumn MappingName="Marked" HeaderText="цв" IsReadOnly="False"/>
+                                    <syncfusion:GridDataVisibleColumn MappingName="Название" HeaderText="подразделение" IsReadOnly="True"/>
+                                    <syncfusion:GridDataVisibleColumn MappingName="Люди" HeaderText="кол-во чел"  IsReadOnly="True"/>
+                                    <syncfusion:GridDataPercentEditVisibleColumn MappingName="Процент" HeaderText="% от общего" IsReadOnly="True"/>
+                                    <syncfusion:GridDataVisibleColumn MappingName="Часы" HeaderText="всего, час"  IsReadOnly="True"/>
+                                    <syncfusion:GridDataVisibleColumn MappingName="ВыходныеЧасы" HeaderText="выходных, час"  IsReadOnly="True"/>
+                                    <syncfusion:GridDataVisibleColumn MappingName="РаспредЧ" HeaderText="кол-во нарядов"  IsReadOnly="True"/>
+                                    <syncfusion:GridDataVisibleColumn MappingName="Загруженность" HeaderText="нагр., час/чел"  IsReadOnly="True"/>
+                                    <syncfusion:GridDataVisibleColumn MappingName="ЗагруженностьВыходных" HeaderText="нагр.вых., час/чел"  IsReadOnly="True"/>
+                                    <syncfusion:GridDataPercentEditVisibleColumn MappingName="ОтклонениеЗагруженности" HeaderText="откл.нагр."  IsReadOnly="True"/>
+                                    <syncfusion:GridDataPercentEditVisibleColumn MappingName="ОтклонениеЗагруженностиВыходных" HeaderText="откл.нагр.вых."  IsReadOnly="True"/>
+                                    <syncfusion:GridDataVisibleColumn MappingName="СписокНарядов" HeaderText="доступные наряды"  IsReadOnly="True"/>
                                 </syncfusion:GridDataControl.VisibleColumns>
                                 <syncfusion:GridDataControl.ConditionalFormats>
                                     <syncfusion:GridDataConditionalFormat Name="C1" ApplyStyleToColumn="ОтклонениеЗагруженности">
