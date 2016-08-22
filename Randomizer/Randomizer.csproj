@@ -43,22 +43,22 @@
     <Reference Include="Accessibility" />
     <Reference Include="PresentationUI, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="ReachFramework" />
-    <Reference Include="Syncfusion.Core, Version=12.2400.0.36, Culture=neutral, PublicKeyToken=632609b4d040f6b4, processorArchitecture=MSIL">
+    <Reference Include="Syncfusion.Core, Version=14.2400.0.26, Culture=neutral, PublicKeyToken=632609b4d040f6b4, processorArchitecture=MSIL" >
+	  <Private>True</Private>
+    </Reference>
+    <Reference Include="Syncfusion.DocIO.Base, Version=14.2400.0.26, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
-    <Reference Include="Syncfusion.DocIO.Base, Version=12.2400.0.36, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+    <Reference Include="Syncfusion.Grid.Wpf, Version=14.2400.0.26, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
-    <Reference Include="Syncfusion.Grid.Wpf, Version=12.2400.0.36, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+    <Reference Include="Syncfusion.GridCommon.Wpf, Version=14.2400.0.26, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
-    <Reference Include="Syncfusion.GridCommon.Wpf, Version=12.2400.0.36, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+    <Reference Include="Syncfusion.Linq.Base, Version=14.2400.0.26, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
-    <Reference Include="Syncfusion.Linq.Base, Version=12.2400.0.36, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Syncfusion.Shared.Wpf, Version=12.2400.0.36, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
+    <Reference Include="Syncfusion.Shared.Wpf, Version=14.2400.0.26, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
